@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    /* General Options */
+    "target": "ESNext", // Configura o alvo mais recente
+    "module": "ESNext", // Usa o módulo ESNext
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // Adiciona suporte às APIs do navegador
+    "skipLibCheck": true, // Ignora a verificação de tipos em arquivos de definição
+    "strict": true, // Ativa modo estrito
+    "jsx": "react-jsx", // Suporte ao JSX no React
+
+    /* Path Aliases */
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["src/components/*"]
+    },
+
+    /* Module Resolution */
+    "moduleResolution": "Bundler", // Modo otimizado para bundlers
+    "allowImportingTsExtensions": true, // Permite importar arquivos TypeScript com extensão
+    "isolatedModules": true, // Garante que cada arquivo seja um módulo isolado
+
+    /* Emit and Output */
+    "noEmit": true, // Impede saída de arquivos .js durante a compilação
+
+    /* Linting */
+    "noUnusedLocals": true, // Reporta variáveis não usadas
+    "noUnusedParameters": true, // Reporta parâmetros não usados
+    "noFallthroughCasesInSwitch": true, // Impede queda acidental em `switch`
+    "noUncheckedSideEffectImports": true, // Verifica efeitos colaterais em imports
+
+    /* Node.js Support */
+    "moduleDetection": "force", // Exige declaração explícita de módulos
+    "resolveJsonModule": true // Permite importar arquivos JSON diretamente
+  },
+  "include": ["src", "vite.config.ts"], // Inclui os arquivos relevantes
+  "exclude": ["node_modules", "dist"] // Exclui pastas desnecessárias
+}
