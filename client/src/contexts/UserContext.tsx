@@ -1,13 +1,17 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { removeLocalStorage, setLocalStorage } from "../utils/storageUtils";
+import {
+  removeLocalStorage,
+  setLocalStorage,
+  getLocalStorage,
+} from "../utils/storageUtils";
 import { check, login, logout, register } from "../services/authServices";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  username: string;
 }
 
 interface UserData {
@@ -32,7 +36,7 @@ interface UserContextProviderProps {
 export const UserContext = createContext({} as UserContextType);
 
 export function UserContextProvider({ children }: UserContextProviderProps) {
-  const [user, setUser] = useState<any | undefined>();
+  const [user, setUser] = useState<User | undefined>();
   const navigate = useNavigate();
 
   const checkUser = async () => {
@@ -68,14 +72,32 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     const response = await logout();
 
     removeLocalStorage("@whats-new:user");
+    removeLocalStorage("@whats-new:teams");
+    removeLocalStorage("@whats-new:active-team");
 
     alert("Logged out successfully. Redirecting to home page.");
     await new Promise((resolve) => setTimeout(resolve, 1000));
     navigate("/");
   };
 
+  useEffect(() => {
+    const userInStorage = getLocalStorage("@whats-new:user") as User;
+
+    if (userInStorage) {
+      setUser(userInStorage);
+    }
+  }, []);
+
   return (
-    <UserContext.Provider value={{ user, checkUser, signIn, signUp, signOut }}>
+    <UserContext.Provider
+      value={{
+        user,
+        checkUser,
+        signIn,
+        signUp,
+        signOut,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

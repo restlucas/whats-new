@@ -11,8 +11,11 @@ export function CreateTeam() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(user);
-    // const response = await newTeam(user.id, teamName);
+    const response = await newTeam(user.id, teamName);
+
+    if (response) {
+      alert(response.message);
+    }
   };
 
   return (

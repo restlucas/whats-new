@@ -19,7 +19,7 @@ const authService = {
   },
 
   async login(username: string, pwd: string) {
-    const userFound = await prisma.user.findFirst({
+    const userFound = await prisma.user.findFirstOrThrow({
       where: {
         username,
       },
@@ -30,18 +30,6 @@ const authService = {
         email: true,
         password: true,
         createdAt: true,
-        teamMember: {
-          select: {
-            role: true,
-            team: {
-              select: {
-                id: true,
-                name: true,
-                createdAt: true,
-              },
-            },
-          },
-        },
       },
     });
 
@@ -53,7 +41,7 @@ const authService = {
       { id: userFound.id },
       process.env.JWT_SECRET as string,
       {
-        expiresIn: "1h",
+        expiresIn: "24h",
       }
     );
 

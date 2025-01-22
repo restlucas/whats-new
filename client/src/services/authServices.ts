@@ -41,6 +41,7 @@ export const login = async (credentials: {
       status: response.status,
       token: response.data.token,
       user: response.data.user,
+      teams: response.data.teams,
     };
   } catch (error) {
     if (error instanceof AxiosError) {

@@ -1,10 +1,11 @@
 import { PlusCircle } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { InviteMembers } from "./components/invite-members";
 import { Members } from "./components/members";
-import { useTeams } from "../../../hooks/useTeams";
 import { CreateTeam } from "./components/create-team";
+import { UserContext } from "../../../contexts/UserContext";
+import { TeamContext } from "../../../contexts/TeamContext";
 
 interface Member {
   role: string;
@@ -18,34 +19,23 @@ interface Member {
 interface Team {
   id: string;
   name: string;
-  description?: string;
   createdAt: string;
-  members: Member[];
-  invitations: any;
 }
 
 export function Teams() {
-  const { teams, loading, error, getTeams } = useTeams();
-  const [selectedTeam, setSelectedTeam] = useState<any>({});
+  const { teams, activeTeam } = useContext(TeamContext);
+  const [selectedTeam, setSelectedTeam] = useState<Team | undefined>();
 
   const handleNavigation = (team: any) => {
     setSelectedTeam(team);
   };
 
   useEffect(() => {
-    getTeams();
-  }, [getTeams]);
+    if (activeTeam) setSelectedTeam(activeTeam);
+  }, [activeTeam]);
 
-  useEffect(() => {
-    if (teams.length > 0) setSelectedTeam(teams[0]);
-  }, [teams]);
-
-  if (loading) {
+  if (!selectedTeam) {
     return <p>loading...</p>;
-  }
-
-  if (error) {
-    return <p>An error occurred while fetching teams...</p>;
   }
 
   return (
@@ -57,24 +47,24 @@ export function Teams() {
           {/* Teams */}
           <div className="flex">
             <div className="flex items-center justify-start gap-2">
-              {teams.map((team: Team, index: number) => {
-                return (
-                  <button
-                    key={index}
-                    type="button"
-                    className={`font-bold py-1 px-4 rounded-lg hover:bg-tertiary/20 dark:hover:bg-tertiary hover:text-tertiary dark:hover:text-white ${selectedTeam.name === team.name ? " text-tertiary dark:text-white bg-tertiary/20 dark:bg-tertiary" : "text-black/30 dark:text-light/30"}`}
-                    onClick={() => handleNavigation(team)}
-                  >
-                    {team.name}
-                  </button>
-                );
-              })}
+              {teams &&
+                teams.map((team: Team) => {
+                  return (
+                    <button
+                      key={team.id}
+                      type="button"
+                      className={`font-bold py-1 px-4 rounded-lg hover:bg-tertiary/20 dark:hover:bg-tertiary hover:text-tertiary dark:hover:text-white ${selectedTeam.name === team.name ? " text-tertiary dark:text-white bg-tertiary/20 dark:bg-tertiary" : "text-black/30 dark:text-light/30"}`}
+                      onClick={() => handleNavigation(team)}
+                    >
+                      {team.name}
+                    </button>
+                  );
+                })}
               <button
                 type="button"
                 onClick={() => handleNavigation({})}
-                className={`px-4 h-8 font-bold flex items-center justify-center gap-2 rounded-md duration-100 text-black/30 dark:text-light/30 hover:bg-tertiary/20 dark:hover:bg-tertiary hover:text-tertiary dark:hover:text-white ${Object.keys(selectedTeam).length === 0 ? " text-tertiary dark:text-white bg-tertiary/20 dark:bg-tertiary" : "text-black/30 dark:text-light/30"}`}
+                className={`${teams && teams.length >= 3 ? "hidden" : "block"} px-4 h-8 font-bold flex items-center justify-center gap-2 rounded-md duration-100 text-black/30 dark:text-light/30 hover:bg-tertiary/20 dark:hover:bg-tertiary hover:text-tertiary dark:hover:text-white ${Object.keys(selectedTeam).length === 0 ? " text-tertiary dark:text-white bg-tertiary/20 dark:bg-tertiary" : "text-black/30 dark:text-light/30"}`}
               >
-                {/* <span>Create</span> */}
                 <PlusCircle size={20} weight="bold" />
               </button>
             </div>

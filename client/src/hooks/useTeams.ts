@@ -24,6 +24,11 @@ export const useTeams = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
       const response = await createTeam(userId, teamName);
+
+      return {
+        status: response.status,
+        message: response.statusText,
+      };
     } catch (err) {
       console.log("Error on creat new team: ", err);
     } finally {
