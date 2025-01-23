@@ -137,6 +137,17 @@ const teamsService = {
       },
     });
   },
+
+  async removeUser(teamId: string, userId: string) {
+    return await prisma.teamMember.delete({
+      where: {
+        userId_teamId: {
+          userId,
+          teamId,
+        },
+      },
+    });
+  },
 };
 
 export default teamsService;

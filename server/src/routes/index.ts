@@ -9,6 +9,7 @@ import {
   getMembersByTeam,
   getTeamInvitations,
   makeInvitation,
+  removeMember,
   revokeInvitation,
   updateMemberRole,
   validateInvitation,
@@ -18,6 +19,7 @@ const router = Router();
 
 // Login
 router.get("/auth/check", check);
+
 router.post("/auth/login", login);
 router.post("/auth/logout", logout);
 
@@ -26,17 +28,22 @@ router.post("/users", createUser);
 
 // News crud
 router.get("/news", getAllNews);
+
 router.post("/news", authMiddleware, createNews);
 
 // Teams crud
 router.get("/teams", authMiddleware, getAllTeamsByUser);
-router.post("/teams", authMiddleware, create);
+router.get("/teams/user", authMiddleware, getAllTeamsByUser);
 router.get("/teams/members", getMembersByTeam);
+router.get("/teams/invitations", authMiddleware, getTeamInvitations);
+router.get("/teams/invitations/validate", validateInvitation);
+
+router.post("/teams", authMiddleware, create);
+router.post("/teams/invitations", authMiddleware, makeInvitation);
+
 router.put("/teams/member/role", authMiddleware, updateMemberRole);
 
-router.get("/teams/invitations", authMiddleware, getTeamInvitations);
-router.post("/teams/invitations", authMiddleware, makeInvitation);
+router.delete("/teams/member", removeMember);
 router.delete("/teams/invitations", authMiddleware, revokeInvitation);
-router.get("/teams/invitations/validate", validateInvitation);
 
 export default router;

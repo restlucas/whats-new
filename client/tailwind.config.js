@@ -1,4 +1,5 @@
 import colors from "tailwindcss/colors";
+import { OperationCanceledException } from "typescript";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -21,6 +22,16 @@ export default {
         tertiary: "#303945",
       },
       keyframes: {
+        "fade-in": {
+          "0%": {
+            transform: "translateX(60px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateX(0)",
+            opacity: "1",
+          },
+        },
         "entrance-right": {
           "0%": {
             transform: "translateX(100vw)",
@@ -41,6 +52,7 @@ export default {
       animation: {
         "fade-in": "entrance-right .15s ease-in",
         "fade-out": "exit-right .15s ease-out",
+        "fade-entrance": "fade-in .35s ease-in-out",
       },
     },
     fontFamily: {

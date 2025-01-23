@@ -1,9 +1,10 @@
 import { OptionsButton } from "@src/components/button/options";
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown, Trash } from "@phosphor-icons/react";
 import { useContext, useEffect, useState } from "react";
 import { useMembers } from "@src/hooks/useMembers";
-import { updateMemberRole } from "@src/services/teamsServices";
+import { removeMember, updateMemberRole } from "@src/services/teamsServices";
 import { UserContext } from "@src/contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const roles = [
   {
@@ -16,15 +17,18 @@ const roles = [
 ];
 
 export function Members({ teamId }: any) {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   const { members, getMembers } = useMembers();
   const [teamMembers, setTeamMembers] = useState<any>([]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMemberId, setLoadingMemberId] = useState<string | null>(null);
+
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  const [removingMember, setRemovingMember] = useState<string | null>(null);
 
   const handleMember = async (memberId: string, roleValue: string) => {
     setLoadingMemberId(memberId);
-    setIsLoading(true);
 
     let memberIndex = teamMembers.findIndex(
       (item: any) => item.user.id === memberId
@@ -51,7 +55,23 @@ export function Members({ teamId }: any) {
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setLoadingMemberId(null);
-    setIsLoading(false);
+  };
+
+  const removeUser = async (memberId: string, memberName: string) => {
+    setRemovingMember(memberId);
+    setIsRemoving(true);
+    const areYouSure = confirm(
+      `Do you really want to remove ${memberName} from your team?`
+    );
+
+    if (areYouSure) {
+      await removeMember(teamId, memberId);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      navigate(0);
+    }
+
+    setRemovingMember(null);
+    setIsRemoving(false);
   };
 
   useEffect(() => {
@@ -90,7 +110,26 @@ export function Members({ teamId }: any) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-4">
+                <div className="flex items-center justify-end gap-2">
+                  {member.user.id !== user.id && (
+                    <button
+                      onClick={() =>
+                        removeUser(member.user.id, member.user.name)
+                      }
+                      className="h-9 w-9 rounded-md flex items-center justify-center duration-200 hover:bg-vibrant-red group"
+                    >
+                      {removingMember === member.user.id ? (
+                        <div className="flex w-full items-center justify-center">
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        </div>
+                      ) : (
+                        <Trash
+                          size={22}
+                          className="duration-200 group-hover:fill-white"
+                        />
+                      )}
+                    </button>
+                  )}
                   <OptionsButton
                     selectedValue={member.role}
                     icon={<CaretDown size={18} />}

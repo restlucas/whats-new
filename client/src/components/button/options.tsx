@@ -1,3 +1,4 @@
+import { ArrowsCounterClockwise } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
 interface OptionsButtonProps {
@@ -63,7 +64,7 @@ export function OptionsButton({
       <button
         type="button"
         onClick={handleVisibility}
-        className={`w-[100px] h-9 rounded-md border border-tertiary/20 dark:border-tertiary flex items-center justify-center gap-3 
+        className={`w-9 sm:w-[100px] h-9 rounded-md sm:border border-tertiary/20 dark:border-tertiary flex items-center justify-center gap-3 
           ${disabled && "pointer-events-none  text-primary/50 dark:text-white/50"}
           `}
       >
@@ -73,11 +74,16 @@ export function OptionsButton({
           </div>
         ) : (
           <>
-            <span className="font-semibold">
-              {selectedValue.charAt(0).toUpperCase() +
-                selectedValue.slice(1).toLowerCase()}
-            </span>
-            {icon}
+            <div className="flex items-center justify-center sm:hidden">
+              <ArrowsCounterClockwise size={22} weight="bold" />
+            </div>
+            <div className="hidden sm:flex items-center justify-center gap-3">
+              <span className="font-semibold">
+                {selectedValue.charAt(0).toUpperCase() +
+                  selectedValue.slice(1).toLowerCase()}
+              </span>
+              {icon}
+            </div>
           </>
         )}
       </button>

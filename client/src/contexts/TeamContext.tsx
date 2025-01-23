@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import { getLocalStorage, setLocalStorage } from "../utils/storageUtils";
-import { fetchTeams } from "../services/teamsServices";
+import { fetchTeams, fetchTeamsByUser } from "../services/teamsServices";
 
 interface Team {
   id: string;
@@ -16,11 +16,11 @@ interface Team {
 
 interface TeamContextType {
   teams: Team[] | undefined;
-  activeTeam: Team | undefined;
+  activeTeam: Team | null;
   loading: boolean;
   error: string | null;
   handleActiveTeam: (teamId: string) => void;
-  getTeams: () => void;
+  getTeams: (userId: string) => void;
 }
 
 interface TeamContextProviderProps {
@@ -31,8 +31,8 @@ export const TeamContext = createContext({} as TeamContextType);
 
 export function TeamContextProvider({ children }: TeamContextProviderProps) {
   const [teams, setTeams] = useState<Team[] | undefined>(undefined);
-  const [activeTeam, setActiveTeam] = useState<Team | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [activeTeam, setActiveTeam] = useState<Team | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const handleActiveTeam = (teamId: string) => {
@@ -45,20 +45,40 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
     setActiveTeam(teamInfo);
   };
 
-  const getTeams = useCallback(async () => {
+  const validateTeams = (data: any): Team[] => {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format: Expected an array.");
+    }
+    return data;
+  };
+
+  const updateLocalStorage = (key: string, value: any) => {
+    try {
+      setLocalStorage(key, value);
+    } catch (error) {
+      console.error(`Failed to update localStorage for key: ${key}`, error);
+    }
+  };
+
+  const getTeams = useCallback(async (userId: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetchTeams();
-      const fetchedTeams = response.data;
+      const response = await fetchTeamsByUser(userId);
+      const fetchedTeams = validateTeams(response.data);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (!Array.isArray(fetchedTeams)) {
-        throw new Error("Invalid data format received");
+      if (fetchedTeams.length === 0) {
+        setTeams([]);
+        setActiveTeam(null);
+        updateLocalStorage("@whats-new:active-team", null);
+        console.warn("No teams found for the user.");
+        return;
       }
 
       setTeams(fetchedTeams);
-      setLocalStorage("@whats-new:teams", fetchedTeams);
+      updateLocalStorage("@whats-new:teams", fetchedTeams);
 
       const storedActiveTeam = getLocalStorage(
         "@whats-new:active-team"
@@ -66,9 +86,9 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
       const initialTeam = storedActiveTeam || fetchedTeams[0];
 
       setActiveTeam(initialTeam);
-      setLocalStorage("@whats-new:active-team", initialTeam);
-    } catch (err: any) {
-      console.error("Failed to fetch teams:", err.message || err);
+      updateLocalStorage("@whats-new:active-team", initialTeam);
+    } catch (error: any) {
+      console.error("Failed to fetch teams:", error.message || error);
       setError("Error fetching teams. Please try again later.");
     } finally {
       setLoading(false);
@@ -76,7 +96,11 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
   }, []);
 
   useEffect(() => {
-    getTeams();
+    const user = getLocalStorage<{ id: string } | null>("@whats-new:user");
+
+    if (user && "id" in user) {
+      getTeams(user.id as string);
+    }
   }, [getTeams]);
 
   return (

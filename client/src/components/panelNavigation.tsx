@@ -4,6 +4,7 @@ import {
   House,
   Info,
   List,
+  Plus,
   SignOut,
   User,
   Users,
@@ -86,10 +87,6 @@ export function PanelNavigation() {
     };
   }, []);
 
-  if (!teams || !activeTeam) {
-    return <p>fodeu</p>;
-  }
-
   return (
     <>
       {/* Desktop Navigation */}
@@ -103,22 +100,32 @@ export function PanelNavigation() {
         </h3>
 
         <div className="relative">
-          <button
-            onClick={() => setShowingTeams(!showingTeams)}
-            className="w-full h-10 flex items-center justify-center cursor-pointer group"
-          >
-            <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-vibrant-red">
-              <span className="font-bold">{activeTeam?.name}</span>
-            </div>
-            <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-vibrant-red">
-              <CaretLeft
-                size={22}
-                weight="bold"
-                fill="white"
-                className="duration-200 group-hover:-rotate-90 "
-              />
-            </div>
-          </button>
+          {teams && teams.length > 0 ? (
+            <button
+              onClick={() => setShowingTeams(!showingTeams)}
+              className="w-full h-10 flex items-center justify-center cursor-pointer group"
+            >
+              <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-vibrant-red">
+                <span className="font-bold">{activeTeam?.name}</span>
+              </div>
+              <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-vibrant-red">
+                <CaretLeft
+                  size={22}
+                  weight="bold"
+                  fill="white"
+                  className="duration-200 group-hover:-rotate-90 "
+                />
+              </div>
+            </button>
+          ) : (
+            <Link
+              to="/panel/teams"
+              className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-vibrant-red rounded-md duration-200 hover:bg-vibrant-red/50"
+            >
+              <span className="font-bold">Create a team</span>
+              <Plus size={22} />
+            </Link>
+          )}
 
           {showingTeams && (
             <div className="border border-tertiary/20 dark:border-tertiary h-auto absolute flex flex-col items-center justify-center top-full right-0 left-0 z-100 rounded-md shadow-md bg-light dark:bg-dark">

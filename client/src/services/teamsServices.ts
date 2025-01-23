@@ -21,6 +21,15 @@ export const fetchTeams = async () => {
   }
 };
 
+export const fetchTeamsByUser = async (userId: string) => {
+  try {
+    return await axiosInstance.get("/teams/user", { params: { userId } });
+  } catch (error) {
+    console.error("Error fetching teams:", error);
+    throw new Error("Failed to fetch teams");
+  }
+};
+
 export const fetchMembers = async (teamId: string) => {
   try {
     return await axiosInstance.get("/teams/members", { params: { teamId } });
@@ -92,5 +101,16 @@ export const revokeInvitation = async (inviteId: string) => {
   } catch (error) {
     console.log("Error on revoke user invite: ", error);
     throw new Error("Failed on revoke member invite");
+  }
+};
+
+export const removeMember = async (teamId: string, memberId: string) => {
+  try {
+    return await axiosInstance.delete("/teams/member", {
+      data: { teamId, memberId },
+    });
+  } catch (error) {
+    console.log("Error on remove user: ", error);
+    throw new Error("Failed on remove member");
   }
 };

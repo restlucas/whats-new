@@ -15,8 +15,18 @@ interface MemberInvitations {
   createdAt: string;
 }
 
-export function InviteMembers() {
-  const { activeTeam } = useContext(TeamContext);
+interface SelectedTeamProps {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+}
+
+export function InviteMembers({
+  selectedTeam,
+}: {
+  selectedTeam: SelectedTeamProps;
+}) {
   const [userEmail, setUserEmail] = useState<string>("");
   const [memberInvitations, setMemberInvitations] = useState<
     MemberInvitations[] | []
@@ -26,35 +36,12 @@ export function InviteMembers() {
 
   const getInvitations = async () => {
     setLoadingInvitations(true);
-    const teamId = activeTeam ? activeTeam.id : "123";
+    const teamId = selectedTeam ? selectedTeam.id : "123";
     const response = await getMemberInvitations(teamId);
 
     setMemberInvitations(response.data);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setLoadingInvitations(false);
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    if (activeTeam && userEmail) {
-      try {
-        await sendInvitation(activeTeam.id, userEmail);
-        alert("Usuário convidado com sucesso!");
-        getInvitations();
-      } catch (error) {
-        alert(`${error}`);
-      }
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoading(false);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setUserEmail(value);
   };
 
   const cancelInvite = async (inviteId: string, userEmail: string) => {
@@ -66,9 +53,32 @@ export function InviteMembers() {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setUserEmail(value);
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (selectedTeam && userEmail) {
+      try {
+        await sendInvitation(selectedTeam.id, userEmail);
+        alert("Usuário convidado com sucesso!");
+        getInvitations();
+      } catch (error) {
+        alert(`${error}`);
+      }
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(false);
+  };
+
   useEffect(() => {
-    if (activeTeam) getInvitations();
-  }, []);
+    if (selectedTeam) getInvitations();
+  }, [selectedTeam]);
 
   return (
     <div className="py-6 border rounded-xl border-tertiary/20 dark:border-tertiary flex flex-col gap-2">
@@ -77,7 +87,7 @@ export function InviteMembers() {
           <h2 className="text-lg font-semibold leading-4">
             Invite members to{" "}
             <span className="font-bold text-vibrant-red">
-              {activeTeam?.name || ""}
+              {selectedTeam.name || ""}
             </span>
           </h2>
           <span className="text-sm">
