@@ -6,6 +6,7 @@ interface OptionsButtonProps {
   icon: any;
   options: any;
   disabled?: boolean;
+  loading: boolean;
   handleRole: (memberId: string, roleValue: string) => void;
 }
 
@@ -15,6 +16,7 @@ export function OptionsButton({
   icon,
   options,
   disabled,
+  loading,
   handleRole,
 }: OptionsButtonProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,11 +67,19 @@ export function OptionsButton({
           ${disabled && "pointer-events-none  text-primary/50 dark:text-white/50"}
           `}
       >
-        <span className="font-semibold">
-          {selectedValue.charAt(0).toUpperCase() +
-            selectedValue.slice(1).toLowerCase()}
-        </span>
-        {icon}
+        {loading ? (
+          <div className="flex w-full items-center justify-center">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          </div>
+        ) : (
+          <>
+            <span className="font-semibold">
+              {selectedValue.charAt(0).toUpperCase() +
+                selectedValue.slice(1).toLowerCase()}
+            </span>
+            {icon}
+          </>
+        )}
       </button>
 
       {isVisible && (

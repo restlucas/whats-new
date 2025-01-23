@@ -1,6 +1,6 @@
 import { Clock } from "@phosphor-icons/react";
 import dayjs from "dayjs";
-import { News } from "../../../hooks/useFetchNews";
+import { News } from "@src/hooks/useFetchNews";
 import { FetchNextPageOptions } from "@tanstack/react-query";
 
 interface NewsItem {

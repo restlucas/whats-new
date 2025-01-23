@@ -20,6 +20,28 @@ export default {
         "secondary-dark": "#c6c6c6",
         tertiary: "#303945",
       },
+      keyframes: {
+        "entrance-right": {
+          "0%": {
+            transform: "translateX(100vw)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
+        "exit-right": {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(100vw)",
+          },
+        },
+      },
+      animation: {
+        "fade-in": "entrance-right .15s ease-in",
+        "fade-out": "exit-right .15s ease-out",
+      },
     },
     fontFamily: {
       body: ["Titillium Web"],

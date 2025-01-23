@@ -11,7 +11,7 @@
     /* Path Aliases */
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"]
+      "@src/*": ["src/*"]
     },
 
     /* Module Resolution */

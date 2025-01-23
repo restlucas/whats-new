@@ -4,8 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { InviteMembers } from "./components/invite-members";
 import { Members } from "./components/members";
 import { CreateTeam } from "./components/create-team";
-import { UserContext } from "../../../contexts/UserContext";
-import { TeamContext } from "../../../contexts/TeamContext";
+import { TeamContext } from "@src/contexts/TeamContext";
 
 interface Member {
   role: string;
@@ -71,7 +70,7 @@ export function Teams() {
           </div>
 
           {Object.keys(selectedTeam).length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 items-start">
               {/* Members */}
               <Members teamId={selectedTeam.id} />
 

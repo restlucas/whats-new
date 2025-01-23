@@ -1,13 +1,19 @@
 import prisma from "../utils/db";
 import bcrypt from "bcryptjs";
 
+interface CreateUserData {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  invitationId: string;
+}
+
 const userService = {
-  async createUser(
-    name: string,
-    username: string,
-    email: string,
-    password: string
-  ) {
+  async createUser(data: CreateUserData) {
+    const { name, username, email, password, invitationId } = data;
+
     const userUsernameExist = await prisma.user.findFirst({
       where: {
         username,
@@ -30,7 +36,7 @@ const userService = {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    return await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         username,
@@ -38,6 +44,24 @@ const userService = {
         password: hashedPassword,
       },
     });
+
+    const invitationInfo = await prisma.invitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        status: "ACCEPTED",
+      },
+    });
+
+    await prisma.teamMember.create({
+      data: {
+        teamId: invitationInfo.teamId,
+        userId: user.id,
+      },
+    });
+
+    return user;
   },
 
   async getUserFavorites(userId: string) {

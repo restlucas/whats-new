@@ -1,4 +1,4 @@
-import { Input } from "@components/input";
+import { Input } from "@src/components/input";
 import {
   CaretDoubleLeft,
   CaretDoubleRight,

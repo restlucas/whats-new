@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import userService from "../services/userService";
 
@@ -6,15 +7,24 @@ export const createUser = async (
   req: Request,
   res: Response
 ): Promise<void | any> => {
-  const { name, username, email, password } = req.body;
+  const { token, ...rest } = req.body;
+  let invitationId = "";
+
+  if (token !== "") {
+    const decoded = jwt.verify(
+      token as string,
+      process.env.JWT_SECRET as string
+    );
+    invitationId = (decoded as any).invitationId;
+  }
+
+  const formattedData = {
+    ...rest,
+    invitationId,
+  };
 
   try {
-    const response = await userService.createUser(
-      name,
-      username,
-      email,
-      password
-    );
+    const response = await userService.createUser(formattedData);
 
     if ("error" in response) {
       return res.status(401).json({ message: response.error });

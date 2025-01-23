@@ -1,7 +1,9 @@
-import { OptionsButton } from "@components/button/options";
-import { CaretDown, UserMinus } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
-import { useMembers } from "../../../../hooks/useMembers";
+import { OptionsButton } from "@src/components/button/options";
+import { CaretDown } from "@phosphor-icons/react";
+import { useContext, useEffect, useState } from "react";
+import { useMembers } from "@src/hooks/useMembers";
+import { updateMemberRole } from "@src/services/teamsServices";
+import { UserContext } from "@src/contexts/UserContext";
 
 const roles = [
   {
@@ -17,7 +19,13 @@ export function Members({ teamId }: any) {
   const { members, getMembers } = useMembers();
   const [teamMembers, setTeamMembers] = useState<any>([]);
 
-  const handleMember = (memberId: string, roleValue: string) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingMemberId, setLoadingMemberId] = useState<string | null>(null);
+
+  const handleMember = async (memberId: string, roleValue: string) => {
+    setLoadingMemberId(memberId);
+    setIsLoading(true);
+
     let memberIndex = teamMembers.findIndex(
       (item: any) => item.user.id === memberId
     );
@@ -31,6 +39,19 @@ export function Members({ teamId }: any) {
     ];
 
     setTeamMembers(updatedTeamMembers);
+    const response = await updateMemberRole(
+      teamId,
+      updatedMember.user.id,
+      updatedMember.role
+    );
+
+    if (response.status === 201) {
+      alert("Função atualizada com sucesso!");
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setLoadingMemberId(null);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -60,10 +81,12 @@ export function Members({ teamId }: any) {
                 <div className="flex items-start justify-start gap-4">
                   <div className="w-9 h-9 rounded-full bg-tertiary/20 dark:bg-tertiary" />
                   <div className="flex flex-col items-start justify-start">
-                    <h5 className="font-semibold leading-4">
+                    <h5 className="text-xs md:text-base font-semibold leading-4">
                       {member.user.name}
                     </h5>
-                    <span className="text-sm">{member.user.email}</span>
+                    <span className="text-xs md:text-sm">
+                      {member.user.email}
+                    </span>
                   </div>
                 </div>
 
@@ -72,6 +95,8 @@ export function Members({ teamId }: any) {
                     selectedValue={member.role}
                     icon={<CaretDown size={18} />}
                     memberId={member.user.id}
+                    loading={loadingMemberId === member.user.id}
+                    disabled={false}
                     handleRole={handleMember}
                     options={roles}
                   />

@@ -47,7 +47,7 @@ model Invitation {
   id        String      @id @default(cuid())
   email     String
   teamId    String
-  status    InviteStatus @default(PENDING)
+  status    Invitationstatus @default(PENDING)
   createdAt DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id])
@@ -102,7 +102,7 @@ enum Role {
   OWNER
 }
 
-enum InviteStatus {
+enum Invitationstatus {
   PENDING
   ACCEPTED
   REJECTED

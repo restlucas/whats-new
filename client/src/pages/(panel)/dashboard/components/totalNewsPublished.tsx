@@ -1,4 +1,4 @@
-import { SimpleCard } from "@components/cards/simple";
+import { SimpleCard } from "@src/components/cards/simple";
 import { ArticleNyTimes } from "@phosphor-icons/react";
 
 export function TotalNewsPublished() {

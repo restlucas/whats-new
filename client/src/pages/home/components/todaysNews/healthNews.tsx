@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { News, useFetchNews } from "../../../../hooks/useFetchNews";
+import { News, useFetchNews } from "@src/hooks/useFetchNews";
 import dayjs from "dayjs";
 
 export function HealthNews({ country }: { country: string }) {

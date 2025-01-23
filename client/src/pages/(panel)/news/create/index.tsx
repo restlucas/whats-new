@@ -1,11 +1,8 @@
-import { categories } from "@components/header";
-import { Input } from "@components/input";
-import { SelectInput } from "@components/input/select";
+import { categories } from "@src/components/header";
+import { Input } from "@src/components/input";
+import { SelectInput } from "@src/components/input/select";
 import { useEffect, useState } from "react";
-import {
-  getLocalStorage,
-  setLocalStorage,
-} from "../../../../utils/storageUtils";
+import { getLocalStorage, setLocalStorage } from "@src/utils/storageUtils";
 import { Editor } from "./editor";
 
 interface NewsProps {

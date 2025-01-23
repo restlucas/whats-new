@@ -1,7 +1,7 @@
-import { useFetchNews } from "../../../../hooks/useFetchNews";
+import { useFetchNews } from "@src/hooks/useFetchNews";
 import { Clock } from "@phosphor-icons/react";
 import dayjs from "dayjs";
-import { Card } from "../../../../components/cards";
+import { Card } from "@src/components/cards";
 import { Link } from "react-router-dom";
 
 export function GeneralNews({ country }: { country: string }) {

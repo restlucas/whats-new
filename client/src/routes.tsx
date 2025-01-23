@@ -11,6 +11,7 @@ import { Support } from "./pages/(panel)/support";
 import { Profile } from "./pages/(panel)/profile";
 import { Teams } from "./pages/(panel)/teams";
 import { TeamContextProvider } from "./contexts/TeamContext";
+import { Error } from "./pages/error";
 
 export const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ export const AppRoutes = () => {
             <Helmet titleTemplate="%s | What's new?" />
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/error" element={<Error />} />
               <Route path="/" element={<Layout />}>
                 <Route path="" element={<Home />} />
               </Route>

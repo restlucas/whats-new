@@ -1,5 +1,5 @@
-import { HorizontalCard } from "../../../components/cards/horizontal";
-import { News, useFetchNews } from "../../../hooks/useFetchNews";
+import { HorizontalCard } from "@src/components/cards/horizontal";
+import { News, useFetchNews } from "@src/hooks/useFetchNews";
 
 export function TechNews() {
   const {

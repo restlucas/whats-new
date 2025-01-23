@@ -1,4 +1,4 @@
-import { TableCard } from "@components/cards/table";
+import { TableCard } from "@src/components/cards/table";
 import { Article } from "@phosphor-icons/react";
 
 const news = [

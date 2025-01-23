@@ -7,6 +7,11 @@ import {
   create,
   getAllTeamsByUser,
   getMembersByTeam,
+  getTeamInvitations,
+  makeInvitation,
+  revokeInvitation,
+  updateMemberRole,
+  validateInvitation,
 } from "../controllers/teamsController";
 
 const router = Router();
@@ -27,5 +32,11 @@ router.post("/news", authMiddleware, createNews);
 router.get("/teams", authMiddleware, getAllTeamsByUser);
 router.post("/teams", authMiddleware, create);
 router.get("/teams/members", getMembersByTeam);
+router.put("/teams/member/role", authMiddleware, updateMemberRole);
+
+router.get("/teams/invitations", authMiddleware, getTeamInvitations);
+router.post("/teams/invitations", authMiddleware, makeInvitation);
+router.delete("/teams/invitations", authMiddleware, revokeInvitation);
+router.get("/teams/invitations/validate", validateInvitation);
 
 export default router;

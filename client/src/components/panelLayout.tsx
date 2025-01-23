@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { Aside } from "./aside";
+import { PanelNavigation } from "./panelNavigation";
 import useAuthCheck from "../hooks/useAuth";
 
 export function PanelLayout() {
@@ -14,8 +14,8 @@ export function PanelLayout() {
   if (!isAuthenticated) return <Navigate to="/auth" />;
 
   return (
-    <div className="bg-light text-primary dark:text-light dark:bg-dark flex h-screen w-full divide-x-2 dark:divide-tertiary">
-      <Aside />
+    <div className="bg-light text-primary dark:text-light dark:bg-dark flex flex-col md:flex-row h-auto md:h-screen w-full md:divide-x-2 dark:divide-tertiary overflow-x-hidden">
+      <PanelNavigation />
       <main className="flex-grow py-8 px-4 overflow-auto">
         <Outlet />
       </main>

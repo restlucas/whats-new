@@ -1,8 +1,8 @@
-import { Input } from "@components/input";
+import { Input } from "@src/components/input";
 import { PlusCircle } from "@phosphor-icons/react";
 import { useContext, useState } from "react";
-import { UserContext } from "../../../../contexts/UserContext";
-import { useTeams } from "../../../../hooks/useTeams";
+import { UserContext } from "@src/contexts/UserContext";
+import { useTeams } from "@src/hooks/useTeams";
 
 export function CreateTeam() {
   const { newTeam, loading } = useTeams();

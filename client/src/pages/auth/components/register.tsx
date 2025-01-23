@@ -1,6 +1,16 @@
-import { FormEvent, useContext, useState } from "react";
-import { Input } from "../../../components/input";
-import { UserContext } from "../../../contexts/UserContext";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { Input } from "@src/components/input";
+import { UserContext } from "@src/contexts/UserContext";
+import { validateInvitation } from "@src/services/authServices";
+import { useNavigate } from "react-router-dom";
+
+interface RegisterProps {
+  params: {
+    token: string | null;
+    email: string | null;
+  };
+  handleAuth: (type: string) => void;
+}
 
 interface FormProps {
   name: string;
@@ -10,7 +20,9 @@ interface FormProps {
   confirmPassword: string;
 }
 
-export function Register({ handleAuth }: any) {
+export function Register({ params, handleAuth }: RegisterProps) {
+  const url = new URL(window.location.href);
+  const navigate = useNavigate();
   const [message, setMessage] = useState<{
     code: number;
     title: string;
@@ -22,8 +34,18 @@ export function Register({ handleAuth }: any) {
     password: "",
     confirmPassword: "",
   });
-
+  const [token, setToken] = useState<string>("");
   const { signUp } = useContext(UserContext);
+
+  const checkInvite = async (token: string) => {
+    const response = await validateInvitation(token);
+
+    if (response.data.message !== "Token is valid") {
+      url.search = "";
+      window.history.replaceState({}, "", url.toString());
+      navigate("/error?message=Invalid%20invitation");
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,10 +60,15 @@ export function Register({ handleAuth }: any) {
     e.preventDefault();
     setMessage(null);
 
+    const data = {
+      ...form,
+      token: token,
+    };
+
     if (form.password !== form.confirmPassword) {
       setMessage({ code: 400, title: "Passwords do not match" });
     } else {
-      const response = await signUp(form);
+      const response = await signUp(data);
 
       if (response.status === 401) {
         setMessage(response);
@@ -54,9 +81,24 @@ export function Register({ handleAuth }: any) {
 
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
+      url.search = "";
+      window.history.replaceState({}, "", url.toString());
       handleAuth("login");
     }
   };
+
+  useEffect(() => {
+    if (params.token && params.email) {
+      checkInvite(params.token);
+
+      setForm((prevState) => ({
+        ...prevState,
+        email: params.email || "",
+      }));
+      setToken(params.token);
+    }
+  }, []);
+
   return (
     <div className="h-auto flex flex-col">
       <h1 className="font-bold text-4xl text-gray-700 dark:text-light">

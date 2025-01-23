@@ -1,12 +1,6 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import axiosInstance from "../lib/axios";
-
-interface User {
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-}
+import { UserData } from "@src/contexts/UserContext";
 
 export const check = async () => {
   try {
@@ -76,7 +70,7 @@ export const logout = async () => {
   }
 };
 
-export const register = async (user: User) => {
+export const register = async (user: UserData) => {
   try {
     const response = await axiosInstance.post("/users", user, {
       headers: {
@@ -99,4 +93,12 @@ export const register = async (user: User) => {
       return { message: "Erro de rede", status: 500 };
     }
   }
+};
+
+export const validateInvitation = async (token: string) => {
+  return await axiosInstance.get("/teams/invitations/validate", {
+    params: {
+      token: token,
+    },
+  });
 };

@@ -1,6 +1,6 @@
 import { FormEvent, useContext, useState } from "react";
-import { Input } from "../../../components/input";
-import { UserContext } from "../../../contexts/UserContext";
+import { Input } from "@src/components/input";
+import { UserContext } from "@src/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 interface FormProps {

@@ -14,11 +14,12 @@ interface User {
   username: string;
 }
 
-interface UserData {
+export interface UserData {
   name: string;
   username: string;
   email: string;
   password: string;
+  token: string;
 }
 
 interface UserContextType {

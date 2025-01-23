@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import teamsService from "../services/teamsService";
 
@@ -39,6 +40,115 @@ export const getMembersByTeam = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
+    }
+  }
+};
+
+export const updateMemberRole = async (req: Request, res: Response) => {
+  try {
+    const { teamId, userId, roleValue } = req.body;
+
+    try {
+      const response = await teamsService.updateRole(
+        teamId as string,
+        userId as string,
+        roleValue as string
+      );
+      res.status(201).json(response);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao atualizar o papel:", error);
+    res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
+export const getTeamInvitations = async (req: Request, res: Response) => {
+  try {
+    const { teamId } = req.body;
+
+    try {
+      const response = await teamsService.getInvitations(teamId as string);
+      res.status(201).json(response);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao atualizar o papel:", error);
+    res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
+export const makeInvitation = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { teamId, userEmail } = req.body;
+
+  try {
+    const response = await teamsService.createInvite(
+      teamId as string,
+      userEmail as string
+    );
+
+    if ("error" in response) {
+      res.status(400).json({ error: response.error });
+      return;
+    }
+
+    res.status(201).json(response);
+  } catch (error: unknown) {
+    console.error("Unexpected error on create invite:", error);
+    res.status(500).json({ message: "Unexpected error occurred" });
+  }
+};
+
+export const revokeInvitation = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { inviteId } = req.body;
+
+  try {
+    const response = await teamsService.deleteInvite(inviteId as string);
+    res.status(201).json(response);
+  } catch (error: unknown) {
+    console.error("Unexpected error on create invite:", error);
+    res.status(500).json({ message: "Unexpected error occurred" });
+  }
+};
+
+export const validateInvitation = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { token } = req.query;
+
+  try {
+    const decoded = jwt.verify(
+      token as string,
+      process.env.JWT_SECRET as string
+    );
+
+    res.status(200).json({ message: "Token is valid", decoded });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.name === "TokenExpiredError") {
+        res
+          .status(400)
+          .json({ message: "Token expired", code: "TOKEN_EXPIRED" });
+      } else {
+        res
+          .status(400)
+          .json({ message: "Invalid token", code: "INVALID_TOKEN" });
+      }
+    } else {
+      res.status(500).json({ message: "An unexpected error occurred" });
     }
   }
 };

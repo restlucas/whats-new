@@ -29,3 +29,68 @@ export const fetchMembers = async (teamId: string) => {
     throw new Error("Failed to fetch members");
   }
 };
+
+export const updateMemberRole = async (
+  teamId: string,
+  userId: string,
+  roleValue: string
+) => {
+  try {
+    return await axiosInstance.put("/teams/member/role", {
+      teamId,
+      userId,
+      roleValue,
+    });
+  } catch (error) {
+    console.log("Error on updating member role: ", error);
+    throw new Error("Failed to update member role");
+  }
+};
+
+export const getMemberInvitations = async (teamId: string) => {
+  try {
+    return await axiosInstance.get("/teams/invitations", {
+      params: {
+        teamId,
+      },
+    });
+  } catch (error) {
+    console.log("Error on get member Invitations: ", error);
+    throw new Error("Failed to get member Invitations");
+  }
+};
+
+export const sendInvitation = async (teamId: string, userEmail: string) => {
+  try {
+    const response = await axiosInstance.post("/teams/invitations", {
+      teamId,
+      userEmail,
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      if (error.response.status === 400) {
+        throw new Error("Usuário já foi convidado.");
+      } else {
+        throw new Error(
+          "Falha ao enviar o convite. Tente novamente mais tarde."
+        );
+      }
+    } else if (error.request) {
+      throw new Error("Problema de conexão. Verifique sua internet.");
+    } else {
+      throw new Error("Tente novamente.");
+    }
+  }
+};
+
+export const revokeInvitation = async (inviteId: string) => {
+  try {
+    return await axiosInstance.delete("/teams/invitations", {
+      data: { inviteId },
+    });
+  } catch (error) {
+    console.log("Error on revoke user invite: ", error);
+    throw new Error("Failed on revoke member invite");
+  }
+};
