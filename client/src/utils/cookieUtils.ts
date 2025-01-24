@@ -3,10 +3,8 @@ export const setCookie = (name: string, value: any, days: number): void => {
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
   const expires = `expires=${date.toUTCString()}`;
 
-  // Set the secure property only if the protocol is HTTPS
   const secure = window.location.protocol === "https:" ? "Secure" : "";
 
-  // Configure cookie with security options
   document.cookie = `${name}=${JSON.stringify(value)}; ${expires}; path=/; ${secure}; HttpOnly; SameSite=Strict`;
 };
 

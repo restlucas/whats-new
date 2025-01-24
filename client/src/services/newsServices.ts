@@ -24,7 +24,7 @@ interface Article {
   id: string;
   title: string;
   description: string;
-  image: true;
+  image: string;
   content: string;
   country: string;
   category: string;
@@ -150,12 +150,8 @@ export const removeNews = async (newsId: string) => {
 };
 
 export const incrementViews = async (slug: string): Promise<void> => {
-  const params = {
+  await axiosInstance.post("/news/article/views", {
     slug,
     api_key: "a_super_secret_api_key",
-  };
-
-  await axiosInstance.post("/news/article/views", {
-    params,
   });
 };

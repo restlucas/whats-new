@@ -37,7 +37,7 @@ export function Home() {
             className="text-xl font-bold uppercase flex items-center justify-end gap-2 duration-100 hover:text-red hover:fill-red"
           >
             <ArrowRight size={20} weight="bold" />
-            <span>See all</span>
+            <span className="text-sm sm:text-base">See all</span>
           </Link>
         </div>
         <TechNews />

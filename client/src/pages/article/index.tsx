@@ -112,27 +112,27 @@ export function Article() {
               </div>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center justify-center gap-4 rounded-md px-4 py-2 border border-tertiary/20 dark:border-tertiary group"
+                className="flex items-center justify-center gap-4 rounded-md px-4 py-2 border border-tertiary/20 dark:border-tertiary duration-200 hover:border-red-vibrant hover:bg-red-vibrant group"
               >
-                <span className="text-sm font-semibold duration-200 group-hover:text-red-vibrant">
+                <span className="text-sm font-semibold duration-200 group-hover:text-white">
                   Share article
                 </span>
                 <ShareNetwork
                   size={18}
                   weight="bold"
-                  className="duration-200 group-hover:fill-red-vibrant"
+                  className="duration-200 group-hover:fill-white"
                 />
               </button>
             </div>
 
-            <div
-              className="overflow-hidden w-full h-[300px] rounded-xl flex items-center justify-center bg-cover bg-center bg-no-repeat shadow-lg"
-              style={{
-                backgroundImage: article?.image
-                  ? `url(${article.image})`
-                  : `url(./assets/tech.jpg)`,
-              }}
-            />
+            <div className="overflow-hidden w-full h-[300px] rounded-xl flex items-center justify-center shadow-lg">
+              <img
+                src={article?.image}
+                className="w-full h-full object-cover object-center"
+                loading="lazy"
+                alt="Image description"
+              />
+            </div>
 
             <div
               className="flex flex-col gap-3"
@@ -156,34 +156,39 @@ export function Article() {
                 </button>
               </div>
 
-              {Array.from({ length: 5 }).map((_, index) => {
-                return (
-                  <div
-                    className="w-full h-auto rounded-md p-4 border border-tertiary/20 dark:border-tertiary flex flex-col items-start gap-2 shadow-lg"
-                    key={index}
-                  >
-                    <div className="w-full flex items-center justify-between gap-2">
-                      <h3 className="font-semibold text-lg">
-                        Lucas Souza de Oliveira
-                      </h3>
-                      <span className="text-sm font-semibold">02/02/2025</span>
+              {article &&
+                article.comments.map((_, index) => {
+                  return (
+                    <div
+                      className="w-full h-auto rounded-md p-4 border border-tertiary/20 dark:border-tertiary flex flex-col items-start gap-2 shadow-lg"
+                      key={index}
+                    >
+                      <div className="w-full flex items-center justify-between gap-2">
+                        <h3 className="font-semibold text-lg">
+                          Lucas Souza de Oliveira
+                        </h3>
+                        <span className="text-sm font-semibold">
+                          02/02/2025
+                        </span>
+                      </div>
+                      <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing
+                        elit. Soluta velit sit voluptatum officia, deleniti fuga
+                        sapiente excepturi harum earum, temporibus consectetur
+                        nobis facere alias porro quia possimus! Aliquam,
+                        exercitationem illo!
+                      </p>
                     </div>
-                    <p>
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Soluta velit sit voluptatum officia, deleniti fuga
-                      sapiente excepturi harum earum, temporibus consectetur
-                      nobis facere alias porro quia possimus! Aliquam,
-                      exercitationem illo!
-                    </p>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
-              <div className="flex items-center justify-center w-full">
-                <button className="w-full md:w-1/6 rounded-md py-2 bg-red-vibrant duration-200 hover:bg-red-hover text-white font-bold">
-                  Load more
-                </button>
-              </div>
+              {article && article.comments.length > 0 && (
+                <div className="flex items-center justify-center w-full">
+                  <button className="w-full md:w-1/6 rounded-md py-2 bg-red-vibrant duration-200 hover:bg-red-hover text-white font-bold">
+                    Load more
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

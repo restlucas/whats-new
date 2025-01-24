@@ -214,6 +214,28 @@ const newsService = {
       },
     });
   },
+
+  async addView(articleSlug: string) {
+    const { views: viewsAmount } = await prisma.news.findFirstOrThrow({
+      where: {
+        slug: articleSlug,
+      },
+      select: {
+        views: true,
+      },
+    });
+
+    const totalViews = viewsAmount + 1;
+
+    return await prisma.news.update({
+      where: {
+        slug: articleSlug,
+      },
+      data: {
+        views: totalViews,
+      },
+    });
+  },
 };
 
 export default newsService;

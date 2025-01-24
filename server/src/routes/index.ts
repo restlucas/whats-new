@@ -8,6 +8,7 @@ import {
   getAllNews,
   getFullArticle,
   getResumeNewsByTeam,
+  incrementViews,
 } from "../controllers/newsController";
 import {
   create,
@@ -38,6 +39,7 @@ router.get("/news/team", authMiddleware, getResumeNewsByTeam);
 router.get("/news/article", getFullArticle);
 
 router.post("/news", authMiddleware, createNews);
+router.post("/news/article/views", incrementViews);
 
 router.delete("/news", authMiddleware, deleteNews);
 

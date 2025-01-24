@@ -58,7 +58,6 @@ import { Request, Response } from "express";
 import newsService from "../services/newsService";
 import { createSlug } from "../utils/slugify";
 
-// CRUD: create news
 export const createNews = async (req: Request, res: Response) => {
   const data = req.body;
 
@@ -94,7 +93,6 @@ export const deleteNews = async (req: Request, res: Response) => {
   }
 };
 
-// CRUD: get news
 export const getAllNews = async (req: Request, res: Response): Promise<any> => {
   const secretKey = req.query.api_key as string;
   const {
@@ -168,12 +166,29 @@ export const getFullArticle = async (
 
   try {
     if (secretKey !== process.env.SECRET_KEY) {
-      return res.status(403).json({ message: "Secret key invalid" });
+      res.status(403).json({ message: "Secret key invalid" });
     }
 
     const article = await newsService.getArticle(slug);
 
     res.status(201).json(article);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+};
+
+export const incrementViews = async (req: Request, res: Response) => {
+  const { slug, api_key }: { slug: string; api_key: string } = req.body;
+
+  try {
+    if (api_key !== process.env.SECRET_KEY) {
+      res.status(403).json({ message: "Secret key invalid" });
+    }
+
+    const response = await newsService.addView(slug);
+    res.status(201).json({ message: "" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });

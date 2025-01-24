@@ -20,10 +20,10 @@ export function HorizontalCard({
   author,
 }: HorizontalCardProps) {
   return (
-    <div className="bg-white dark:bg-dark shadow-md rounded-md p-4 grid grid-cols-[min-content_1fr] gap-4 h-[220px] group">
+    <div className="bg-white dark:bg-dark shadow-md rounded-md p-4 grid grid-cols-1 sm:grid-cols-[min-content_1fr] gap-4 h-auto sm:h-[220px] group">
       <Link to={`article/${slug}`}>
         <div
-          className={`w-[188px] h-[188px] overflow-hidden flex items-center justify-center rounded-md bg-cover bg-center bg-no-repeat`}
+          className={`w-full sm:w-[188px] h-[188px] overflow-hidden flex items-center justify-center rounded-md bg-cover bg-center bg-no-repeat`}
           style={{
             backgroundImage: image ? `url(${image})` : `url(./assets/tech.jpg)`,
           }}
@@ -47,10 +47,10 @@ export function HorizontalCard({
           <Link
             target="_blank"
             to={`article/${slug}`}
-            className="text-sm font-bold uppercase flex items-center justify-end gap-2 duration-100 hover:text-red hover:fill-red"
+            className="font-bold uppercase flex items-center justify-end gap-2 duration-100 hover:text-red hover:fill-red"
           >
             <ArrowRight size={20} weight="bold" />
-            <span className="text-nowrap">Read more</span>
+            <span className="text-nowrap text-xs sm:text-sm">Read more</span>
           </Link>
         </div>
       </div>
