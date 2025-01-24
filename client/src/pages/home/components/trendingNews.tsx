@@ -78,7 +78,7 @@ export function TrendingNews() {
                   <span>
                     by{" "}
                     <span className="font-bold cursor-pointer duration-100 hover:underline">
-                      {article.user.name}
+                      {article.teamMember.user.name}
                     </span>
                   </span>
                 </div>
@@ -96,7 +96,7 @@ export function TrendingNews() {
               image={article.image}
               title={article.title}
               date={dayjs(article.createdAt).format("DD MMMM, YYYY")}
-              author={article.user.name}
+              author={article.teamMember.user.name}
             />
           );
         }

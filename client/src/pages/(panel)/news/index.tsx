@@ -40,7 +40,7 @@ export function News() {
             </div>
           </div>
 
-          <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-2">
+          <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-2 mb-20">
             {selectedOption.component}
           </div>
         </div>

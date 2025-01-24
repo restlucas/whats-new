@@ -2,8 +2,9 @@ import {
   FetchNextPageOptions,
   keepPreviousData,
   useInfiniteQuery,
+  useQuery,
 } from "@tanstack/react-query";
-import { fetchNews } from "../services/newsServices";
+import { fetchNews, fetchNewsByTeam } from "../services/newsServices";
 
 interface FetchOptions {
   queryName: string;
@@ -23,10 +24,18 @@ export interface News {
   createdAt: string;
   updatedAt: string;
   userId?: string;
-  user: {
-    id: string;
-    name: string;
+  teamMember: {
+    user: {
+      id: string;
+      name: string;
+    };
   };
+}
+
+export interface FilterProps {
+  title: string;
+  category: string;
+  status: string;
 }
 
 export interface FetchResponse {
@@ -65,5 +74,36 @@ export const useFetchNews = ({
     loading: isFetching,
     error: isError ? (error?.message ?? "Error fetching news") : null,
     fetchNextPage,
+  };
+};
+
+export const useFetchBasicNews = (
+  teamId: string,
+  page: number = 1,
+  pageSize: number = 10,
+  filters: FilterProps
+) => {
+  const queryOptions = { teamId, page, pageSize, filters };
+
+  const shouldFetch = filters.title.length === 0 || filters.title.length > 3;
+
+  const { status, data, error, isFetching, refetch } = useQuery({
+    queryKey: ["newsByTeam", queryOptions],
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return await fetchNewsByTeam(queryOptions);
+    },
+    enabled: teamId !== "" && shouldFetch,
+    placeholderData: keepPreviousData,
+    staleTime: 600000,
+    gcTime: 1200000,
+  });
+
+  return {
+    status,
+    news: data,
+    error,
+    isFetching,
+    refetch,
   };
 };

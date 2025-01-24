@@ -42,7 +42,7 @@ export function TechNews() {
               title={news.title}
               description={news.description}
               date={news.createdAt}
-              author={news.user.name}
+              author={news.teamMember.user.name}
             />
           </div>
         );

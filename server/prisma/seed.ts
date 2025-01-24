@@ -1,11 +1,15 @@
 import {
   PrismaClient,
   News as PrismaNews,
+  Team as PrismaTeam,
+  TeamMember as PrismaTeamMember,
   User as PrismaUser,
   Favorite as PrismaFavorite,
+  Role,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
+import { createSlug } from "../src/utils/slugify";
 
 const prisma = new PrismaClient();
 
@@ -28,7 +32,22 @@ async function getRandomImageUrl() {
   return url;
 }
 
-async function getRandomRow(): Promise<PrismaUser | null> {
+async function getRandomTeamMemberRow(): Promise<PrismaTeamMember | null> {
+  const totalRecords = await prisma.team.count();
+
+  if (totalRecords === 0) return null;
+
+  const randomIndex = Math.floor(Math.random() * totalRecords);
+
+  const randomRow = await prisma.teamMember.findMany({
+    take: 1,
+    skip: randomIndex,
+  });
+
+  return randomRow[0];
+}
+
+async function getRandomUserRow(): Promise<PrismaUser | null> {
   const totalRecords = await prisma.user.count();
 
   if (totalRecords === 0) return null;
@@ -68,6 +87,48 @@ async function createUser() {
   });
 }
 
+async function createTeam() {
+  const teams = [];
+  const users = await prisma.user.findMany();
+
+  if (!users.length) {
+    throw new Error(
+      "Nenhum usuário encontrado. Crie usuários antes de gerar times."
+    );
+  }
+
+  const teamCount = 6;
+
+  const getRandomRole = () => {
+    const roles: Role[] = ["READER", "EDITOR", "OWNER"];
+    return faker.helpers.arrayElement(roles);
+  };
+
+  const selectRandomUsers = (users: any[], min = 2, max = 6) => {
+    const teamSize = faker.number.int({ min, max });
+    const shuffledUsers = faker.helpers.shuffle(users); // Embaralha os usuários
+    const selectedUsers = shuffledUsers.slice(0, teamSize);
+
+    return selectedUsers.map((user) => ({
+      userId: user.id,
+      role: getRandomRole(), // Seleciona um papel aleatório
+    }));
+  };
+
+  for (let i = 0; i < teamCount; i++) {
+    const teamName = faker.company.name();
+    const team = await prisma.team.create({
+      data: {
+        name: teamName,
+        members: {
+          create: selectRandomUsers(users), // Adiciona membros aleatórios ao time
+        },
+      },
+      include: { members: true },
+    });
+  }
+}
+
 // Função para criar notícias
 async function createNews(country: string): Promise<PrismaNews[]> {
   const news: PrismaNews[] = []; // Tipando explicitamente o array como PrismaNews[]
@@ -80,19 +141,23 @@ async function createNews(country: string): Promise<PrismaNews[]> {
       const likes = faker.number.int({ min: 10, max: 500 }); // Likes aleatórios
       const image = await getRandomImageUrl();
 
-      const { id: userId } = (await getRandomRow()) as PrismaUser;
+      const slug = createSlug(title);
+
+      const { id: teamMemberId } =
+        (await getRandomTeamMemberRow()) as PrismaTeamMember;
 
       const newsItem = await prisma.news.create({
         data: {
           image,
           title,
+          slug,
           description,
           content,
           views,
           likes,
           country,
           category,
-          userId,
+          teamMemberId,
         },
       });
 
@@ -107,7 +172,7 @@ async function createFavorites(newsList: PrismaNews[]) {
   const favoriteNews: PrismaFavorite[] = [];
   const randomNews = faker.helpers.shuffle(newsList).slice(0, 5); // Favoritar 5 notícias aleatórias
 
-  const { id: userId } = (await getRandomRow()) as PrismaUser;
+  const { id: userId } = (await getRandomUserRow()) as PrismaUser;
 
   for (const news of randomNews) {
     const favorite = await prisma.favorite.create({
@@ -132,6 +197,9 @@ async function seedDatabase() {
       const user = await createUser();
       users.push(user);
     }
+
+    // Criação de 6 times
+    await createTeam();
 
     for (const country of countries) {
       const newsList = await createNews(country);

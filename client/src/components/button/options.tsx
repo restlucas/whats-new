@@ -70,7 +70,8 @@ export function OptionsButton({
       >
         {loading ? (
           <div className="flex w-full items-center justify-center">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            {/* <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> */}
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-vibrant-red border-t-transparent" />
           </div>
         ) : (
           <>

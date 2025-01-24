@@ -1,9 +1,17 @@
 import { categories } from "@src/components/header";
 import { Input } from "@src/components/input";
 import { SelectInput } from "@src/components/input/select";
-import { useEffect, useState } from "react";
-import { getLocalStorage, setLocalStorage } from "@src/utils/storageUtils";
+import { useContext, useEffect, useState } from "react";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from "@src/utils/storageUtils";
 import { Editor } from "./editor";
+import { TeamContext } from "@src/contexts/TeamContext";
+import { UserContext } from "@src/contexts/UserContext";
+import { createNews } from "@src/services/newsServices";
+import { useNavigate } from "react-router-dom";
 
 interface NewsProps {
   title: string;
@@ -13,6 +21,9 @@ interface NewsProps {
 }
 
 export function Create() {
+  const navigate = useNavigate();
+  const { activeTeam } = useContext(TeamContext);
+  const { user } = useContext(UserContext);
   const [form, setForm] = useState<NewsProps>({
     title: "",
     description: "",
@@ -38,6 +49,19 @@ export function Create() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (activeTeam && user) {
+      const response = await createNews({
+        fields: form,
+        teamId: activeTeam?.id,
+        userId: user.id,
+      });
+
+      if (response.status === 201) {
+        await removeLocalStorage("@whats-new:draft-news-form");
+        alert("News created successfully!");
+        navigate(0);
+      }
+    }
   };
 
   useEffect(() => {
@@ -58,7 +82,7 @@ export function Create() {
     <div>
       <h2 className="font-bold mb-10">Fill in all the fields on the form</h2>
       <form id="createNews" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Input
             id="title"
             name="title"
@@ -76,7 +100,7 @@ export function Create() {
             handleChange={handleChange}
           />
 
-          <div className="row-start-2 col-span-2">
+          <div className="md:row-start-2 md:col-span-2">
             <Input
               id="description"
               name="description"
@@ -87,7 +111,7 @@ export function Create() {
             />
           </div>
 
-          <div className="row-start-3 col-span-full flex flex-col gap-1">
+          <div className="md:row-start-3 col-span-full flex flex-col gap-1">
             <span className="font-semibold">Content</span>
             <div className="border rounded-md border-tertiary/20 dark:border-slate-600 bg-white dark:bg-[#3c4856]">
               <Editor content={form.content} onChange={handleContent} />

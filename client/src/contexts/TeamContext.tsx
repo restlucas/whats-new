@@ -8,7 +8,7 @@ import {
 import { getLocalStorage, setLocalStorage } from "../utils/storageUtils";
 import { fetchTeams, fetchTeamsByUser } from "../services/teamsServices";
 
-interface Team {
+export interface Team {
   id: string;
   name: string;
   createdAt: string;

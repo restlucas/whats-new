@@ -2,7 +2,12 @@ import { Router } from "express";
 import authMiddleware from "../middlewares/authMiddleware";
 import { createUser } from "../controllers/userController";
 import { check, login, logout } from "../controllers/authController";
-import { createNews, getAllNews } from "../controllers/newsController";
+import {
+  createNews,
+  deleteNews,
+  getAllNews,
+  getResumeNewsByTeam,
+} from "../controllers/newsController";
 import {
   create,
   getAllTeamsByUser,
@@ -28,8 +33,11 @@ router.post("/users", createUser);
 
 // News crud
 router.get("/news", getAllNews);
+router.get("/news/team", getResumeNewsByTeam);
 
 router.post("/news", authMiddleware, createNews);
+
+router.delete("/news", authMiddleware, deleteNews);
 
 // Teams crud
 router.get("/teams", authMiddleware, getAllTeamsByUser);

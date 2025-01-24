@@ -100,7 +100,7 @@ export function GeneralNews({ country }: { country: string }) {
                   <span>
                     by{" "}
                     <span className="font-bold cursor-pointer duration-100 hover:underline">
-                      {mainArticle.user.name}
+                      {mainArticle.teamMember.user.name}
                     </span>
                   </span>
                 </div>
@@ -123,7 +123,7 @@ export function GeneralNews({ country }: { country: string }) {
                   title={article.title}
                   description={article.description}
                   date={dayjs(article.createdAt).format("DD MMMM, YYYY")}
-                  author={article.user.name}
+                  author={article.teamMember.user.name}
                 />
               </div>
             );

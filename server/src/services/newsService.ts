@@ -10,23 +10,40 @@ interface GetAllNewsParams {
   sortBy: string;
 }
 
+interface CreateNewsProps {
+  fields: {
+    title: string;
+    slug: string;
+    description: string;
+    category: string;
+    content: string;
+  };
+  teamId: string;
+  userId: string;
+}
+
 const newsService = {
-  async createNews(
-    title: string,
-    content: string,
-    description: string,
-    country: string,
-    category: string,
-    userId: string
-  ) {
+  async createNews(data: CreateNewsProps) {
+    const { fields, teamId, userId } = data;
+
+    const { id: teamMemberId } = await prisma.teamMember.findUniqueOrThrow({
+      where: {
+        userId_teamId: {
+          userId,
+          teamId,
+        },
+      },
+    });
+
     return prisma.news.create({
       data: {
-        title,
-        content,
-        userId,
-        description,
-        country,
-        category,
+        title: fields.title,
+        slug: fields.slug,
+        content: fields.content,
+        description: fields.description,
+        country: "US",
+        category: fields.category,
+        teamMemberId: teamMemberId,
       },
     });
   },
@@ -38,12 +55,10 @@ const newsService = {
     size,
     sortBy,
   }: GetAllNewsParams) {
-    // Construir os filtros para a consulta
     const filters: any = {};
     if (country) filters.country = country;
     if (category) filters.category = category;
 
-    // Definir a ordem de acordo com o parâmetro sortBy
     let orderBy: any = {};
     if (sortBy === "publishedAt") {
       orderBy = { createdAt: "desc" };
@@ -53,28 +68,29 @@ const newsService = {
       orderBy = { views: "desc" };
     }
 
-    // Consultar as notícias com os filtros, ordenação e paginação
     const news = await prisma.news.findMany({
       where: filters,
       orderBy: orderBy,
-      skip: (page - 1) * size, // Pula os itens da página anterior
-      take: size, // Limita o número de resultados por página
+      skip: (page - 1) * size,
+      take: size,
       include: {
-        user: {
+        teamMember: {
           select: {
-            id: true,
-            name: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         },
       },
     });
 
-    // Contar o número total de notícias que atendem aos critérios de filtro
     const total = await prisma.news.count({
       where: filters,
     });
 
-    // Calcular a próxima página
     const nextPage = page * size < total ? page + 1 : null;
 
     return {
@@ -82,6 +98,77 @@ const newsService = {
       total,
       nextPage,
     };
+  },
+
+  async getNewsByTeam(
+    teamId: string,
+    filters: { title: string; category: string },
+    skip: number,
+    take: number
+  ) {
+    return await prisma.news.findMany({
+      where: {
+        ...(filters.title &&
+          filters.title !== "" && {
+            title: {
+              contains: filters.title,
+            },
+          }),
+        ...(filters.category &&
+          filters.category !== "" && {
+            category: filters.category,
+          }),
+        teamMember: {
+          team: {
+            id: teamId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        category: true,
+        createdAt: true,
+      },
+      skip,
+      take,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  },
+
+  async countNewsByTeam(
+    teamId: string,
+    filters: { title: string; category: string }
+  ) {
+    return await prisma.news.count({
+      where: {
+        ...(filters.title &&
+          filters.title !== "" && {
+            title: {
+              contains: filters.title,
+            },
+          }),
+        ...(filters.category &&
+          filters.category !== "" && {
+            category: filters.category,
+          }),
+        teamMember: {
+          teamId: teamId,
+        },
+      },
+    });
+  },
+
+  async removeNews(newsId: string) {
+    return await prisma.news.delete({
+      where: {
+        id: newsId,
+      },
+    });
   },
 };
 

@@ -22,6 +22,26 @@ export default {
         tertiary: "#303945",
       },
       keyframes: {
+        "fade-y-normal": {
+          "0%": {
+            transform: "translateY(-10px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+        },
+        "fade-x-normal": {
+          "0%": {
+            transform: "translateX(10px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateX(0)",
+            opacity: "1",
+          },
+        },
         "fade-in": {
           "0%": {
             transform: "translateX(60px)",
@@ -53,6 +73,8 @@ export default {
         "fade-in": "entrance-right .15s ease-in",
         "fade-out": "exit-right .15s ease-out",
         "fade-entrance": "fade-in .35s ease-in-out",
+        "fade-yaxis": "fade-y-normal .25s ease-in-out",
+        "fade-xaxis": "fade-x-normal .25s ease-in-out",
       },
     },
     fontFamily: {

@@ -56,25 +56,41 @@
 
 import { Request, Response } from "express";
 import newsService from "../services/newsService";
+import { createSlug } from "../utils/slugify";
 
 // CRUD: create news
 export const createNews = async (req: Request, res: Response) => {
-  const { title, content, userId, description, country, category } = req.body;
+  const data = req.body;
+
+  const slug = createSlug(data.fields.title);
+
+  const formattedData = {
+    ...data,
+    fields: {
+      ...data.fields,
+      slug,
+    },
+  };
 
   try {
-    const news = await newsService.createNews(
-      title,
-      content,
-      userId,
-      description,
-      country,
-      category
-    );
-    res.status(201).json(news);
+    const response = await newsService.createNews(formattedData);
+    res.status(201).json(response);
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     }
+  }
+};
+
+export const deleteNews = async (req: Request, res: Response) => {
+  const { newsId } = req.body;
+
+  try {
+    const response = await newsService.removeNews(newsId as string);
+    res.json({ message: "News delete successfully", code: 200 });
+  } catch (error: unknown) {
+    console.error("Unexpected error on delete news:", error);
+    res.status(500).json({ message: "Unexpected error occurred" });
   }
 };
 
@@ -102,6 +118,40 @@ export const getAllNews = async (req: Request, res: Response): Promise<any> => {
       sortBy: sortBy as string,
     });
     res.status(201).json(newsList);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+};
+
+export const getResumeNewsByTeam = async (req: Request, res: Response) => {
+  const { teamId, page = 1, pageSize = 10, filters } = req.query;
+
+  const pageNumber = parseInt(page as string, 10);
+  const pageSizeNumber = parseInt(pageSize as string, 10);
+
+  const skip = (pageNumber - 1) * pageSizeNumber;
+  const take = pageSizeNumber;
+
+  try {
+    const totalNews = await newsService.countNewsByTeam(
+      teamId as string,
+      filters as { title: string; category: string }
+    );
+    const news = await newsService.getNewsByTeam(
+      teamId as string,
+      filters as { title: string; category: string },
+      skip as number,
+      take as number
+    );
+
+    res.json({
+      totalNews,
+      news,
+      totalPages: Math.ceil(totalNews / pageSizeNumber),
+      currentPage: page,
+    });
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });

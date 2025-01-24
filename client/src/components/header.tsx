@@ -17,32 +17,6 @@ export function Header() {
   const isAuthenticated = useAuthCheck();
   const [searchParams] = useSearchParams();
 
-  // const navigate = useNavigate();
-  // const dropdownRef = useRef<HTMLDivElement>(null);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // const toggleDropdown = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
-
-  // const handleClickOutside = (event: any) => {
-  //   if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-  //     setIsDropdownOpen(false);
-  //   }
-  // };
-
-  // const handleNavigation = (category: string) => {
-  //   setIsDropdownOpen(false);
-  //   navigate(`/search?category=${category}`);
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
-
   return (
     <header className="dark:text-white text-primary py-6 flex items-center justify-between mx-8 md:mx-12 xl:mx-36">
       <div className="h-9 flex items-center justify-start gap-4 2xl:gap-16">
