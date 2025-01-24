@@ -10,7 +10,7 @@ export function Dashboard() {
     <>
       <Helmet title="Dashboard" />
       <section className="w-full h-full flex flex-col gap-8">
-        <h1 className="text-vibrant-red font-bold text-2xl">Dashboard</h1>
+        <h1 className="text-red-vibrant font-bold text-2xl">Dashboard</h1>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-4">
             <div className="grid md:grid-cols-3 gap-4">

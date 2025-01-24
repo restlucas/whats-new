@@ -14,7 +14,7 @@ export function GeneralNews({ country }: { country: string }) {
     queryOptions: { category: "general", pageSize: 4 },
   });
 
-  const mainArticle = generalNews.pop();
+  const mainArticle = generalNews.shift();
   const secondaryArticles = generalNews;
 
   if (loading)
@@ -65,7 +65,7 @@ export function GeneralNews({ country }: { country: string }) {
       <div className="flex items-center justify-start">
         <Link
           to="/search?category=general"
-          className="font-bold bg-vibrant-red text-white text-sm rounded-md py-2 px-4"
+          className="font-bold bg-red-vibrant text-white text-sm rounded-md py-2 px-4"
         >
           General
         </Link>
@@ -74,19 +74,23 @@ export function GeneralNews({ country }: { country: string }) {
         {/* Main news */}
         {mainArticle && (
           <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-[min-content_1fr] h-full gap-2 lg:gap-10 overflow-hidden group">
-            <div
-              className="overflow-hidden w-full lg:w-[500px] h-[300px] rounded-xl flex items-center justify-center bg-cover bg-center bg-no-repeat shadow-md"
-              style={{
-                backgroundImage: mainArticle.image
-                  ? `url(${mainArticle.image})`
-                  : `url(./assets/tech.jpg)`,
-              }}
-            />
+            <Link to={`article/${mainArticle.slug}`}>
+              <div
+                className="overflow-hidden w-full lg:w-[500px] h-[300px] rounded-xl flex items-center justify-center bg-cover bg-center bg-no-repeat shadow-md"
+                style={{
+                  backgroundImage: mainArticle.image
+                    ? `url(${mainArticle.image})`
+                    : `url(./assets/tech.jpg)`,
+                }}
+              />
+            </Link>
 
             <div className="flex flex-col gap-6">
-              <h2 className="font-bold text-3xl cursor-pointer duration-100 hover:underline">
-                {mainArticle.title}
-              </h2>
+              <Link to={`article/${mainArticle.slug}`}>
+                <h2 className="font-bold text-3xl cursor-pointer duration-100 hover:underline">
+                  {mainArticle.title}
+                </h2>
+              </Link>
 
               <div className="flex items-center justify-start gap-8">
                 <div className="flex items-center justify-start gap-2">
@@ -120,6 +124,7 @@ export function GeneralNews({ country }: { country: string }) {
               <div key={article.id}>
                 <Card
                   image={article.image}
+                  slug={article.slug}
                   title={article.title}
                   description={article.description}
                   date={dayjs(article.createdAt).format("DD MMMM, YYYY")}

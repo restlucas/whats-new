@@ -12,6 +12,7 @@ import { Profile } from "./pages/(panel)/profile";
 import { Teams } from "./pages/(panel)/teams";
 import { TeamContextProvider } from "./contexts/TeamContext";
 import { Error } from "./pages/error";
+import { Article } from "./pages/article";
 
 export const AppRoutes = () => {
   return (
@@ -25,6 +26,7 @@ export const AppRoutes = () => {
               <Route path="/error" element={<Error />} />
               <Route path="/" element={<Layout />}>
                 <Route path="" element={<Home />} />
+                <Route path="article/:slug" element={<Article />} />
               </Route>
               <Route path="/panel" element={<PanelLayout />}>
                 <Route path="" element={<Dashboard />} />

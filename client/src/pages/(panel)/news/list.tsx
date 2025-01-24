@@ -106,7 +106,7 @@ const FilterButton = ({
     <div ref={divRef} className="relative">
       <button
         onClick={() => setShowValues(!showValues)}
-        className={`flex items-center justify-center gap-3  h-9 px-3 text-sm font-semibold border border-dashed border-tertiary/20 dark:border-tertiary rounded-md cursor-pointer duration-100  ${filterDefaultValue !== "" ? "bg-vibrant-red text-white hover:bg-vibrant-red/80" : "hover:bg-tertiary/10 dark:hover:bg-tertiary"}`}
+        className={`flex items-center justify-center gap-3  h-9 px-3 text-sm font-semibold border border-dashed border-tertiary/20 dark:border-tertiary rounded-md cursor-pointer duration-100  ${filterDefaultValue !== "" ? "bg-red-vibrant text-white hover:bg-red-hover" : "hover:bg-tertiary/10 dark:hover:bg-tertiary"}`}
       >
         {filterDefaultValue ? (
           <Funnel size={18} weight="bold" />
@@ -279,7 +279,7 @@ const LoadingRow = () => (
     <td className="w-full py-6 font-semibold" colSpan={5}>
       <div className="w-full flex items-center justify-center gap-4">
         <span className="text-sm">Checking team</span>
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-vibrant-red border-t-transparent" />
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-red-vibrant border-t-transparent" />
       </div>
     </td>
   </tr>
@@ -334,7 +334,7 @@ const NewsRows = ({
         </div>
       </td>
       <td className="border-y text-nowrap border-tertiary/20 dark:border-tertiary p-3 font-semibold cursor-pointer duration-100 hover:underline">
-        <Link target="_blank" to={`${clientUrl + article.slug}`}>
+        <Link target="_blank" to={`${clientUrl + "article/" + article.slug}`}>
           {article.title}
         </Link>
       </td>

@@ -209,7 +209,7 @@ export function Categories() {
           {/* Apply button */}
           <button
             onClick={applyFilters}
-            className="w-[200px] h-[42px] rounded-md font-bold text-white bg-vibrant-red cursor-pointer duration-100 hover:bg-vibrant-red/60"
+            className="w-[200px] h-[42px] rounded-md font-bold text-white bg-red-vibrant cursor-pointer duration-100 hover:bg-red-hover"
           >
             Apply filters
           </button>
@@ -222,7 +222,7 @@ export function Categories() {
         {hasNextPage && (
           <div className="flex items-center justify-center">
             {loading ? (
-              <div className="w-[150px] h-10 rounded-md bg-vibrant-red/50 cursor-not-allowed flex items-center justify-center">
+              <div className="w-[150px] h-10 rounded-md bg-red-hover cursor-not-allowed flex items-center justify-center">
                 <svg
                   aria-hidden="true"
                   className="inline w-5 h-5 text-dark animate-spin fill-white"
@@ -243,7 +243,7 @@ export function Categories() {
             ) : (
               <button
                 onClick={seeMore}
-                className="w-[150px] h-10 font-bold text-white rounded-md bg-vibrant-red duration-100 hover:bg-vibrant-red/50 cursor-pointer"
+                className="w-[150px] h-10 font-bold text-white rounded-md bg-red-vibrant duration-100 hover:bg-red-hover cursor-pointer"
               >
                 See more
               </button>

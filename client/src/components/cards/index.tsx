@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 interface CardProps {
   image: string | undefined;
+  slug: string;
   category?: string;
   title: string;
   description?: string;
@@ -12,6 +13,7 @@ interface CardProps {
 
 export function Card({
   image,
+  slug,
   category,
   title,
   description,
@@ -20,25 +22,31 @@ export function Card({
 }: CardProps) {
   return (
     <div className="flex flex-col gap-2 group">
-      <div
-        className="w-full h-[200px] flex items-center justify-center rounded-xl overflow-hidden relative bg-cover bg-center bg-no-repeat shadow-xl border-[1px] border-slate-200 dark:border-slate-700"
-        style={{
-          backgroundImage: image ? `url(${image})` : `url(./assets/photo.jpg)`,
-        }}
-      >
-        {category && (
-          <Link
-            to={`/categories/${category.toLowerCase()}`}
-            className="cursor-pointer shadow-md z-20 absolute top-2 left-2 w-[100px] text-sm flex items-center justify-center bg-vibrant-red rounded-md py-1 px-2 uppercase text-white font-bold"
-          >
-            {category}
-          </Link>
-        )}
-      </div>
+      <Link to={`article/${slug}`}>
+        <div
+          className="w-full h-[200px] flex items-center justify-center rounded-xl overflow-hidden relative bg-cover bg-center bg-no-repeat shadow-xl border-[1px] border-slate-200 dark:border-slate-700"
+          style={{
+            backgroundImage: image
+              ? `url(${image})`
+              : `url(./assets/photo.jpg)`,
+          }}
+        >
+          {category && (
+            <Link
+              to={`/categories/${category.toLowerCase()}`}
+              className="cursor-pointer shadow-md z-20 absolute top-2 left-2 w-[100px] text-sm flex items-center justify-center bg-red-vibrant rounded-md py-1 px-2 uppercase text-white font-bold"
+            >
+              {category}
+            </Link>
+          )}
+        </div>
+      </Link>
 
-      <h3 className="font-bold text-lg cursor-pointer duration-100 hover:underline line-clamp-2">
-        {title}
-      </h3>
+      <Link to={`article/${slug}`}>
+        <h3 className="font-bold text-lg cursor-pointer duration-100 hover:underline line-clamp-2">
+          {title}
+        </h3>
+      </Link>
       {description && (
         <p className="line-clamp-2 text-secondary dark:text-secondary-dark text-sm">
           {description}

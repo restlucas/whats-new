@@ -13,6 +13,42 @@ interface CreateNewsProps {
   userId: string;
 }
 
+interface NewsByTeamProps {
+  teamId: string;
+  page: number;
+  pageSize: number;
+  filters: FilterProps;
+}
+
+interface Article {
+  id: string;
+  title: string;
+  description: string;
+  image: true;
+  content: string;
+  country: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  teamMember: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+  comments: {
+    id: string;
+    content: string;
+    createdAt: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  }[];
+}
+
 export const fetchNews = async (options: QueryOptions) => {
   try {
     const params = {
@@ -41,12 +77,25 @@ export const fetchNews = async (options: QueryOptions) => {
   }
 };
 
-interface NewsByTeamProps {
-  teamId: string;
-  page: number;
-  pageSize: number;
-  filters: FilterProps;
-}
+export const fetchArticle = async (articleSlug: string): Promise<Article> => {
+  try {
+    const params = {
+      slug: articleSlug,
+      api_key: "a_super_secret_api_key",
+    };
+
+    const response = (await axiosInstance.get("/news/article", {
+      params,
+    })) as { data: Article };
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    throw new Error("Failed to fetch article");
+  }
+};
 
 export const fetchNewsByTeam = async ({
   teamId,
@@ -98,4 +147,15 @@ export const removeNews = async (newsId: string) => {
     console.error("Error delete news:", error);
     throw new Error("Failed to delete news");
   }
+};
+
+export const incrementViews = async (slug: string): Promise<void> => {
+  const params = {
+    slug,
+    api_key: "a_super_secret_api_key",
+  };
+
+  await axiosInstance.post("/news/article/views", {
+    params,
+  });
 };

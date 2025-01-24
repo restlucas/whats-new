@@ -135,7 +135,7 @@ export function Create() {
             </button>
             <button
               type="submit"
-              className="py-1 px-3 rounded-md bg-vibrant-red font-semibold text-white duration-100 hover:bg-vibrant-red/70"
+              className="py-1 px-3 rounded-md bg-red-vibrant font-semibold text-white duration-100 hover:bg-red-hover"
             >
               Create news
             </button>

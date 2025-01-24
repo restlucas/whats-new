@@ -116,7 +116,7 @@ export function Members({ teamId }: any) {
                       onClick={() =>
                         removeUser(member.user.id, member.user.name)
                       }
-                      className="h-9 w-9 rounded-md flex items-center justify-center duration-200 hover:bg-vibrant-red group"
+                      className="h-9 w-9 rounded-md flex items-center justify-center duration-200 hover:bg-red-vibrant group"
                     >
                       {removingMember === member.user.id ? (
                         <div className="flex w-full items-center justify-center">

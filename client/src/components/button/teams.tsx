@@ -32,7 +32,7 @@ export function TeamsButton() {
   return (
     <div ref={divRef} className="relative">
       {loading ? (
-        <div className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-vibrant-red rounded-md duration-200 hover:bg-vibrant-red/50 text-white">
+        <div className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-red-vibrant rounded-md duration-200 hover:bg-red-hover text-white">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
         </div>
       ) : teams && teams.length > 0 ? (
@@ -40,10 +40,10 @@ export function TeamsButton() {
           onClick={() => setShowingTeams(!showingTeams)}
           className="w-full h-10 flex items-center justify-center cursor-pointer group"
         >
-          <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-vibrant-red">
+          <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-red-vibrant">
             <span className="font-bold">{activeTeam?.name}</span>
           </div>
-          <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-vibrant-red">
+          <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-red-vibrant">
             <CaretLeft
               size={22}
               weight="bold"
@@ -55,7 +55,7 @@ export function TeamsButton() {
       ) : (
         <Link
           to="/panel/teams"
-          className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-vibrant-red rounded-md duration-200 hover:bg-vibrant-red/50 text-white"
+          className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-red-vibrant rounded-md duration-200 hover:bg-red-hover text-white"
         >
           <span className="font-bold">Create a team</span>
           <Plus size={22} />

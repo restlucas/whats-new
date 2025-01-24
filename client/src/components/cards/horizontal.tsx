@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 interface HorizontalCardProps {
   image?: string;
   title: string;
+  slug: string;
   description: string;
   date?: string;
   author: string;
@@ -13,22 +14,27 @@ interface HorizontalCardProps {
 export function HorizontalCard({
   image,
   title,
+  slug,
   description,
   date,
   author,
 }: HorizontalCardProps) {
   return (
     <div className="bg-white dark:bg-dark shadow-md rounded-md p-4 grid grid-cols-[min-content_1fr] gap-4 h-[220px] group">
-      <div
-        className={`w-[188px] h-[188px] overflow-hidden flex items-center justify-center rounded-md bg-cover bg-center bg-no-repeat`}
-        style={{
-          backgroundImage: image ? `url(${image})` : `url(./assets/tech.jpg)`,
-        }}
-      />
+      <Link to={`article/${slug}`}>
+        <div
+          className={`w-[188px] h-[188px] overflow-hidden flex items-center justify-center rounded-md bg-cover bg-center bg-no-repeat`}
+          style={{
+            backgroundImage: image ? `url(${image})` : `url(./assets/tech.jpg)`,
+          }}
+        />
+      </Link>
       <div className="flex flex-col gap-4">
-        <h5 className="font-bold text-xl cursor-pointer duration-100 hover:underline line-clamp-2">
-          {title}
-        </h5>
+        <Link to={`article/${slug}`}>
+          <h5 className="font-bold text-xl cursor-pointer duration-100 hover:underline line-clamp-2">
+            {title}
+          </h5>
+        </Link>
         <p className="line-clamp-3 text-primary dark:text-secondary-dark">
           {description}
         </p>
@@ -39,7 +45,8 @@ export function HorizontalCard({
             </span>
           </div>
           <Link
-            to=""
+            target="_blank"
+            to={`article/${slug}`}
             className="text-sm font-bold uppercase flex items-center justify-end gap-2 duration-100 hover:text-red hover:fill-red"
           >
             <ArrowRight size={20} weight="bold" />

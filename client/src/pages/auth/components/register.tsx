@@ -168,7 +168,7 @@ export function Register({ params, handleAuth }: RegisterProps) {
         />
         <button
           type="submit"
-          className="w-full h-11 rounded-md bg-vibrant-red font-bold duration-150 hover:bg-red-400"
+          className="w-full h-11 rounded-md bg-red-vibrant font-bold duration-150 hover:bg-red-400"
         >
           Login
         </button>
@@ -176,7 +176,7 @@ export function Register({ params, handleAuth }: RegisterProps) {
 
       {message && (
         <div
-          className={`mt-4 text-center text-sm ${message.code === 401 ? "text-vibrant-red" : "text-green-500"}`}
+          className={`mt-4 text-center text-sm ${message.code === 401 ? "text-red-vibrant" : "text-green-500"}`}
         >
           {message.title}
         </div>

@@ -8,7 +8,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        "vibrant-red": "#EA3323",
+        "red-vibrant": "#EA3323",
+        "red-hover": "#b2241a",
         light: "#F5F5F5",
         dark: "#1f2937",
         secondary: "#4F4F4F",

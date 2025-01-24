@@ -67,14 +67,14 @@ export function Header() {
         {isAuthenticated ? (
           <Link
             to="/panel"
-            className="w-auto text-nowrap py-1 px-2 rounded-md bg-vibrant-red text-white font-bold flex items-center justify-center duration-100 hover:bg-vibrant-red/50"
+            className="w-auto text-nowrap py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
           >
             Go to dashboard
           </Link>
         ) : (
           <Link
             to="/auth"
-            className="w-auto py-1 px-2 rounded-md bg-vibrant-red text-white font-bold flex items-center justify-center duration-100 hover:bg-vibrant-red/50"
+            className="w-auto py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
           >
             Go to login
           </Link>

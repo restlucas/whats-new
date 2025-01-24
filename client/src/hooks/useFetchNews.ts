@@ -4,7 +4,11 @@ import {
   useInfiniteQuery,
   useQuery,
 } from "@tanstack/react-query";
-import { fetchNews, fetchNewsByTeam } from "../services/newsServices";
+import {
+  fetchArticle,
+  fetchNews,
+  fetchNewsByTeam,
+} from "../services/newsServices";
 
 interface FetchOptions {
   queryName: string;
@@ -15,6 +19,7 @@ export interface News {
   id: string;
   image?: string;
   title: string;
+  slug: string;
   description: string;
   content: string;
   views: number;
@@ -102,6 +107,29 @@ export const useFetchBasicNews = (
   return {
     status,
     news: data,
+    error,
+    isFetching,
+    refetch,
+  };
+};
+
+export const useFetchArticle = ({ articleSlug }: { articleSlug: string }) => {
+  const { status, data, error, isFetching, refetch } = useQuery({
+    queryKey: ["newsByTeam", articleSlug],
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return await fetchArticle(articleSlug);
+    },
+    enabled: !!articleSlug,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    status,
+    article: data,
     error,
     isFetching,
     refetch,

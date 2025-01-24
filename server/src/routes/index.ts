@@ -6,6 +6,7 @@ import {
   createNews,
   deleteNews,
   getAllNews,
+  getFullArticle,
   getResumeNewsByTeam,
 } from "../controllers/newsController";
 import {
@@ -33,7 +34,8 @@ router.post("/users", createUser);
 
 // News crud
 router.get("/news", getAllNews);
-router.get("/news/team", getResumeNewsByTeam);
+router.get("/news/team", authMiddleware, getResumeNewsByTeam);
+router.get("/news/article", getFullArticle);
 
 router.post("/news", authMiddleware, createNews);
 

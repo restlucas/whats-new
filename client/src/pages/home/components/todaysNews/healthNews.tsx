@@ -48,7 +48,7 @@ export function HealthNews({ country }: { country: string }) {
       <div className="flex items-center justify-start">
         <Link
           to="/search?category=health"
-          className="font-bold bg-vibrant-red text-white text-sm rounded-md py-2 px-4"
+          className="font-bold bg-red-vibrant text-white text-sm rounded-md py-2 px-4"
         >
           Health
         </Link>
@@ -58,7 +58,7 @@ export function HealthNews({ country }: { country: string }) {
         {healthNews.map((news: News, index: number) => {
           return (
             <Link
-              to=""
+              to={`article/${news.slug}`}
               key={index}
               className="p-3 w-full text-lg font-bold line-clamp-1 xl:line-clamp-4 cursor-pointer duration-100 hover:underline overflow-hidden grid gap-4 items-start grid-cols-[1fr_min-content]"
             >

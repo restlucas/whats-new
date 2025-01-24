@@ -140,6 +140,50 @@ const newsService = {
     });
   },
 
+  async getArticle(slug: string) {
+    return await prisma.news.findFirstOrThrow({
+      where: {
+        slug,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        image: true,
+        content: true,
+        country: true,
+        category: true,
+        createdAt: true,
+        updatedAt: true,
+        teamMember: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
+
   async countNewsByTeam(
     teamId: string,
     filters: { title: string; category: string }

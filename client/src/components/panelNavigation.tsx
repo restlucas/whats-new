@@ -85,7 +85,7 @@ export function PanelNavigation() {
     <>
       {/* Desktop Navigation */}
       <aside className="hidden md:flex w-[275px] h-screen py-8 px-4 flex-col gap-8">
-        <h1 className="text-4xl text-center font-bold text-vibrant-red">
+        <h1 className="text-4xl text-center font-bold text-red-vibrant">
           what's new
         </h1>
 
@@ -101,7 +101,7 @@ export function PanelNavigation() {
               return (
                 <li
                   key={index}
-                  className={`w-full h-full duration-100 rounded-md hover:text-vibrant-red hover:fill-vibrant-red cursor-pointer ${location.pathname === menu.href && "bg-tertiary/10 dark:bg-tertiary text-vibrant-red fill-vibrant-red"}`}
+                  className={`w-full h-full duration-100 rounded-md hover:text-red-vibrant hover:fill-red-vibrant cursor-pointer ${location.pathname === menu.href && "bg-tertiary/10 dark:bg-tertiary text-red-vibrant fill-red-vibrant"}`}
                 >
                   <Link
                     to={menu.href}
@@ -126,7 +126,7 @@ export function PanelNavigation() {
           >
             <User
               size={22}
-              className={`${location.pathname === "/panel/profile" && "fill-vibrant-red"}`}
+              className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
             />
           </Link>
 
@@ -166,7 +166,7 @@ export function PanelNavigation() {
           <TeamsButton />
           {/* <div className="relative">
             {loading ? (
-              <div className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-vibrant-red rounded-md duration-200 hover:bg-vibrant-red/50 text-white">
+              <div className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-red-vibrant rounded-md duration-200 hover:bg-red-vibrant/50 text-white">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
               </div>
             ) : teams && teams.length > 0 ? (
@@ -174,10 +174,10 @@ export function PanelNavigation() {
                 onClick={() => setShowingTeams(!showingTeams)}
                 className="w-full h-10 flex items-center justify-center cursor-pointer group"
               >
-                <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-vibrant-red">
+                <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-red-vibrant">
                   <span className="font-bold">{activeTeam?.name}</span>
                 </div>
-                <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-vibrant-red">
+                <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-red-vibrant">
                   <CaretLeft
                     size={22}
                     weight="bold"
@@ -189,7 +189,7 @@ export function PanelNavigation() {
             ) : (
               <Link
                 to="/panel/teams"
-                className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-vibrant-red rounded-md duration-200 hover:bg-vibrant-red/50 text-white"
+                className="w-full h-10 flex items-center justify-center gap-4 cursor-pointer group bg-red-vibrant rounded-md duration-200 hover:bg-red-vibrant/50 text-white"
               >
                 <span className="font-bold">Create a team</span>
                 <Plus size={22} />
@@ -231,7 +231,7 @@ export function PanelNavigation() {
             ref={divRef}
             className={`${isAnimating ? "animate-fade-out" : "animate-fade-in"} px-4 py-8 w-2/3 h-full bg-light dark:bg-dark flex flex-col gap-4`}
           >
-            <h1 className="text-4xl text-center font-bold text-vibrant-red">
+            <h1 className="text-4xl text-center font-bold text-red-vibrant">
               what's new
             </h1>
 
@@ -241,7 +241,7 @@ export function PanelNavigation() {
                   return (
                     <li
                       key={index}
-                      className={`w-full h-full duration-100 rounded-md hover:text-vibrant-red hover:fill-vibrant-red cursor-pointer ${location.pathname === menu.href && "bg-tertiary/10 dark:bg-tertiary text-vibrant-red fill-vibrant-red"}`}
+                      className={`w-full h-full duration-100 rounded-md hover:text-red-vibrant hover:fill-red-vibrant cursor-pointer ${location.pathname === menu.href && "bg-tertiary/10 dark:bg-tertiary text-red-vibrant fill-red-vibrant"}`}
                     >
                       <button
                         onClick={() => handleNavigate(menu.href)}
@@ -266,7 +266,7 @@ export function PanelNavigation() {
               >
                 <User
                   size={22}
-                  className={`${location.pathname === "/panel/profile" && "fill-vibrant-red"}`}
+                  className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
                 />
               </Link>
 

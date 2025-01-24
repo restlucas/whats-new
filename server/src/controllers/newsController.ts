@@ -159,6 +159,28 @@ export const getResumeNewsByTeam = async (req: Request, res: Response) => {
   }
 };
 
+export const getFullArticle = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const secretKey = req.query.api_key as string;
+  const slug = req.query.slug as string;
+
+  try {
+    if (secretKey !== process.env.SECRET_KEY) {
+      return res.status(403).json({ message: "Secret key invalid" });
+    }
+
+    const article = await newsService.getArticle(slug);
+
+    res.status(201).json(article);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+};
+
 // CRUD: update news
 // export const updateUser = async (req: Request, res: Response) => {
 //   const { name, email, password } = req.body;

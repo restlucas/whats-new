@@ -5,7 +5,7 @@ export function Profile() {
     <>
       <Helmet title="Profile" />
       <section className="w-full h-full">
-        <h1 className="text-vibrant-red font-bold text-2xl">Profile</h1>
+        <h1 className="text-red-vibrant font-bold text-2xl">Profile</h1>
       </section>
     </>
   );

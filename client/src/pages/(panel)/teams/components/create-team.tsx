@@ -38,7 +38,7 @@ export function CreateTeam() {
           />
         </div>
         <button
-          className={`w-full sm:w-[150px] h-10 sm:h-full flex items-center justify-center gap-2 text-white bg-vibrant-red rounded-md duration-100 hover:bg-vibrant-red/80 ${loading ? "pointer-events-none" : ""}`}
+          className={`w-full sm:w-[150px] h-10 sm:h-full flex items-center justify-center gap-2 text-white bg-red-vibrant rounded-md duration-100 hover:bg-red-hover ${loading ? "pointer-events-none" : ""}`}
         >
           {loading ? (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

@@ -86,7 +86,7 @@ export function InviteMembers({
         <div className="mb-6">
           <h2 className="text-lg font-semibold leading-4">
             Invite members to{" "}
-            <span className="font-bold text-vibrant-red">
+            <span className="font-bold text-red-vibrant">
               {selectedTeam.name || ""}
             </span>
           </h2>
@@ -110,7 +110,7 @@ export function InviteMembers({
           </div>
           <button
             type="submit"
-            className="h-9 w-[170px] bg-vibrant-red rounded-md text-nowrap text-xs md:text-sm text-center text-white font-semibold duration-100 hover:bg-vibrant-red/50"
+            className="h-9 w-[170px] bg-red-vibrant rounded-md text-nowrap text-xs md:text-sm text-center text-white font-semibold duration-100 hover:bg-red-hover"
           >
             {loading ? (
               <div className="flex w-full items-center justify-center">
@@ -144,7 +144,7 @@ export function InviteMembers({
                       colSpan={3}
                     >
                       <div className="flex w-full items-center justify-center">
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-vibrant-red border-t-transparent" />
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-red-vibrant border-t-transparent" />
                       </div>
                     </td>
                   </tr>

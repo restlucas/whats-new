@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { Card } from "@src/components/cards";
 import { Clock } from "@phosphor-icons/react";
 import { News, useFetchNews } from "@src/hooks/useFetchNews";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 export function TrendingNews() {
   const {
@@ -58,14 +58,16 @@ export function TrendingNews() {
               key={index}
               className="col-start-1 row-start-1  md:col-start-auto md:row-start-auto xl:col-span-2 md:row-span-2 w-full flex flex-col gap-4"
             >
-              <div
-                className="h-[356px] w-full rounded-md overflow-hidden flex items-center justify-center relative group shadow-xl bg-cover bg-center"
-                style={{
-                  backgroundImage: article.image
-                    ? `url(${article.image})`
-                    : `url(./assets/photo.jpg)`,
-                }}
-              />
+              <Link to={`article/${article.slug}`}>
+                <div
+                  className="h-[356px] w-full rounded-md overflow-hidden flex items-center justify-center relative group shadow-xl bg-cover bg-center"
+                  style={{
+                    backgroundImage: article.image
+                      ? `url(${article.image})`
+                      : `url(./assets/photo.jpg)`,
+                  }}
+                />
+              </Link>
               <div className="flex items-center justify-start gap-8">
                 <div className="flex items-center justify-start gap-2">
                   <Clock size={22} className="fill-text-primary" />
@@ -93,6 +95,7 @@ export function TrendingNews() {
           return (
             <Card
               key={index}
+              slug={article.slug}
               image={article.image}
               title={article.title}
               date={dayjs(article.createdAt).format("DD MMMM, YYYY")}

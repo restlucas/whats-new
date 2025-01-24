@@ -37,7 +37,7 @@ export function Teams() {
   if (!teams) {
     return (
       <section className="w-full h-full flex flex-col gap-5">
-        <h1 className="text-vibrant-red font-bold text-2xl">Teams</h1>
+        <h1 className="text-red-vibrant font-bold text-2xl">Teams</h1>
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-start gap-2">
             {Array.from({ length: 3 }).map((_, index) => {
@@ -153,7 +153,7 @@ export function Teams() {
     <>
       <Helmet title="Teams" />
       <section className="w-full h-full flex flex-col gap-5">
-        <h1 className="text-vibrant-red font-bold text-2xl">Teams</h1>
+        <h1 className="text-red-vibrant font-bold text-2xl">Teams</h1>
         <div className="flex flex-col gap-4">
           {/* Teams */}
           <div className="flex">
