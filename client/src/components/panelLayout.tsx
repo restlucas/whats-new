@@ -1,9 +1,24 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { PanelNavigation } from "./panelNavigation";
 import useAuthCheck from "../hooks/useAuth";
+import { useContext, useEffect } from "react";
+import { User, UserContext } from "@src/contexts/UserContext";
+import { getLocalStorage } from "@src/utils/storageUtils";
+import { TeamContext } from "@src/contexts/TeamContext";
 
 export function PanelLayout() {
   const isAuthenticated = useAuthCheck();
+  const { setUser } = useContext(UserContext);
+  const { getTeams } = useContext(TeamContext);
+
+  useEffect(() => {
+    const userInStorage = getLocalStorage("@whats-new:user") as User;
+    getTeams(userInStorage.id);
+
+    if (userInStorage) {
+      setUser(userInStorage);
+    }
+  }, []);
 
   if (isAuthenticated === null)
     return (

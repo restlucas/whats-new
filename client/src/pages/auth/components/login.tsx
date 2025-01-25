@@ -10,6 +10,7 @@ interface FormProps {
 
 export function Login({ handleAuth }: any) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{
     code: number;
     title: string;
@@ -32,6 +33,7 @@ export function Login({ handleAuth }: any) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (form) {
+      setLoading(true);
       setMessage(null);
       const response = await signIn(form);
 
@@ -45,14 +47,12 @@ export function Login({ handleAuth }: any) {
     }
   };
   return (
-    <div className="flex flex-col h-[600px]">
-      <h1 className="font-bold text-4xl text-gray-700 dark:text-light">
+    <div className="animate-fade-xaxis flex flex-col h-[600px]">
+      <h1 className="font-bold text-4xl text-red-vibrant dark:text-light">
         Login
       </h1>
 
-      <h3 className="text-sm text-center mt-10 opacity-50">
-        Enter your credentials
-      </h3>
+      <h3 className="text-sm text-center mt-10">Enter your credentials</h3>
 
       <form
         id="loginForm"
@@ -80,9 +80,13 @@ export function Login({ handleAuth }: any) {
         />
         <button
           type="submit"
-          className="w-full h-11 rounded-md bg-red-vibrant font-bold duration-150 hover:bg-red-400"
+          className="w-full h-11 rounded-md bg-red-vibrant text-white font-bold duration-200 hover:bg-red-hover flex items-center justify-center"
         >
-          Login
+          {loading ? (
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          ) : (
+            <span>Login</span>
+          )}
         </button>
       </form>
 
@@ -96,7 +100,10 @@ export function Login({ handleAuth }: any) {
 
       <div className="flex items-center justify-center gap-2 text-sm mt-auto mb-10">
         <span>Don't have an account?</span>
-        <button className="font-bold" onClick={() => handleAuth("register")}>
+        <button
+          className="font-bold font-bold duration-200 hover:underline"
+          onClick={() => handleAuth("register")}
+        >
           Register!
         </button>
       </div>

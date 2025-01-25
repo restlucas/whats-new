@@ -7,7 +7,7 @@ import {
 } from "../utils/storageUtils";
 import { check, login, logout, register } from "../services/authServices";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -24,6 +24,7 @@ export interface UserData {
 
 interface UserContextType {
   user: any | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   checkUser: () => any;
   signIn: (credentials: { username: string; password: string }) => any;
   signUp: (user: UserData) => any;
@@ -93,6 +94,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     <UserContext.Provider
       value={{
         user,
+        setUser,
         checkUser,
         signIn,
         signUp,

@@ -167,3 +167,38 @@ export const removeMember = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Unexpected error occurred" });
   }
 };
+
+export const getStatistics = async (req: Request, res: Response) => {
+  const { teamId, type } = req.query;
+
+  let key = null;
+  switch (type) {
+    case "recentViews":
+      key = "views";
+      break;
+
+    case "likeRate":
+      key = "likes";
+      break;
+
+    default:
+      break;
+  }
+
+  const response = await teamsService.getStatisticsByTeam(
+    teamId as string,
+    key as string
+  );
+
+  res.status(201).json({ data: response });
+};
+
+export const getLastNewsAndTopUsers = async (req: Request, res: Response) => {
+  const { teamId } = req.query;
+
+  const response = await teamsService.getLastFiveNewsAndTopUsers(
+    teamId as string
+  );
+
+  res.status(201).json({ data: response });
+};

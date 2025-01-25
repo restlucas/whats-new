@@ -48,6 +48,7 @@ export interface FetchResponse {
   error: string | null;
 
   loading: boolean;
+  fetching: boolean;
   hasNextPage: boolean;
   fetchNextPage: (options?: FetchNextPageOptions) => Promise<any>;
 }
@@ -56,27 +57,35 @@ export const useFetchNews = ({
   queryName,
   queryOptions,
 }: FetchOptions): FetchResponse => {
-  const { data, hasNextPage, isError, error, isFetching, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: [queryName, queryOptions],
-      queryFn: async ({ pageParam = 1 }) => {
-        return await fetchNews({
-          ...queryOptions,
-          page: pageParam,
-        });
-      },
-      placeholderData: keepPreviousData,
-      getNextPageParam: (lastPage) =>
-        lastPage.nextPage ? lastPage.nextPage : undefined,
-      initialPageParam: 1,
-      staleTime: 600000, // 10 minutes
-      gcTime: 1200000, // 20 minutes
-    });
+  const {
+    data,
+    hasNextPage,
+    isError,
+    error,
+    isLoading,
+    isFetching,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: [queryName, queryOptions],
+    queryFn: async ({ pageParam = 1 }) => {
+      return await fetchNews({
+        ...queryOptions,
+        page: pageParam,
+      });
+    },
+    placeholderData: keepPreviousData,
+    getNextPageParam: (lastPage) =>
+      lastPage.nextPage ? lastPage.nextPage : undefined,
+    initialPageParam: 1,
+    staleTime: 600000, // 10 minutes
+    gcTime: 1200000, // 20 minutes
+  });
 
   return {
     news: data?.pages.flatMap((page) => page.data) ?? [],
     hasNextPage,
-    loading: isFetching,
+    fetching: isFetching,
+    loading: isLoading,
     error: isError ? (error?.message ?? "Error fetching news") : null,
     fetchNextPage,
   };

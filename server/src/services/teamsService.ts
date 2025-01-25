@@ -147,6 +147,99 @@ const teamsService = {
       },
     });
   },
+
+  async getStatisticsByTeam(teamId: string, key: string) {
+    if (key === null) {
+      const result = await prisma.news.aggregate({
+        _count: {
+          id: true,
+        },
+        where: {
+          teamMember: {
+            teamId: teamId,
+          },
+        },
+      });
+      return result._count.id;
+    }
+
+    const result = await prisma.news.aggregate({
+      _sum: {
+        [key]: true,
+      },
+      where: {
+        teamMember: {
+          teamId: teamId,
+        },
+      },
+    });
+
+    return result._sum[key] || 0;
+  },
+
+  async getLastFiveNewsAndTopUsers(teamId: string) {
+    const lastFiveNews = await prisma.news.findMany({
+      where: {
+        teamMember: {
+          teamId: teamId,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        createdAt: true,
+        likes: true,
+        views: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 5,
+    });
+
+    const users = await prisma.teamMember.findMany({
+      where: {
+        teamId,
+      },
+      select: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            news: true,
+          },
+        },
+        news: {
+          select: {
+            views: true,
+          },
+        },
+      },
+      orderBy: {
+        news: {
+          _count: "desc",
+        },
+      },
+      take: 5,
+    });
+
+    const topUsers = users.map((user) => ({
+      id: user.user.id,
+      name: user.user.name,
+      totalNews: user._count.news,
+      totalViews: user.news.reduce((sum, news) => sum + news.views, 0),
+    }));
+
+    return {
+      lastFiveNews,
+      topUsers,
+    };
+  },
 };
 
 export default teamsService;

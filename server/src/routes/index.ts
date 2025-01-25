@@ -13,7 +13,9 @@ import {
 import {
   create,
   getAllTeamsByUser,
+  getLastNewsAndTopUsers,
   getMembersByTeam,
+  getStatistics,
   getTeamInvitations,
   makeInvitation,
   removeMember,
@@ -44,6 +46,8 @@ router.post("/news/article/views", incrementViews);
 router.delete("/news", authMiddleware, deleteNews);
 
 // Teams crud
+router.get("/team/statistics", authMiddleware, getStatistics);
+router.get("/team/news/members", authMiddleware, getLastNewsAndTopUsers);
 router.get("/teams", authMiddleware, getAllTeamsByUser);
 router.get("/teams/user", authMiddleware, getAllTeamsByUser);
 router.get("/teams/members", getMembersByTeam);

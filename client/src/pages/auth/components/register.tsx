@@ -100,12 +100,12 @@ export function Register({ params, handleAuth }: RegisterProps) {
   }, []);
 
   return (
-    <div className="h-auto flex flex-col">
-      <h1 className="font-bold text-4xl text-gray-700 dark:text-light">
+    <div className="animate-fade-xaxis h-auto flex flex-col">
+      <h1 className="font-bold text-4xl text-red-vibrant dark:text-light">
         Register
       </h1>
 
-      <h3 className="text-sm text-center mt-10 opacity-50">
+      <h3 className="text-sm text-center mt-10">
         Fill in all the fields of the form
       </h3>
 
@@ -168,7 +168,7 @@ export function Register({ params, handleAuth }: RegisterProps) {
         />
         <button
           type="submit"
-          className="w-full h-11 rounded-md bg-red-vibrant font-bold duration-150 hover:bg-red-400"
+          className="w-full h-11 rounded-md bg-red-vibrant text-white font-bold duration-200 hover:bg-red-hover"
         >
           Login
         </button>
@@ -184,7 +184,10 @@ export function Register({ params, handleAuth }: RegisterProps) {
 
       <div className="flex items-center justify-center gap-2 text-sm mt-10 mb-10">
         <span>Already have an account?</span>
-        <button className="font-bold" onClick={() => handleAuth("login")}>
+        <button
+          className="font-bold duration-200 hover:underline"
+          onClick={() => handleAuth("login")}
+        >
           Login!
         </button>
       </div>

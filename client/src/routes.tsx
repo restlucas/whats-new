@@ -13,6 +13,7 @@ import { Teams } from "./pages/(panel)/teams";
 import { TeamContextProvider } from "./contexts/TeamContext";
 import { Error } from "./pages/error";
 import { Article } from "./pages/article";
+import { Search } from "./pages/search";
 
 export const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ export const AppRoutes = () => {
               <Route path="/" element={<Layout />}>
                 <Route path="" element={<Home />} />
                 <Route path="article/:slug" element={<Article />} />
+                <Route path="search" element={<Search />} />
               </Route>
               <Route path="/panel" element={<PanelLayout />}>
                 <Route path="" element={<Dashboard />} />

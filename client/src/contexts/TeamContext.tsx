@@ -16,6 +16,7 @@ export interface Team {
 
 interface TeamContextType {
   teams: Team[] | undefined;
+  setTeams: React.Dispatch<React.SetStateAction<Team[] | undefined>>;
   activeTeam: Team | null;
   loading: boolean;
   error: string | null;
@@ -107,6 +108,7 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
     <TeamContext.Provider
       value={{
         teams,
+        setTeams,
         activeTeam,
         loading,
         error,
