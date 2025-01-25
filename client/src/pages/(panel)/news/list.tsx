@@ -117,7 +117,7 @@ const FilterButton = ({
       </button>
 
       {showValues && (
-        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 left-0 flex flex-col border border-tertiary/20 dark:border-tertiary rounded-md bg-light dark:bg-dark ">
+        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 left-0 flex flex-col border border-tertiary/20 dark:border-tertiary rounded-md bg-light dark:bg-dark">
           {filterValues.map((value: string, index: number) => {
             return (
               <button

@@ -69,6 +69,14 @@ export default {
             transform: "translateX(100vw)",
           },
         },
+        slide: {
+          "0%": {
+            backgroundPosition: "0 0",
+          },
+          "100%": {
+            backgroundPosition: "-600% 0",
+          },
+        },
       },
       animation: {
         "fade-in": "entrance-right .15s ease-in",
@@ -76,6 +84,7 @@ export default {
         "fade-entrance": "fade-in .35s ease-in-out",
         "fade-yaxis": "fade-y-normal .25s ease-in-out",
         "fade-xaxis": "fade-x-normal .25s ease-in-out",
+        "slide-left": "slide 100s linear infinite",
       },
     },
     fontFamily: {

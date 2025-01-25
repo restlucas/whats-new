@@ -1,5 +1,5 @@
 import prisma from "../utils/db";
-import { Role } from "@prisma/client";
+import { TeamRole } from "@prisma/client";
 import { sendInviteEmail } from "./emailService";
 
 const teamsService = {
@@ -24,7 +24,7 @@ const teamsService = {
       data: {
         userId,
         teamId,
-        role: Role.OWNER,
+        role: TeamRole.OWNER,
       },
     });
   },
@@ -73,7 +73,7 @@ const teamsService = {
         },
       },
       data: {
-        role: roleValue as Role,
+        role: roleValue as TeamRole,
       },
     });
   },

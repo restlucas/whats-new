@@ -25,10 +25,12 @@ export const login = async (
   req: Request,
   res: Response
 ): Promise<void | any> => {
-  const { username, password } = req.body;
+  const { credentials, entranceMode } = req.body;
+
+  const { username, password } = credentials;
 
   try {
-    const response = await authService.login(username, password);
+    const response = await authService.login(username, password, entranceMode);
 
     if (response.error) {
       return res.status(401).json({ message: response.error });

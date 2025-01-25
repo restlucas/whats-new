@@ -5,7 +5,7 @@ import {
   TeamMember as PrismaTeamMember,
   User as PrismaUser,
   Favorite as PrismaFavorite,
-  Role,
+  TeamRole,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
@@ -70,6 +70,7 @@ async function createSpecificUser() {
       name: "Lucas Souza de Oliveira",
       username: "restlucas",
       email: "restlucas.dev@gmail.com",
+      role: "ADMIN",
       password: hashedPassword,
     },
   });
@@ -82,6 +83,7 @@ async function createUser() {
       name: faker.person.fullName(),
       username: faker.internet.username(),
       email: faker.internet.email(),
+      role: "CREATOR",
       password: faker.internet.password(),
     },
   });
@@ -100,7 +102,7 @@ async function createTeam() {
   const teamCount = 6;
 
   const getRandomRole = () => {
-    const roles: Role[] = ["READER", "EDITOR", "OWNER"];
+    const roles: TeamRole[] = ["EDITOR", "OWNER"];
     return faker.helpers.arrayElement(roles);
   };
 

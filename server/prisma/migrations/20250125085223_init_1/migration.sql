@@ -5,6 +5,7 @@ CREATE TABLE `User` (
     `username` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
+    `role` ENUM('READER', 'CREATOR', 'ADMIN') NOT NULL DEFAULT 'READER',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -27,7 +28,7 @@ CREATE TABLE `TeamMember` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `teamId` VARCHAR(191) NOT NULL,
-    `role` ENUM('READER', 'EDITOR', 'OWNER') NOT NULL DEFAULT 'READER',
+    `role` ENUM('EDITOR', 'OWNER') NOT NULL DEFAULT 'EDITOR',
 
     UNIQUE INDEX `TeamMember_userId_teamId_key`(`userId`, `teamId`),
     PRIMARY KEY (`id`)

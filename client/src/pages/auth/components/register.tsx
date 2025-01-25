@@ -3,9 +3,11 @@ import { Input } from "@src/components/input";
 import { UserContext } from "@src/contexts/UserContext";
 import { validateInvitation } from "@src/services/authServices";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 interface RegisterProps {
-  params: {
+  entranceMode: string;
+  params?: {
     token: string | null;
     email: string | null;
   };
@@ -20,7 +22,7 @@ interface FormProps {
   confirmPassword: string;
 }
 
-export function Register({ params, handleAuth }: RegisterProps) {
+export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
   const url = new URL(window.location.href);
   const navigate = useNavigate();
   const [message, setMessage] = useState<{
@@ -88,7 +90,7 @@ export function Register({ params, handleAuth }: RegisterProps) {
   };
 
   useEffect(() => {
-    if (params.token && params.email) {
+    if (params && params.token && params.email) {
       checkInvite(params.token);
 
       setForm((prevState) => ({
@@ -100,97 +102,98 @@ export function Register({ params, handleAuth }: RegisterProps) {
   }, []);
 
   return (
-    <div className="animate-fade-xaxis h-auto flex flex-col">
-      <h1 className="font-bold text-4xl text-red-vibrant dark:text-light">
-        Register
-      </h1>
+    <>
+      <Helmet title="Register" />
+      <div className="animate-fade-xaxis h-auto flex flex-col gap-4 mx-4 w-full md:w-1/2 dark:text-light">
+        <h1 className="font-bold text-4xl text-red-vibrant">Register</h1>
 
-      <h3 className="text-sm text-center mt-10">
-        Fill in all the fields of the form
-      </h3>
+        <h3 className="text-sm text-center mt-10">
+          Fill in all the fields of the form
+        </h3>
 
-      <form
-        id="registerForm"
-        onSubmit={handleSubmit}
-        className="w-full h-auto flex flex-col gap-4 mt-4"
-      >
-        <Input
-          label="Full name"
-          id="name"
-          name="name"
-          value={form.name}
-          placeholder="Your name here"
-          handleChange={handleChange}
-          required
-        />
-
-        <Input
-          label="Username"
-          id="username"
-          name="username"
-          value={form.username}
-          placeholder="Your username here"
-          handleChange={handleChange}
-          required
-        />
-
-        <Input
-          label="Email"
-          id="email"
-          name="email"
-          type="email"
-          value={form.email}
-          placeholder="youremail@example.com"
-          handleChange={handleChange}
-          required
-        />
-
-        <Input
-          label="Password"
-          id="password"
-          name="password"
-          type="password"
-          value={form.password}
-          placeholder="********"
-          handleChange={handleChange}
-          required
-        />
-
-        <Input
-          label="Confirme password"
-          id="confirmPassword"
-          type="password"
-          name="confirmPassword"
-          value={form.confirmPassword}
-          placeholder="******"
-          handleChange={handleChange}
-          required
-        />
-        <button
-          type="submit"
-          className="w-full h-11 rounded-md bg-red-vibrant text-white font-bold duration-200 hover:bg-red-hover"
+        <form
+          id="registerForm"
+          onSubmit={handleSubmit}
+          className="w-full h-auto flex flex-col gap-4 mt-4"
         >
-          Login
-        </button>
-      </form>
+          <Input
+            label="Full name"
+            id="name"
+            name="name"
+            value={form.name}
+            placeholder="Your name here"
+            handleChange={handleChange}
+            required
+          />
 
-      {message && (
-        <div
-          className={`mt-4 text-center text-sm ${message.code === 401 ? "text-red-vibrant" : "text-green-500"}`}
-        >
-          {message.title}
+          <Input
+            label="Username"
+            id="username"
+            name="username"
+            value={form.username}
+            placeholder="Your username here"
+            handleChange={handleChange}
+            required
+          />
+
+          <Input
+            label="Email"
+            id="email"
+            name="email"
+            type="email"
+            value={form.email}
+            placeholder="youremail@example.com"
+            handleChange={handleChange}
+            required
+          />
+
+          <Input
+            label="Password"
+            id="password"
+            name="password"
+            type="password"
+            value={form.password}
+            placeholder="********"
+            handleChange={handleChange}
+            required
+          />
+
+          <Input
+            label="Confirme password"
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            placeholder="******"
+            handleChange={handleChange}
+            required
+          />
+          <button
+            type="submit"
+            className="w-full h-11 rounded-md bg-red-vibrant text-white font-bold duration-200 hover:bg-red-hover shadow-lg"
+          >
+            Register
+          </button>
+        </form>
+
+        {message && (
+          <div
+            className={`mt-4 text-center text-sm ${message.code === 401 ? "text-red-vibrant" : "text-green-500"}`}
+          >
+            {message.title}
+          </div>
+        )}
+
+        <div className="flex items-center justify-center gap-2 text-sm mt-10 mb-10">
+          <span>Already have an account?</span>
+          <button
+            className="font-bold duration-200 hover:underline"
+            onClick={() => handleAuth("login")}
+          >
+            Login!
+          </button>
         </div>
-      )}
-
-      <div className="flex items-center justify-center gap-2 text-sm mt-10 mb-10">
-        <span>Already have an account?</span>
-        <button
-          className="font-bold duration-200 hover:underline"
-          onClick={() => handleAuth("login")}
-        >
-          Login!
-        </button>
       </div>
-    </div>
+    </>
   );
 }

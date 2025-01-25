@@ -39,7 +39,7 @@ export function SimpleCard({
     }
   }, [fetching, amount]);
 
-  if (fetching || !amount)
+  if (fetching && !amount)
     return (
       <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-3">
         <div className="w-full flex items-center justify-between">
@@ -51,6 +51,22 @@ export function SimpleCard({
         </div>
       </div>
     );
+
+  if (!amount)
+    return (
+      <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-3">
+        <div className="w-full flex items-center justify-between">
+          <h3 className="text-base font-bold">{title}</h3>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-2xl font-bold">No statistics found</span>
+          <span className="text-xs text-black/70 dark:text-[#76899e]">
+            create new news and the statistics will appear here
+          </span>
+        </div>
+      </div>
+    );
+
   return (
     <>
       <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-2">

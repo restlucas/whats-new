@@ -85,9 +85,12 @@ export function PanelNavigation() {
     <>
       {/* Desktop Navigation */}
       <aside className="hidden md:flex w-[275px] h-screen py-8 px-4 flex-col gap-8">
-        <h1 className="text-4xl text-center font-bold text-red-vibrant">
+        <Link
+          to="/"
+          className="text-4xl text-center font-bold text-red-vibrant"
+        >
           what's new
-        </h1>
+        </Link>
 
         <h3 className="text-sm text-center">
           Welcome <span className="font-bold">{user.name || "..."}!</span>
@@ -159,9 +162,9 @@ export function PanelNavigation() {
       {/* Mobile Navigation */}
       <div className="flex md:hidden w-full h-auto px-4 pt-8 pb-4 items-start justify-between">
         <div className="flex flex-col gap-4">
-          <h3 className="text-start">
+          <Link to="/" className="text-start">
             Welcome <span className="font-bold">{user.name || "..."}!</span>
-          </h3>
+          </Link>
 
           <TeamsButton />
           {/* <div className="relative">

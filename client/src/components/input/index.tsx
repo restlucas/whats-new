@@ -25,7 +25,7 @@ export function Input({
         id={id}
         name={name}
         type={type}
-        className="rounded-md px-2 py-1 h-9 dark:bg-[#3c4856] border border-tertiary/20 dark:border-slate-600"
+        className="rounded-md px-2 py-1 h-9 dark:bg-[#3c4856] border border-tertiary/20 dark:border-slate-600 shadow-sm"
         placeholder={placeholder}
         onChange={(e) => handleChange(e)}
         {...rest}

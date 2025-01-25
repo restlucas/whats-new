@@ -20,16 +20,26 @@ export const check = async () => {
   }
 };
 
-export const login = async (credentials: {
-  username: string;
-  password: string;
-}) => {
+export const login = async (
+  credentials: {
+    username: string;
+    password: string;
+  },
+  entranceMode: string
+) => {
   try {
-    const response = await axiosInstance.post("/auth/login", credentials, {
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axiosInstance.post(
+      "/auth/login",
+      {
+        credentials,
+        entranceMode,
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return {
       status: response.status,

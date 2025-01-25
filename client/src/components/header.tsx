@@ -1,10 +1,13 @@
 import {
-  Bell,
+  BookmarkSimple,
   CaretDown,
+  House,
   List,
   MagnifyingGlass,
+  Newspaper,
   SignOut,
   User,
+  UserGear,
 } from "@phosphor-icons/react";
 import {
   Link,
@@ -14,9 +17,10 @@ import {
 } from "react-router-dom";
 import ThemeToggle from "./themeToggle";
 import useAuthCheck from "../hooks/useAuth";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { clearLocalStorage } from "@src/utils/storageUtils";
 import { deleteCookie } from "@src/utils/cookieUtils";
+import { UserContext } from "@src/contexts/UserContext";
 
 export const categories = [
   { value: "general", name: "General" },
@@ -28,13 +32,175 @@ export const categories = [
   { value: "technology", name: "Technology" },
 ];
 
+interface UserProps {
+  id: string;
+  username: string;
+  name: string;
+  role: "READER" | "CREATOR" | "ADMIN";
+  email: string;
+  createdAt: string;
+}
+
+const loggedNavigation = {
+  CREATOR: [
+    {
+      name: "Dashboard",
+      href: "/panel",
+      icon: <House size={22} weight="fill" className="fill-white" />,
+    },
+    {
+      name: "Saved news",
+      href: "/saved-news",
+      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
+    },
+  ],
+  READER: [
+    {
+      name: "My profile",
+      href: "/my-profile",
+      icon: <User size={22} weight="fill" className="fill-white" />,
+    },
+    {
+      name: "Saved news",
+      href: "/saved-news",
+      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
+    },
+  ],
+  ADMIN: [
+    {
+      name: "Dashboard",
+      href: "/panel",
+      icon: <House size={22} weight="fill" className="fill-white" />,
+    },
+    {
+      name: "Saved news",
+      href: "/saved-news",
+      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
+    },
+  ],
+};
+
+const LoggedOptions = ({ user }: { user: UserProps }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [loggedOptions, setLoggedOptions] = useState<boolean>(false);
+  const { signOut } = useContext(UserContext);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (divRef.current && !divRef.current.contains(event.target as Node)) {
+      setLoggedOptions(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={divRef} className="relative">
+      <button
+        onClick={() => setLoggedOptions(!loggedOptions)}
+        className="py-2 px-4 rounded-md bg-red-vibrant font-bold flex items-center justify-center gap-4"
+      >
+        <span className="text-white">{user.name.split(" ")[0]}</span>
+        <CaretDown
+          size={22}
+          weight="bold"
+          className={`fill-white duration-300 ${loggedOptions ? "rotate-0" : "rotate-90"}`}
+        />
+      </button>
+
+      {loggedOptions && (
+        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
+          {loggedNavigation[user.role].map((navigation, index) => {
+            return (
+              <Link
+                key={index}
+                to={navigation.href}
+                className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+              >
+                <span>{navigation.name}</span>
+                {navigation.icon}
+              </Link>
+            );
+          })}
+          <button
+            onClick={() => signOut()}
+            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+          >
+            <span>Sign out</span>
+            <SignOut
+              size={22}
+              className="fill-text-primary cursor-pointer"
+              weight="bold"
+            />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const EntranceOptions = () => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [entranceOptions, setEntranceOptions] = useState<boolean>(false);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (divRef.current && !divRef.current.contains(event.target as Node)) {
+      setEntranceOptions(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={divRef} className="relative">
+      <button
+        onClick={() => setEntranceOptions(!entranceOptions)}
+        className="px-2 py-1 rounded-md bg-red-vibrant font-bold text-white"
+      >
+        Go to login
+      </button>
+
+      {entranceOptions && (
+        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
+          <Link
+            to="/auth/reader"
+            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+          >
+            <span>as a Reader</span>
+            <Newspaper size={18} weight="bold" />
+          </Link>
+          <Link
+            to="/auth/creator"
+            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+          >
+            <span>as a Creator</span>
+            <UserGear size={18} weight="bold" />
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const DesktopNavigation = ({
   urlParams,
-  authenticated,
 }: {
   urlParams: URLSearchParams;
   authenticated: boolean | null;
 }) => {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="hidden min-[900px]:flex items-center justify-between">
       <div className="h-9 flex items-center justify-start gap-4 2xl:gap-16">
@@ -76,25 +242,23 @@ const DesktopNavigation = ({
 
         <ThemeToggle />
 
-        {authenticated ? (
-          <>
-            <Link
-              to="/panel"
-              className="w-auto text-nowrap py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
-            >
-              Go to dashboard
-            </Link>
-          </>
+        {user ? <LoggedOptions user={user} /> : <EntranceOptions />}
+
+        {/* {authenticated ? (
+          <Link
+            to="/panel"
+            className="w-auto text-nowrap py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
+          >
+            Go to dashboard
+          </Link>
         ) : (
-          <>
-            <Link
-              to="/auth"
-              className="w-auto py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
-            >
-              Go to login
-            </Link>
-          </>
-        )}
+          <Link
+            to="/auth"
+            className="w-auto py-1 px-2 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
+          >
+            Go to login
+          </Link>
+        )} */}
       </div>
     </div>
   );

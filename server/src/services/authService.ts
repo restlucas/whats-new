@@ -18,13 +18,19 @@ const authService = {
     });
   },
 
-  async login(username: string, pwd: string) {
-    const userFound = await prisma.user.findFirstOrThrow({
+  async login(
+    username: string,
+    pwd: string,
+    entranceRole: "READER" | "CREATOR"
+  ) {
+    let userFound = await prisma.user.findUnique({
       where: {
         username,
+        role: entranceRole,
       },
       select: {
         id: true,
+        role: true,
         name: true,
         username: true,
         email: true,
@@ -32,6 +38,24 @@ const authService = {
         createdAt: true,
       },
     });
+
+    if (!userFound) {
+      userFound = await prisma.user.findUnique({
+        where: {
+          username,
+          role: "ADMIN",
+        },
+        select: {
+          id: true,
+          role: true,
+          name: true,
+          username: true,
+          email: true,
+          password: true,
+          createdAt: true,
+        },
+      });
+    }
 
     if (!userFound || !(await bcrypt.compare(pwd, userFound.password))) {
       return { error: "Invalid credentials" };

@@ -28,7 +28,7 @@ interface TableProps {
 }
 
 const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
-  if (fetching || data.length === 0) {
+  if (fetching && data.length === 0) {
     return (
       <div className="w-full border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-4">
         <div className="w-full flex items-center justify-between">
@@ -72,6 +72,45 @@ const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
       </div>
     );
   }
+
+  if (data.length === 0)
+    return (
+      <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-4">
+        <div className="w-full flex items-center justify-between">
+          <h3 className="text-lg font-bold">{title}</h3>
+          {icon}
+        </div>
+        <div className="overflow-x-scroll xl:overflow-hidden">
+          <table className="w-full table-auto overflow-hidden">
+            <thead>
+              <tr className="text-sm font-semibold text-left rtl:text-right">
+                {tableTitle.map((header, index) => (
+                  <th
+                    key={index}
+                    className={`text-nowrap p-2 ${index === 0 ? "w-full" : "w-auto"}`}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td
+                  className="py-6 font-semibold text-nowrap md:text-wrap"
+                  colSpan={3}
+                >
+                  <div className="w-full text-center text-sm">
+                    No statistics found. Create new news and the statistics will
+                    appear here!
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
 
   return (
     <div className="border rounded-xl p-6 border-tertiary/20 dark:border-tertiary flex flex-col gap-4">
