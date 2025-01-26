@@ -127,7 +127,7 @@ export function MyProfile() {
                 value={formProfile.password}
                 placeholder="*********"
                 handleChange={handleChange}
-                required
+                required={!!formProfile.password}
               />
 
               <Input
@@ -138,7 +138,7 @@ export function MyProfile() {
                 value={formProfile.confirmPassword}
                 placeholder="*********"
                 handleChange={handleChange}
-                required
+                required={!!formProfile.password}
               />
 
               <div className="col-span-full mt-4 w-full flex items-center justify-end">

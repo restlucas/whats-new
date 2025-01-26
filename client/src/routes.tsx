@@ -16,6 +16,7 @@ import { Article } from "./pages/article";
 import { Search } from "./pages/search";
 import { AuthReader } from "./pages/auth/reader";
 import { MyProfile } from "./pages/my-profile";
+import { ResetPassword } from "./pages/auth/reset-password";
 // import { LikedNews } from "./pages/liked-news";
 
 export const AppRoutes = () => {
@@ -43,6 +44,7 @@ export const AppRoutes = () => {
               <Route path="/support" element={<Support />} />
               <Route path="/auth/reader" element={<AuthReader />} />
               <Route path="/auth/creator" element={<AuthCreator />} />
+              <Route path="/auth/reset-password" element={<ResetPassword />} />
               <Route path="/my-profile" element={<MyProfile />} />
               <Route path="/error" element={<Error />} />
             </Routes>

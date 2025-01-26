@@ -57,33 +57,6 @@ export const toggleLike = async (
   }
 };
 
-export const addLike = async (userId: string, newsId: string) => {
-  try {
-    const response = await axiosInstance.post("/user/like", {
-      userId,
-      newsId,
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Error creating like:", error);
-    throw new Error("Failed to create like");
-  }
-};
-
-export const removeLike = async (userId: string, newsId: string) => {
-  try {
-    const response = await axiosInstance.delete("/user/like", {
-      params: { userId, newsId },
-    });
-
-    return response;
-  } catch (error) {
-    console.error("Error creating like:", error);
-    throw new Error("Failed to create like");
-  }
-};
-
 export const toggleCommentLike = async (
   userId: string,
   commentId: string,
@@ -133,4 +106,17 @@ export const toggleCommentLike = async (
   // } catch (error) {
   //   console.error("Error toggling like:", error);
   // }
+};
+
+export const validateToken = async (token: string) => {
+  return await axiosInstance.post("/users/validate-token", { token });
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+  const response = await axiosInstance.post("/users/reset-password", {
+    token,
+    newPassword,
+  });
+
+  return response;
 };

@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import userService from "../services/userService";
 import bcrypt from "bcryptjs";
+import { requestPwdReset } from "../utils/email";
+
+const secretKey = process.env.JWT_SECRET;
 
 // CRUD: Create user
 export const createUser = async (
@@ -122,6 +125,77 @@ export const removeCommentLike = async (req: Request, res: Response) => {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     }
+  }
+};
+
+export const requestPasswordReset = async (req: Request, res: Response) => {
+  const { key, email } = req.body;
+
+  const user = await userService.getUserByKey(key as "email", email as string);
+
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+
+  const token = jwt.sign({ userId: user.id }, secretKey as string);
+
+  await userService.createResetToken(user.id, token);
+
+  const response = await requestPwdReset(token, user.email);
+  res.status(200).json(response);
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      userId: string;
+    };
+
+    await userService.updatePassword(decoded.userId, hashedPassword);
+    await userService.updateResetToken(token);
+
+    res.status(200).json({ message: "Password successfully updated" });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
+};
+
+export const validateToken = async (req: Request, res: Response) => {
+  const token = req.query.token as string;
+
+  if (!token) {
+    res.status(200).json({ message: "Token is required" });
+    return;
+  }
+
+  try {
+    const tokenData = await userService.getResetToken(token);
+
+    if (!tokenData) {
+      res.status(200).json({ isValid: false, message: "Token not found" });
+      return;
+    }
+
+    if (tokenData.used) {
+      res
+        .status(200)
+        .json({ isValid: false, message: "Token has already been used" });
+      return;
+    }
+
+    if (new Date() > tokenData.expiresAt) {
+      res.status(200).json({ isValid: false, message: "Expired token" });
+      return;
+    }
+
+    res.status(200).json({ isValid: true });
+  } catch (error: unknown) {
+    console.error("Unexpected error on create invite:", error);
+    res.status(500).json({ message: "Unexpected error occurred" });
   }
 };
 

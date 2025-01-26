@@ -112,3 +112,41 @@ export const validateInvitation = async (token: string) => {
     },
   });
 };
+
+export const requestResetPassword = async (userEmail: string) => {
+  return await axiosInstance.post("/users/request-reset-password", {
+    userEmail,
+  });
+};
+
+// export const validateToken = async (token: string) => {
+//   const response = await axiosInstance.get("/users/validate-token", {
+//     params: { token },
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
+//   console.log(response);
+//   return response;
+// };
+
+export const validateToken = async (token: string) => {
+  try {
+    const response = await axiosInstance.get("/users/validate-token", {
+      params: { token },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      console.error("Error:", error.response.data.message);
+      alert(error.response.data.message);
+    } else if (error.request) {
+      console.error("No response from server:", error.request);
+      alert("No response from server. Please try again later.");
+    } else {
+      console.error("Unexpected error:", error.message);
+      alert("An unexpected error occurred. Please try again.");
+    }
+  }
+};

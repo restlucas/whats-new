@@ -7,7 +7,10 @@ import {
   makeLike,
   removeCommentLike,
   removeLike,
+  requestPasswordReset,
+  resetPassword,
   updateProfile,
+  validateToken,
 } from "../controllers/userController";
 import { check, login, logout } from "../controllers/authController";
 import {
@@ -49,11 +52,9 @@ router.post("/user/like/comment", authMiddleware, makeCommentLike);
 router.put("/user", updateProfile);
 router.delete("/user/like", authMiddleware, removeLike);
 router.delete("/user/like/comment", removeCommentLike);
-// router.delete("/user/like/comment", authMiddleware, removeCommentLike);
-// router.delete("/user/like/comment", authMiddleware, (req, res) => {
-//   const user = (req as any).user; // Aqui você pode acessar o usuário autenticado
-//   res.status(200).json({ message: "Like removed successfully", user });
-// });
+router.post("/users/request-reset-password", requestPasswordReset);
+router.post("/users/reset-password", resetPassword);
+router.get("/users/validate-token", validateToken);
 
 // News crud
 router.get("/news", getAllNews);

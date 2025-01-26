@@ -143,20 +143,6 @@ const LoggedOptions = ({
             <button
               onClick={() => {
                 setLoggedOptions(false);
-                navigate("/support");
-              }}
-              className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
-            >
-              <span>FAQ</span>
-              <Question
-                size={22}
-                className="fill-text-primary cursor-pointer"
-                weight="bold"
-              />
-            </button>
-            <button
-              onClick={() => {
-                setLoggedOptions(false);
                 signOut();
               }}
               className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
@@ -189,20 +175,6 @@ const LoggedOptions = ({
             </button>
           );
         })}
-        <button
-          onClick={() => {
-            setLoggedOptions(false);
-            setShowMobileMenu && setShowMobileMenu(false);
-            navigate("/support");
-          }}
-          className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
-        >
-          <Question
-            size={22}
-            className="fill-text-primary cursor-pointer fill-white"
-            weight="bold"
-          />
-        </button>
         <button
           onClick={() => signOut()}
           className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
@@ -242,7 +214,7 @@ const EntranceOptions = () => {
       <div ref={divRef} className="relative hidden min-[900px]:block">
         <button
           onClick={() => setEntranceOptions(!entranceOptions)}
-          className="px-2 py-1 rounded-md bg-red-vibrant font-bold text-white"
+          className="py-2 px-4 text-nowrap rounded-md bg-red-vibrant font-bold text-white"
         >
           Go to login
         </button>
@@ -338,6 +310,13 @@ const DesktopNavigation = ({
         </Link>
 
         <ThemeToggle />
+
+        <Link
+          to="/support"
+          className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
+        >
+          <Question size={22} className="fill-text-primary cursor-pointer" />
+        </Link>
 
         {user ? <LoggedOptions user={user} /> : <EntranceOptions />}
 
@@ -452,6 +431,16 @@ const MobileNavigation = ({
               </Link>
 
               <ThemeToggle />
+
+              <Link
+                to="/support"
+                className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
+              >
+                <Question
+                  size={26}
+                  className="fill-text-primary cursor-pointer"
+                />
+              </Link>
             </div>
             <nav className="w-full h-full flex flex-col">
               <h3 className="w-full text-center text-sm font-bold mb-4">

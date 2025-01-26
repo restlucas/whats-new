@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Login } from "./components/login";
 import { Register } from "./components/register";
+import { Forgot } from "./components/forgot";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
 
@@ -57,6 +58,7 @@ export function AuthCreator() {
             handleAuth={handleAuth}
           />
         )}
+        {auth === "forgot" && <Forgot handleAuth={handleAuth} />}
       </aside>
       {/* <div className="absolute top-5 left-5">
         <Link to="/" className="flex items-center justify-start gap-2 group">

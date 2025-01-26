@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { Login } from "./components/login";
 import { Register } from "./components/register";
+import { Forgot } from "./components/forgot";
 
 export function AuthReader() {
   const [auth, setAuth] = useState("login");
@@ -28,6 +29,7 @@ export function AuthReader() {
         {auth === "register" && (
           <Register entranceMode="READER" handleAuth={handleAuth} />
         )}
+        {auth === "forgot" && <Forgot handleAuth={handleAuth} />}
       </aside>
       <div className="hidden md:block relative w-full h-full bg-red-vibrant rounded-xl overflow-hidden shadow-2xl">
         <div

@@ -99,10 +99,19 @@ export function Login({ entranceMode, handleAuth }: LoginProps) {
           </div>
         )}
 
+        <div className="flex items-center justify-center gap-2 text-sm">
+          <span>Forgout you password?</span>
+          <button
+            className="font-bold duration-200 hover:underline"
+            onClick={() => handleAuth("forgot")}
+          >
+            Click here!
+          </button>
+        </div>
         <div className="flex items-center justify-center gap-2 text-sm mt-auto mb-10">
           <span>Don't have an account?</span>
           <button
-            className="font-bold font-bold duration-200 hover:underline"
+            className="font-bold duration-200 hover:underline"
             onClick={() => handleAuth("register")}
           >
             Register!

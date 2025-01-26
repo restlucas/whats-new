@@ -66,6 +66,15 @@ const userService = {
     return user;
   },
 
+  async getUserByKey(key: "id" | "username" | "email", value: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        [key]: value,
+      },
+    });
+    return user;
+  },
+
   async updateProfile(userId: string, name: string, password: string) {
     return await prisma.user.update({
       where: {
@@ -81,6 +90,23 @@ const userService = {
         email: true,
         role: true,
         createdAt: true,
+      },
+    });
+  },
+
+  async updatePassword(userId: string, newPassword: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: newPassword,
       },
     });
   },
@@ -140,6 +166,35 @@ const userService = {
           userId,
           commentId,
         },
+      },
+    });
+  },
+
+  async createResetToken(userId: string, token: string) {
+    return await prisma.resetPasswordToken.create({
+      data: {
+        userId,
+        token,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
+  },
+
+  async getResetToken(token: string) {
+    return await prisma.resetPasswordToken.findUnique({
+      where: {
+        token,
+      },
+    });
+  },
+
+  async updateResetToken(token: string) {
+    return await prisma.resetPasswordToken.update({
+      where: {
+        token,
+      },
+      data: {
+        used: true,
       },
     });
   },

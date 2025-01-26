@@ -21,6 +21,9 @@ model User {
   commentLike   CommentLike[]
   likes         Like[]
   teamMember    TeamMember[]
+  resetTokens ResetPasswordToken[]
+
+  @@unique([id, username, email])
 }
 
 model Team {
@@ -30,6 +33,8 @@ model Team {
 
   members     TeamMember[]    
   invitations Invitation[]
+
+  @@unique([id])
 }
 
 model TeamMember {
@@ -54,6 +59,8 @@ model Invitation {
   createdAt DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([id])
 }
 
 model News {
@@ -74,6 +81,8 @@ model News {
   teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id])
   comments    Comment[]
   likes       Like[]
+
+  @@unique([id, slug])
 }
 
 model Comment {
@@ -87,6 +96,8 @@ model Comment {
   news        News      @relation(fields: [newsId], references: [id])
 
   commentLike CommentLike[]
+
+  @@unique([id])
 }
 
 model CommentLike {
@@ -121,6 +132,18 @@ model Contact {
   message String @db.Text
 
   createdAt DateTime @default(now())
+}
+
+model ResetPasswordToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  used      Boolean   @default(false)  
+  createdAt DateTime  @default(now()) 
+
+  user      User     @relation(fields: [userId], references: [id])
+  @@index([token]) 
 }
 
 enum Role {
