@@ -1,14 +1,18 @@
-import { fetchArticle, incrementViews } from "@src/services/newsServices";
+import {
+  Article,
+  fetchArticle,
+  incrementViews,
+} from "@src/services/newsServices";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useArticle = (slug: string) => {
+export const useArticle = (slug: string, userId: string) => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["newsByTeam", slug],
+  const { data, isLoading, error, refetch } = useQuery<Article>({
+    queryKey: ["newsByTeam", slug, userId],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      return await fetchArticle(slug);
+      return await fetchArticle(slug, userId);
     },
     enabled: !!slug,
     staleTime: 0,
@@ -26,5 +30,5 @@ export const useArticle = (slug: string) => {
     },
   });
 
-  return { article: data, isLoading, error, incrementArticleViews };
+  return { article: data, isLoading, error, refetch, incrementArticleViews };
 };

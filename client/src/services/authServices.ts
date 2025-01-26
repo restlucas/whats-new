@@ -82,7 +82,7 @@ export const logout = async () => {
 
 export const register = async (user: UserData) => {
   try {
-    const response = await axiosInstance.post("/users", user, {
+    const response = await axiosInstance.post("/user", user, {
       headers: {
         "Content-Type": "application/json",
       },

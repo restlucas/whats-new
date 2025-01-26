@@ -1,11 +1,12 @@
 import {
-  BookmarkSimple,
   CaretDown,
   House,
   List,
   MagnifyingGlass,
   Newspaper,
+  Question,
   SignOut,
+  ThumbsUp,
   User,
   UserGear,
 } from "@phosphor-icons/react";
@@ -18,9 +19,18 @@ import {
 import ThemeToggle from "./themeToggle";
 import useAuthCheck from "../hooks/useAuth";
 import { useContext, useEffect, useRef, useState } from "react";
-import { clearLocalStorage } from "@src/utils/storageUtils";
+import { clearLocalStorage, getLocalStorage } from "@src/utils/storageUtils";
 import { deleteCookie } from "@src/utils/cookieUtils";
 import { UserContext } from "@src/contexts/UserContext";
+
+interface UserProps {
+  id: string;
+  username: string;
+  name: string;
+  role: "READER" | "CREATOR" | "ADMIN";
+  email: string;
+  createdAt: string;
+}
 
 export const categories = [
   { value: "general", name: "General" },
@@ -32,15 +42,6 @@ export const categories = [
   { value: "technology", name: "Technology" },
 ];
 
-interface UserProps {
-  id: string;
-  username: string;
-  name: string;
-  role: "READER" | "CREATOR" | "ADMIN";
-  email: string;
-  createdAt: string;
-}
-
 const loggedNavigation = {
   CREATOR: [
     {
@@ -48,11 +49,11 @@ const loggedNavigation = {
       href: "/panel",
       icon: <House size={22} weight="fill" className="fill-white" />,
     },
-    {
-      name: "Saved news",
-      href: "/saved-news",
-      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
-    },
+    // {
+    //   name: "Liked news",
+    //   href: "/liked-news",
+    //   icon: <ThumbsUp size={22} weight="fill" className="fill-white" />,
+    // },
   ],
   READER: [
     {
@@ -60,11 +61,11 @@ const loggedNavigation = {
       href: "/my-profile",
       icon: <User size={22} weight="fill" className="fill-white" />,
     },
-    {
-      name: "Saved news",
-      href: "/saved-news",
-      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
-    },
+    // {
+    //   name: "Liked news",
+    //   href: "/liked-news",
+    //   icon: <ThumbsUp size={22} weight="fill" className="fill-white" />,
+    // },
   ],
   ADMIN: [
     {
@@ -72,16 +73,23 @@ const loggedNavigation = {
       href: "/panel",
       icon: <House size={22} weight="fill" className="fill-white" />,
     },
-    {
-      name: "Saved news",
-      href: "/saved-news",
-      icon: <BookmarkSimple size={22} weight="fill" className="fill-white" />,
-    },
+    // {
+    //   name: "Liked news",
+    //   href: "/liked-news",
+    //   icon: <ThumbsUp size={22} weight="fill" className="fill-white" />,
+    // },
   ],
 };
 
-const LoggedOptions = ({ user }: { user: UserProps }) => {
+const LoggedOptions = ({
+  user,
+  setShowMobileMenu,
+}: {
+  user: UserProps;
+  setShowMobileMenu?: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const divRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [loggedOptions, setLoggedOptions] = useState<boolean>(false);
   const { signOut } = useContext(UserContext);
 
@@ -100,47 +108,113 @@ const LoggedOptions = ({ user }: { user: UserProps }) => {
   }, []);
 
   return (
-    <div ref={divRef} className="relative">
-      <button
-        onClick={() => setLoggedOptions(!loggedOptions)}
-        className="py-2 px-4 rounded-md bg-red-vibrant font-bold flex items-center justify-center gap-4"
-      >
-        <span className="text-white">{user.name.split(" ")[0]}</span>
-        <CaretDown
-          size={22}
-          weight="bold"
-          className={`fill-white duration-300 ${loggedOptions ? "rotate-0" : "rotate-90"}`}
-        />
-      </button>
+    <>
+      {/* Desktop */}
+      <div ref={divRef} className="relative hidden min-[900px]:block">
+        <button
+          onClick={() => setLoggedOptions(!loggedOptions)}
+          className="py-2 px-4 rounded-md bg-red-vibrant font-bold flex items-center justify-center gap-4"
+        >
+          <span className="text-white">{user.name.split(" ")[0]}</span>
+          <CaretDown
+            size={22}
+            weight="bold"
+            className={`fill-white duration-300 ${loggedOptions ? "rotate-0" : "rotate-90"}`}
+          />
+        </button>
 
-      {loggedOptions && (
-        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
-          {loggedNavigation[user.role].map((navigation, index) => {
-            return (
-              <Link
-                key={index}
-                to={navigation.href}
-                className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
-              >
-                <span>{navigation.name}</span>
-                {navigation.icon}
-              </Link>
-            );
-          })}
-          <button
-            onClick={() => signOut()}
-            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
-          >
-            <span>Sign out</span>
-            <SignOut
-              size={22}
-              className="fill-text-primary cursor-pointer"
-              weight="bold"
-            />
-          </button>
-        </div>
-      )}
-    </div>
+        {loggedOptions && (
+          <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
+            {loggedNavigation[user.role].map((navigation, index) => {
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setLoggedOptions(false);
+                    navigate(navigation.href);
+                  }}
+                  className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+                >
+                  <span>{navigation.name}</span>
+                  {navigation.icon}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => {
+                setLoggedOptions(false);
+                navigate("/support");
+              }}
+              className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            >
+              <span>FAQ</span>
+              <Question
+                size={22}
+                className="fill-text-primary cursor-pointer"
+                weight="bold"
+              />
+            </button>
+            <button
+              onClick={() => {
+                setLoggedOptions(false);
+                signOut();
+              }}
+              className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            >
+              <span>Sign out</span>
+              <SignOut
+                size={22}
+                className="fill-text-primary cursor-pointer"
+                weight="bold"
+              />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile */}
+      <div className="w-full flex items-center justify-center gap-2 min-[900px]:hidden">
+        {loggedNavigation[user.role].map((navigation, index) => {
+          return (
+            <button
+              key={index}
+              onClick={() => {
+                setLoggedOptions(false);
+                setShowMobileMenu && setShowMobileMenu(false);
+                navigate(navigation.href);
+              }}
+              className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
+            >
+              {navigation.icon}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => {
+            setLoggedOptions(false);
+            setShowMobileMenu && setShowMobileMenu(false);
+            navigate("/support");
+          }}
+          className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
+        >
+          <Question
+            size={22}
+            className="fill-text-primary cursor-pointer fill-white"
+            weight="bold"
+          />
+        </button>
+        <button
+          onClick={() => signOut()}
+          className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
+        >
+          <SignOut
+            size={22}
+            className="fill-text-primary cursor-pointer fill-white"
+            weight="bold"
+          />
+        </button>
+      </div>
+    </>
   );
 };
 
@@ -163,33 +237,56 @@ const EntranceOptions = () => {
   }, []);
 
   return (
-    <div ref={divRef} className="relative">
-      <button
-        onClick={() => setEntranceOptions(!entranceOptions)}
-        className="px-2 py-1 rounded-md bg-red-vibrant font-bold text-white"
-      >
-        Go to login
-      </button>
+    <>
+      {/* Desktop */}
+      <div ref={divRef} className="relative hidden min-[900px]:block">
+        <button
+          onClick={() => setEntranceOptions(!entranceOptions)}
+          className="px-2 py-1 rounded-md bg-red-vibrant font-bold text-white"
+        >
+          Go to login
+        </button>
 
-      {entranceOptions && (
-        <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
+        {entranceOptions && (
+          <div className="animate-fade-yaxis absolute z-[100] top-full mt-1 right-0 flex flex-col rounded-md bg-red-vibrant text-white overflow-hidden">
+            <Link
+              to="/auth/reader"
+              className="py-2 px-5 font-semibold duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            >
+              <span>as a Reader</span>
+              <Newspaper size={18} weight="bold" />
+            </Link>
+            <Link
+              to="/auth/creator"
+              className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            >
+              <span>as a Creator</span>
+              <UserGear size={18} weight="bold" />
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile */}
+      <div className="flex min-[900px]:hidden">
+        <div className="flex flex-col gap-2">
           <Link
             to="/auth/reader"
-            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            className="py-2 px-5 font-semibold duration-200 bg-red-hover text-white text-nowrap flex items-center justify-between gap-4 rounded-md"
           >
             <span>as a Reader</span>
             <Newspaper size={18} weight="bold" />
           </Link>
           <Link
             to="/auth/creator"
-            className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
+            className="text-end font-semibold py-2 px-5 duration-200 bg-red-hover text-white text-nowrap flex items-center justify-between gap-4 rounded-md"
           >
             <span>as a Creator</span>
             <UserGear size={18} weight="bold" />
           </Link>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 
@@ -266,13 +363,12 @@ const DesktopNavigation = ({
 
 const MobileNavigation = ({
   urlParams,
-  authenticated,
 }: {
   urlParams: URLSearchParams;
   authenticated: boolean | null;
 }) => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   const divRef = useRef<HTMLDivElement>(null);
 
   const [isAnimating, setIsAnimating] = useState(false);
@@ -372,37 +468,27 @@ const MobileNavigation = ({
                       key={index}
                       className={`h-9 flex items-center justify-center box-content border-b-2 border-transparent font-bold duration-100 text-inherit uppercase ${urlParams.get("category") && urlParams.get("category") === category.value ? "text-red border-red" : "hover:text-title hover:border-red"}`}
                     >
-                      <Link to={categoryUrl}>{category.name}</Link>
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          navigate(categoryUrl);
+                        }}
+                      >
+                        {category.name}
+                      </button>
                     </li>
                   );
                 })}
               </ul>
 
-              <div className="mt-auto flex items-center justify-center gap-2">
-                {authenticated ? (
-                  <>
-                    <Link
-                      to="/panel"
-                      className="w-auto h-12 text-nowrap px-4 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
-                    >
-                      Go to dashboard
-                    </Link>
-                    <button
-                      onClick={() => makeLogout()}
-                      className="h-12 w-12 flex items-center justify-center rounded-md border border-tertiary/20 dark:border-tertiary"
-                    >
-                      <SignOut size={22} className="" />
-                    </button>
-                  </>
+              <div className="mt-auto flex items-center justify-center">
+                {user ? (
+                  <LoggedOptions
+                    user={user}
+                    setShowMobileMenu={setShowMobileMenu}
+                  />
                 ) : (
-                  <>
-                    <Link
-                      to="/auth"
-                      className="w-auto h-12 text-nowrap px-4 rounded-md bg-red-vibrant text-white font-bold flex items-center justify-center duration-100 hover:bg-red-hover"
-                    >
-                      Go to login
-                    </Link>
-                  </>
+                  <EntranceOptions />
                 )}
               </div>
             </nav>

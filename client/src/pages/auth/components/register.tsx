@@ -4,6 +4,7 @@ import { UserContext } from "@src/contexts/UserContext";
 import { validateInvitation } from "@src/services/authServices";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { AuthButton } from "@src/components/button/auth";
 
 interface RegisterProps {
   entranceMode: string;
@@ -37,6 +38,7 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
     confirmPassword: "",
   });
   const [token, setToken] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { signUp } = useContext(UserContext);
 
   const checkInvite = async (token: string) => {
@@ -61,6 +63,7 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setMessage(null);
+    setLoading(true);
 
     const data = {
       ...form,
@@ -72,20 +75,24 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
     } else {
       const response = await signUp(data);
 
-      if (response.status === 401) {
-        setMessage(response);
+      if (response.status !== 201) {
+        setMessage({
+          code: response.status,
+          title: response.message,
+        });
+      } else {
+        setMessage({
+          code: 201,
+          title: `User successfully created. Please, make login!`,
+        });
+
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        url.search = "";
+        window.history.replaceState({}, "", url.toString());
+        handleAuth("login");
       }
-
-      setMessage({
-        code: 201,
-        title: `${response.message}. Please, make login!`,
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-
-      url.search = "";
-      window.history.replaceState({}, "", url.toString());
-      handleAuth("login");
+      setLoading(false);
     }
   };
 
@@ -159,7 +166,7 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
           />
 
           <Input
-            label="Confirme password"
+            label="Confirm password"
             id="confirmPassword"
             type="password"
             name="confirmPassword"
@@ -168,17 +175,13 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
             handleChange={handleChange}
             required
           />
-          <button
-            type="submit"
-            className="w-full h-11 rounded-md bg-red-vibrant text-white font-bold duration-200 hover:bg-red-hover shadow-lg"
-          >
-            Register
-          </button>
+
+          <AuthButton loading={loading} text="Register" />
         </form>
 
         {message && (
           <div
-            className={`mt-4 text-center text-sm ${message.code === 401 ? "text-red-vibrant" : "text-green-500"}`}
+            className={`mt-4 font-bold text-center text-sm ${message.code !== 201 ? "text-red-vibrant" : "text-green-500"}`}
           >
             {message.title}
           </div>

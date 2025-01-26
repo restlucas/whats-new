@@ -4,7 +4,7 @@ import {
   Team as PrismaTeam,
   TeamMember as PrismaTeamMember,
   User as PrismaUser,
-  Favorite as PrismaFavorite,
+  Like as PrismaLike,
   TeamRole,
 } from "@prisma/client";
 import { faker } from "@faker-js/faker";
@@ -140,7 +140,6 @@ async function createNews(country: string): Promise<PrismaNews[]> {
       const description = faker.lorem.sentence(30); // Descrição curta
       const content = faker.lorem.paragraphs(6); // Conteúdo com no mínimo 6 parágrafos
       const views = faker.number.int({ min: 100, max: 1000 }); // Views aleatórios
-      const likes = faker.number.int({ min: 10, max: 500 }); // Likes aleatórios
       const image = await getRandomImageUrl();
 
       const slug = createSlug(title);
@@ -156,7 +155,6 @@ async function createNews(country: string): Promise<PrismaNews[]> {
           description,
           content,
           views,
-          likes,
           country,
           category,
           teamMemberId,
@@ -171,13 +169,13 @@ async function createNews(country: string): Promise<PrismaNews[]> {
 
 // Função para criar favoritos
 async function createFavorites(newsList: PrismaNews[]) {
-  const favoriteNews: PrismaFavorite[] = [];
+  const favoriteNews: PrismaLike[] = [];
   const randomNews = faker.helpers.shuffle(newsList).slice(0, 5); // Favoritar 5 notícias aleatórias
 
   const { id: userId } = (await getRandomUserRow()) as PrismaUser;
 
   for (const news of randomNews) {
-    const favorite = await prisma.favorite.create({
+    const favorite = await prisma.like.create({
       data: {
         userId,
         newsId: news.id,

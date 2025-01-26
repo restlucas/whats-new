@@ -41,7 +41,9 @@ export function TeamsButton() {
           className="w-full h-10 flex items-center justify-center cursor-pointer group"
         >
           <div className="border border-r-0 border-tertiary/20 dark:border-tertiary w-full h-full px-2 flex-1 rounded-tl-md rounded-bl-md flex items-center justify-start duration-200 group-hover:text-white group-hover:bg-red-vibrant">
-            <span className="font-bold">{activeTeam?.name}</span>
+            <span className="font-bold text-nowrap line-clamp-1">
+              {activeTeam?.name}
+            </span>
           </div>
           <div className="h-10 w-10 flex items-center justify-center rounded-tr-md rounded-br-md bg-red-vibrant">
             <CaretLeft
@@ -72,7 +74,7 @@ export function TeamsButton() {
                   <button
                     key={team.id}
                     onClick={() => changeTeam(team.id)}
-                    className="h-10 w-full p-2 text-start duration-200 hover:bg-tertiary/5 hover:dark:bg-tertiary/60 font-bold"
+                    className="h-10 w-full p-2 text-start duration-200 hover:bg-tertiary/5 hover:dark:bg-tertiary/60 font-bold text-nowrap line-clamp-1"
                   >
                     {team.name}
                   </button>

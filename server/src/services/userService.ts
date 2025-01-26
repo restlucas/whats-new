@@ -45,28 +45,102 @@ const userService = {
       },
     });
 
-    const invitationInfo = await prisma.invitation.update({
-      where: {
-        id: invitationId,
-      },
-      data: {
-        status: "ACCEPTED",
-      },
-    });
+    if (invitationId) {
+      const invitationInfo = await prisma.invitation.update({
+        where: {
+          id: invitationId,
+        },
+        data: {
+          status: "ACCEPTED",
+        },
+      });
 
-    await prisma.teamMember.create({
-      data: {
-        teamId: invitationInfo.teamId,
-        userId: user.id,
-      },
-    });
+      await prisma.teamMember.create({
+        data: {
+          teamId: invitationInfo.teamId,
+          userId: user.id,
+        },
+      });
+    }
 
     return user;
+  },
+
+  async updateProfile(userId: string, name: string, password: string) {
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name,
+        password,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    });
   },
 
   async getUserFavorites(userId: string) {
     return await prisma.user.findUnique({
       where: { id: userId },
+    });
+  },
+
+  async getLikes(userId: string) {
+    const likes = await prisma.like.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        newsId: true,
+      },
+    });
+
+    return likes.map((like) => like.newsId);
+  },
+
+  async createLike(userId: string, newsId: string) {
+    return await prisma.like.create({
+      data: {
+        newsId,
+        userId,
+      },
+    });
+  },
+
+  async deleteLike(userId: string, newsId: string) {
+    return await prisma.like.delete({
+      where: {
+        userId_newsId: {
+          userId,
+          newsId,
+        },
+      },
+    });
+  },
+
+  async createCommentLike(userId: string, commentId: string) {
+    return await prisma.commentLike.create({
+      data: {
+        commentId,
+        userId,
+      },
+    });
+  },
+
+  async deleteCommentLike(userId: string, commentId: string) {
+    return await prisma.commentLike.delete({
+      where: {
+        userId_commentId: {
+          userId,
+          commentId,
+        },
+      },
     });
   },
 };

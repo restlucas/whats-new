@@ -8,15 +8,17 @@ import { TeamContext } from "@src/contexts/TeamContext";
 
 export function PanelLayout() {
   const isAuthenticated = useAuthCheck();
-  const { setUser } = useContext(UserContext);
+  const { setUser, setLikedNews, getLikes } = useContext(UserContext);
   const { getTeams } = useContext(TeamContext);
 
   useEffect(() => {
     const userInStorage = getLocalStorage("@whats-new:user") as User;
     getTeams(userInStorage.id);
+    getLikes(userInStorage.id);
 
     if (userInStorage) {
       setUser(userInStorage);
+      setLikedNews(userInStorage);
     }
   }, []);
 

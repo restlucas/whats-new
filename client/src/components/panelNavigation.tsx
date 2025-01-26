@@ -5,6 +5,7 @@ import {
   Info,
   List,
   Plus,
+  Question,
   SignOut,
   User,
   Users,
@@ -12,15 +13,8 @@ import {
 import ThemeToggle from "./themeToggle";
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { Link, Router, useLocation, useNavigate } from "react-router-dom";
-import { TeamContext } from "../contexts/TeamContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { TeamsButton } from "./button/teams";
-
-interface Team {
-  id: string;
-  name: string;
-  createdAt: string;
-}
 
 const menus = [
   { name: "Dashboard", href: "/panel", icon: <House size={22} /> },
@@ -33,11 +27,6 @@ const menus = [
     name: "Teams",
     href: "/panel/teams",
     icon: <Users size={22} />,
-  },
-  {
-    name: "Support and feedback",
-    href: "/panel/support",
-    icon: <Info size={22} />,
   },
 ];
 
@@ -128,6 +117,17 @@ export function PanelNavigation() {
             className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
           >
             <User
+              size={22}
+              className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
+            />
+          </Link>
+
+          <Link
+            to="/support"
+            title="Support and FAQ"
+            className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
+          >
+            <Question
               size={22}
               className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
             />

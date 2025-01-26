@@ -63,7 +63,7 @@ const newsService = {
     if (sortBy === "publishedAt") {
       orderBy = { createdAt: "desc" };
     } else if (sortBy === "likes") {
-      orderBy = { likes: "desc" };
+      orderBy = { likes: { _count: "desc" } };
     } else if (sortBy === "views") {
       orderBy = { views: "desc" };
     }
@@ -140,48 +140,68 @@ const newsService = {
     });
   },
 
-  async getArticle(slug: string) {
-    return await prisma.news.findFirstOrThrow({
-      where: {
-        slug,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        image: true,
-        content: true,
-        country: true,
-        category: true,
-        createdAt: true,
-        updatedAt: true,
-        teamMember: {
-          select: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
+  async getArticle(slug: string, userId?: string) {
+    return await prisma.news
+      .findFirstOrThrow({
+        where: {
+          slug,
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          image: true,
+          content: true,
+          country: true,
+          category: true,
+          createdAt: true,
+          updatedAt: true,
+          teamMember: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
               },
             },
           },
-        },
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
+          comments: {
+            select: {
+              id: true,
+              content: true,
+              createdAt: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
               },
+              commentLike: {
+                select: {
+                  id: true,
+                  userId: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
             },
           },
         },
-      },
-    });
+      })
+      .then((news) => ({
+        ...news,
+        comments: news.comments.map(({ commentLike, ...comment }) => ({
+          ...comment,
+          likeCount: commentLike.length,
+          isLikedByUser: userId
+            ? commentLike.some((like) => like.userId === userId)
+            : false,
+        })),
+      }));
   },
 
   async countNewsByTeam(
@@ -233,6 +253,16 @@ const newsService = {
       },
       data: {
         views: totalViews,
+      },
+    });
+  },
+
+  async createComment(userId: string, newsId: string, content: string) {
+    return await prisma.comment.create({
+      data: {
+        userId,
+        newsId,
+        content,
       },
     });
   },

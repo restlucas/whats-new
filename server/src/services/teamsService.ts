@@ -163,6 +163,19 @@ const teamsService = {
       return result._count.id;
     }
 
+    if (key === "likes") {
+      const result = await prisma.like.count({
+        where: {
+          news: {
+            teamMember: {
+              teamId: teamId,
+            },
+          },
+        },
+      });
+      return result || 0;
+    }
+
     const result = await prisma.news.aggregate({
       _sum: {
         [key]: true,
@@ -189,8 +202,12 @@ const teamsService = {
         title: true,
         slug: true,
         createdAt: true,
-        likes: true,
         views: true,
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

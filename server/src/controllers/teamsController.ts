@@ -61,8 +61,8 @@ export const updateMemberRole = async (req: Request, res: Response) => {
       }
     }
   } catch (error) {
-    console.error("Erro ao atualizar o papel:", error);
-    res.status(500).json({ message: "Erro interno no servidor" });
+    console.error("Error on update member role:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

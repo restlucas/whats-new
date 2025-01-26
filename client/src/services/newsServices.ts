@@ -20,7 +20,7 @@ interface NewsByTeamProps {
   filters: FilterProps;
 }
 
-interface Article {
+export interface Article {
   id: string;
   title: string;
   description: string;
@@ -46,6 +46,9 @@ interface Article {
       name: string;
       email: string;
     };
+    commentLike: any[];
+    likeCount: number;
+    isLikedByUser: boolean;
   }[];
 }
 
@@ -77,11 +80,15 @@ export const fetchNews = async (options: QueryOptions) => {
   }
 };
 
-export const fetchArticle = async (articleSlug: string): Promise<Article> => {
+export const fetchArticle = async (
+  articleSlug: string,
+  userId: string
+): Promise<Article> => {
   try {
     const params = {
       slug: articleSlug,
       api_key: "a_super_secret_api_key",
+      userId,
     };
 
     const response = (await axiosInstance.get("/news/article", {
@@ -154,4 +161,22 @@ export const incrementViews = async (slug: string): Promise<void> => {
     slug,
     api_key: "a_super_secret_api_key",
   });
+};
+
+export const makeComment = async (
+  userId: string,
+  newsId: string,
+  comment: string
+) => {
+  const response = await axiosInstance.post(
+    "/news/comment",
+    { userId, newsId, comment },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response;
 };

@@ -1,4 +1,10 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useEffect,
+  useCallback,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   removeLocalStorage,
@@ -6,6 +12,12 @@ import {
   getLocalStorage,
 } from "../utils/storageUtils";
 import { check, login, logout, register } from "../services/authServices";
+import {
+  addLike,
+  fetchLikes,
+  removeLike,
+  toggleLike,
+} from "@src/services/userServices";
 
 export interface User {
   id: string;
@@ -26,7 +38,11 @@ export interface UserData {
 interface UserContextType {
   user: any | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  likedNews: string[];
+  setLikedNews: React.Dispatch<any>;
   checkUser: () => any;
+  getLikes: (userId: string) => void;
+  toggleArticleLike: (method: string, userId: string, newsId: string) => void;
   signIn: (
     credentials: { username: string; password: string },
     entranceMode: string
@@ -44,6 +60,7 @@ export const UserContext = createContext({} as UserContextType);
 export function UserContextProvider({ children }: UserContextProviderProps) {
   const location = useLocation();
   const [user, setUser] = useState<User | undefined>();
+  const [likedNews, setLikedNews] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const checkUser = async () => {
@@ -85,15 +102,48 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     removeLocalStorage("@whats-new:user");
     removeLocalStorage("@whats-new:teams");
     removeLocalStorage("@whats-new:active-team");
+    removeLocalStorage("@whats-new:liked-news");
 
     alert("Logged out successfully.");
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    if (location.pathname === "/") {
-      setUser(undefined);
-    } else {
+    setUser(undefined);
+
+    if (location.pathname !== "/") {
       navigate("/");
     }
+  };
+
+  const getLikes = async (userId: string) => {
+    const response = await fetchLikes(userId);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setLikedNews(response.likes);
+    setLocalStorage("@whats-new:liked-news", response.likes);
+  };
+
+  const toggleArticleLike = async (
+    method: string,
+    userId: string,
+    newsId: string
+  ) => {
+    const updatedLikes = [...likedNews];
+
+    const updateState = (newLikes: string[]) => {
+      setLocalStorage("@whats-new:liked-news", newLikes);
+      setLikedNews(newLikes);
+    };
+
+    const newLikes =
+      method === "add"
+        ? [...updatedLikes, newsId]
+        : updatedLikes.filter((id) => id !== newsId);
+
+    if (newLikes !== updatedLikes) {
+      updateState(newLikes);
+    }
+
+    await toggleLike(method, userId, newsId);
   };
 
   useEffect(() => {
@@ -109,10 +159,14 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
       value={{
         user,
         setUser,
+        likedNews,
+        setLikedNews,
         checkUser,
+        toggleArticleLike,
         signIn,
         signUp,
         signOut,
+        getLikes,
       }}
     >
       {children}

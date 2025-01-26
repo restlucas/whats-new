@@ -163,13 +163,14 @@ export const getFullArticle = async (
 ): Promise<any> => {
   const secretKey = req.query.api_key as string;
   const slug = req.query.slug as string;
+  const userId = req.query.userId as string;
 
   try {
     if (secretKey !== process.env.SECRET_KEY) {
       res.status(403).json({ message: "Secret key invalid" });
     }
 
-    const article = await newsService.getArticle(slug);
+    const article = await newsService.getArticle(slug, userId);
 
     res.status(201).json(article);
   } catch (error: unknown) {
@@ -192,6 +193,19 @@ export const incrementViews = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+};
+
+export const makeComment = async (req: Request, res: Response) => {
+  const { userId, newsId, comment } = req.body;
+
+  try {
+    await newsService.createComment(userId, newsId, comment);
+    res.status(201).json({ message: "Comment created successfully" });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
     }
   }
 };

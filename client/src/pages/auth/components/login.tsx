@@ -3,6 +3,7 @@ import { Input } from "@src/components/input";
 import { UserContext } from "@src/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { AuthButton } from "@src/components/button/auth";
 
 interface LoginProps {
   entranceMode: string;
@@ -87,16 +88,7 @@ export function Login({ entranceMode, handleAuth }: LoginProps) {
             handleChange={handleChange}
             required
           />
-          <button
-            type="submit"
-            className="w-full h-11 rounded-md bg-red-vibrant font-bold duration-200 hover:bg-red-hover flex items-center justify-center shadow-lg text-white"
-          >
-            {loading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : (
-              <span>Login</span>
-            )}
-          </button>
+          <AuthButton loading={loading} text="Login" />
         </form>
 
         {message && (
