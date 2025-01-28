@@ -112,14 +112,11 @@ export function PanelNavigation() {
           <ThemeToggle />
 
           <Link
-            to="profile"
+            to="/my-profile"
             title="Profile"
             className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
           >
-            <User
-              size={22}
-              className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
-            />
+            <User size={22} weight="bold" />
           </Link>
 
           <Link
@@ -127,14 +124,11 @@ export function PanelNavigation() {
             title="Support and FAQ"
             className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
           >
-            <Question
-              size={22}
-              className={`${location.pathname === "/panel/profile" && "fill-red-vibrant"}`}
-            />
+            <Question size={22} weight="bold" />
           </Link>
 
           <button
-            onClick={() => signOut()}
+            onClick={() => signOut("Logged out successfully.")}
             className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
           >
             <SignOut
@@ -274,7 +268,7 @@ export function PanelNavigation() {
               </Link>
 
               <button
-                onClick={() => signOut()}
+                onClick={() => signOut("Logged out successfully.")}
                 className="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center duration-100 hover:bg-tertiary/20 dark:hover:bg-tertiary"
               >
                 <SignOut

@@ -3,7 +3,7 @@ import { User } from "@src/contexts/UserContext";
 import { toggleCommentLike } from "@src/services/userServices";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NewComment } from "./new-coment";
 
@@ -15,6 +15,7 @@ interface Comment {
     id: string;
     name: string;
     email: string;
+    image?: string;
   };
   likeCount: number;
   isLikedByUser: boolean;
@@ -49,8 +50,12 @@ export function Comments({
           : comment
       )
     );
-    const response = await toggleCommentLike(user.id, commentId, isLiked);
+    await toggleCommentLike(user.id, commentId, isLiked);
   };
+
+  useEffect(() => {
+    setComments(articleComments);
+  }, [articleComments]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -85,7 +90,23 @@ export function Comments({
             >
               <div className="w-full flex items-center justify-between gap-2">
                 <div className="flex items-center justify-start gap-4">
-                  <div className="rounded-full h-9 w-9 bg-slate-400" />
+                  <div
+                    className={`rounded-full h-9 w-9 bg-tertiary/20 dark:bg-tertiary relative flex items-center justify-center overflow-hidden bg-cover bg-center`}
+                    style={{
+                      backgroundImage:
+                        comment.user.image && `url(${comment.user.image})`,
+                    }}
+                  >
+                    {!comment.user.image && (
+                      <span className="text-sm font-semibold">
+                        {comment.user.name
+                          .split(" ")
+                          .map((part) => part[0].toUpperCase())
+                          .join("")
+                          .slice(0, 2)}
+                      </span>
+                    )}
+                  </div>
                   <h3 className="font-semibold text-lg text-nowrap truncate sm:hidden">
                     {comment.user.name.split(" ")[0]}
                   </h3>
@@ -107,7 +128,9 @@ export function Comments({
                     weight={`${comment.isLikedByUser ? "fill" : "bold"}`}
                     className={`duration-200 ${comment.isLikedByUser ? "fill-white" : "group-hover:fill-white"}`}
                   />
-                  <span className="font-semibold duration-200 group-hover:text-white">
+                  <span
+                    className={`font-semibold duration-200 group-hover:text-white ${comment.isLikedByUser && "text-white"}`}
+                  >
                     {comment.likeCount}
                   </span>
                 </button>

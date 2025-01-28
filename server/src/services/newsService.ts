@@ -80,6 +80,7 @@ const newsService = {
               select: {
                 id: true,
                 name: true,
+                image: true,
               },
             },
           },
@@ -177,6 +178,7 @@ const newsService = {
                   id: true,
                   name: true,
                   email: true,
+                  image: true,
                 },
               },
               commentLike: {

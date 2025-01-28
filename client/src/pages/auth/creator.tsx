@@ -53,7 +53,7 @@ export function AuthCreator() {
         )}
         {auth === "register" && (
           <Register
-            entranceMode="CREATOR"
+            registerMode="CREATOR"
             params={{ token: token, email: email }}
             handleAuth={handleAuth}
           />

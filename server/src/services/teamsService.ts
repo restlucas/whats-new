@@ -58,6 +58,7 @@ const teamsService = {
             id: true,
             name: true,
             email: true,
+            image: true,
           },
         },
       },
@@ -78,7 +79,7 @@ const teamsService = {
     });
   },
 
-  async getInvitations(teamId: string) {
+  async getInvitationsByTeam(teamId: string) {
     return await prisma.invitation.findMany({
       where: {
         teamId: teamId,
@@ -86,8 +87,37 @@ const teamsService = {
       },
       select: {
         id: true,
-        email: true,
         createdAt: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+  },
+
+  async getInvitationsByUser(userEmail: string) {
+    return await prisma.invitation.findMany({
+      where: {
+        status: "PENDING",
+        user: {
+          email: userEmail,
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        team: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   },
@@ -102,9 +132,23 @@ const teamsService = {
       },
     });
 
-    const userAlreadyInvited = await prisma.invitation.findFirst({
+    const { id: userId } = (await prisma.user.findFirst({
       where: {
         email: userEmail,
+      },
+      select: {
+        id: true,
+      },
+    })) as { id: string };
+
+    if (!userId) {
+      return { error: "User is not in our system" };
+    }
+
+    const userAlreadyInvited = await prisma.invitation.findFirst({
+      where: {
+        teamId,
+        userId,
       },
     });
 
@@ -115,7 +159,7 @@ const teamsService = {
     const response = await prisma.invitation.create({
       data: {
         teamId,
-        email: userEmail,
+        userId,
       },
     });
 
@@ -224,6 +268,7 @@ const teamsService = {
           select: {
             id: true,
             name: true,
+            image: true,
           },
         },
         _count: {
@@ -256,6 +301,40 @@ const teamsService = {
       lastFiveNews,
       topUsers,
     };
+  },
+
+  async updateTeamInvitation(
+    userId: string,
+    invitationId: string,
+    status: "ACCEPTED" | "REJECTED"
+  ) {
+    if (status === "ACCEPTED") {
+      const { teamId } = (await prisma.invitation.findUnique({
+        where: {
+          id: invitationId,
+          userId,
+        },
+        select: {
+          teamId: true,
+        },
+      })) as { teamId: string };
+
+      await prisma.teamMember.create({
+        data: {
+          teamId,
+          userId,
+        },
+      });
+    }
+
+    return await prisma.invitation.update({
+      where: {
+        id: invitationId,
+      },
+      data: {
+        status,
+      },
+    });
   },
 };
 

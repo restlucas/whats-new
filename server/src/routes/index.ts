@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import authMiddleware from "../middlewares/authMiddleware";
 import {
   createUser,
@@ -26,9 +27,11 @@ import {
   create,
   getAllTeamsByUser,
   getLastNewsAndTopUsers,
+  getMemberInvitations,
   getMembersByTeam,
   getStatistics,
   getTeamInvitations,
+  handleTeamInvite,
   makeInvitation,
   removeMember,
   revokeInvitation,
@@ -38,6 +41,7 @@ import {
 import { sendMessage } from "../controllers/contactController";
 
 const router = Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Login
 router.get("/auth/check", check);
@@ -46,10 +50,10 @@ router.post("/auth/logout", logout);
 
 // Users crud
 router.get("/user/likes", authMiddleware, getLikesByUser);
-router.post("/user", createUser);
+router.post("/user", upload.single("image"), createUser);
 router.post("/user/like", authMiddleware, makeLike);
 router.post("/user/like/comment", authMiddleware, makeCommentLike);
-router.put("/user", updateProfile);
+router.put("/user", upload.single("image"), updateProfile);
 router.delete("/user/like", authMiddleware, removeLike);
 router.delete("/user/like/comment", removeCommentLike);
 router.post("/users/request-reset-password", requestPasswordReset);
@@ -72,9 +76,11 @@ router.get("/teams", authMiddleware, getAllTeamsByUser);
 router.get("/teams/user", authMiddleware, getAllTeamsByUser);
 router.get("/teams/members", getMembersByTeam);
 router.get("/teams/invitations", authMiddleware, getTeamInvitations);
+router.get("/teams/invitations/members", authMiddleware, getMemberInvitations);
 router.get("/teams/invitations/validate", validateInvitation);
 router.post("/teams", authMiddleware, create);
 router.post("/teams/invitations", authMiddleware, makeInvitation);
+router.put("/teams/invitation/team", authMiddleware, handleTeamInvite);
 router.put("/teams/member/role", authMiddleware, updateMemberRole);
 router.delete("/teams/member", removeMember);
 router.delete("/teams/invitations", authMiddleware, revokeInvitation);

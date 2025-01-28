@@ -1,11 +1,6 @@
 import axiosInstance from "@src/lib/axios";
 
-export const updateProfile = async (data: {
-  userId: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-}) => {
+export const updateProfile = async (data: FormData) => {
   try {
     const response = await axiosInstance.put("/user", data);
 

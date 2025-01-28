@@ -17,7 +17,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import ThemeToggle from "./themeToggle";
-import useAuthCheck from "../hooks/useAuth";
+import useAuthCheck from "../hooks/useAuthCheck";
 import { useContext, useEffect, useRef, useState } from "react";
 import { clearLocalStorage, getLocalStorage } from "@src/utils/storageUtils";
 import { deleteCookie } from "@src/utils/cookieUtils";
@@ -143,7 +143,7 @@ const LoggedOptions = ({
             <button
               onClick={() => {
                 setLoggedOptions(false);
-                signOut();
+                signOut("Logged out successfully.");
               }}
               className="text-end font-semibold py-2 px-5 duration-200 hover:bg-red-hover text-nowrap flex items-center justify-between gap-4"
             >
@@ -176,7 +176,7 @@ const LoggedOptions = ({
           );
         })}
         <button
-          onClick={() => signOut()}
+          onClick={() => signOut("Logged out successfully.")}
           className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
         >
           <SignOut
@@ -491,7 +491,7 @@ const MobileNavigation = ({
 };
 
 export function Header() {
-  const isAuthenticated = useAuthCheck();
+  const { isAuthenticated, loading } = useAuthCheck();
   const [searchParams] = useSearchParams();
 
   return (

@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response } from "express";
 import teamsService from "../services/teamsService";
 
@@ -66,12 +66,34 @@ export const updateMemberRole = async (req: Request, res: Response) => {
   }
 };
 
-export const getTeamInvitations = async (req: Request, res: Response) => {
+export const getMemberInvitations = async (req: Request, res: Response) => {
   try {
     const { teamId } = req.query;
 
     try {
-      const response = await teamsService.getInvitations(teamId as string);
+      const response = await teamsService.getInvitationsByTeam(
+        teamId as string
+      );
+      res.status(201).json(response);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        res.status(400).json({ error: error.message });
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao atualizar o papel:", error);
+    res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
+export const getTeamInvitations = async (req: Request, res: Response) => {
+  try {
+    const { userEmail } = req.query;
+
+    try {
+      const response = await teamsService.getInvitationsByUser(
+        userEmail as string
+      );
       res.status(201).json(response);
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -130,12 +152,23 @@ export const validateInvitation = async (
   const { token } = req.query;
 
   try {
-    const decoded = jwt.verify(
+    const { invitationId, email } = jwt.verify(
       token as string,
       process.env.JWT_SECRET as string
-    );
+    ) as JwtPayload & { invitationId: string; email: string };
 
-    res.status(200).json({ message: "Token is valid", decoded });
+    let redirect = `/auth/creator?method=register&email=${email}`;
+    let message = `Token is valid, redirecting to register page!`;
+
+    const userInSystem = await teamsService.getInvitationsByUser(
+      email as string
+    );
+    if (userInSystem) {
+      redirect = "/auth/creator?method=login";
+      message = "Make login and access system to accept invite!";
+    }
+
+    res.status(200).json({ message, redirect });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.name === "TokenExpiredError") {
@@ -201,4 +234,22 @@ export const getLastNewsAndTopUsers = async (req: Request, res: Response) => {
   );
 
   res.status(201).json({ data: response });
+};
+
+export const handleTeamInvite = async (req: Request, res: Response) => {
+  const { userId, invitationId, action } = req.body;
+
+  try {
+    const response = await teamsService.updateTeamInvitation(
+      userId,
+      invitationId,
+      action
+    );
+
+    res.status(201).json({ message: "Success", user: response });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 };

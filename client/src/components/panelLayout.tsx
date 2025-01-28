@@ -1,26 +1,9 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import { PanelNavigation } from "./panelNavigation";
-import useAuthCheck from "../hooks/useAuth";
-import { useContext, useEffect } from "react";
-import { User, UserContext } from "@src/contexts/UserContext";
-import { getLocalStorage } from "@src/utils/storageUtils";
-import { TeamContext } from "@src/contexts/TeamContext";
 
 export function PanelLayout() {
-  const isAuthenticated = useAuthCheck();
-  const { setUser, setLikedNews, getLikes } = useContext(UserContext);
-  const { getTeams } = useContext(TeamContext);
-
-  useEffect(() => {
-    const userInStorage = getLocalStorage("@whats-new:user") as User;
-    getTeams(userInStorage.id);
-    getLikes(userInStorage.id);
-
-    if (userInStorage) {
-      setUser(userInStorage);
-      setLikedNews(userInStorage);
-    }
-  }, []);
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated === null)
     return (
@@ -28,7 +11,8 @@ export function PanelLayout() {
         Loading...
       </div>
     );
-  if (!isAuthenticated) return <Navigate to="/auth" />;
+
+  if (!isAuthenticated) return <Navigate to="/auth/creator" />;
 
   return (
     <div className="bg-light text-primary dark:text-light dark:bg-dark flex flex-col md:flex-row h-auto md:h-screen w-full md:divide-x-2 dark:divide-tertiary overflow-x-hidden">

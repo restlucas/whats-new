@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import userService from "../services/userService";
 import bcrypt from "bcryptjs";
 import { requestPwdReset } from "../utils/email";
+import { uploadToFirebase } from "../utils/uploadHelper";
 
 const secretKey = process.env.JWT_SECRET;
 
@@ -12,9 +13,11 @@ export const createUser = async (
   res: Response
 ): Promise<void | any> => {
   const { token, ...rest } = req.body;
+  const file = req.file;
+
   let invitationId = "";
 
-  if (token !== "") {
+  if (token) {
     const decoded = jwt.verify(
       token as string,
       process.env.JWT_SECRET as string
@@ -28,10 +31,16 @@ export const createUser = async (
   };
 
   try {
-    const response = await userService.createUser(formattedData);
+    const user = await userService.createUser(formattedData.user);
 
-    if ("error" in response) {
-      return res.status(401).json({ message: response.error });
+    if ("error" in user) {
+      return res.status(401).json({ message: user.error });
+    }
+
+    if (file) {
+      const fileName = `user-profile-pic/${user.id}.jpg`;
+      const profilePicUrl = await uploadToFirebase(file.buffer, fileName);
+      await userService.updateImage(user.id, profilePicUrl);
     }
 
     return res.status(201).json({ message: "User created successfully" });
@@ -43,16 +52,26 @@ export const createUser = async (
 };
 
 export const updateProfile = async (req: Request, res: Response) => {
-  const { userId, name, password } = req.body;
+  const data = req.body;
+  const file = req.file;
 
   try {
-    const hashedPassword = await bcrypt.hash(password as string, 10);
+    let profilePicUrl = "";
+    const hashedPassword = data.password
+      ? await bcrypt.hash(data.password as string, 10)
+      : "";
 
-    const response = await userService.updateProfile(
-      userId as string,
-      name as string,
-      hashedPassword
-    );
+    if (file) {
+      const fileName = `user-profile-pic/${data.userId}.jpg`;
+      profilePicUrl = await uploadToFirebase(file.buffer, fileName);
+      profilePicUrl = `${profilePicUrl}?v=${Date.now()}`;
+    }
+
+    const response = await userService.updateProfile(data.userId as string, {
+      image: profilePicUrl,
+      name: data.name || "",
+      password: hashedPassword || "",
+    });
     res
       .status(201)
       .json({ message: "Profile updated successfully", user: response });

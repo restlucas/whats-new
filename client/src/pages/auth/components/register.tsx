@@ -1,13 +1,12 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Input } from "@src/components/input";
 import { UserContext } from "@src/contexts/UserContext";
-import { validateInvitation } from "@src/services/authServices";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { AuthButton } from "@src/components/button/auth";
 
 interface RegisterProps {
-  entranceMode: string;
+  registerMode: "READER" | "CREATOR";
   params?: {
     token: string | null;
     email: string | null;
@@ -23,7 +22,7 @@ interface FormProps {
   confirmPassword: string;
 }
 
-export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
+export function Register({ registerMode, params, handleAuth }: RegisterProps) {
   const url = new URL(window.location.href);
   const navigate = useNavigate();
   const [message, setMessage] = useState<{
@@ -40,16 +39,6 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
   const [token, setToken] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { signUp } = useContext(UserContext);
-
-  const checkInvite = async (token: string) => {
-    const response = await validateInvitation(token);
-
-    if (response.data.message !== "Token is valid") {
-      url.search = "";
-      window.history.replaceState({}, "", url.toString());
-      navigate("/error?message=Invalid%20invitation");
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -68,6 +57,7 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
     const data = {
       ...form,
       token: token,
+      registerMode,
     };
 
     if (form.password !== form.confirmPassword) {
@@ -97,14 +87,11 @@ export function Register({ entranceMode, params, handleAuth }: RegisterProps) {
   };
 
   useEffect(() => {
-    if (params && params.token && params.email) {
-      checkInvite(params.token);
-
+    if (params) {
       setForm((prevState) => ({
         ...prevState,
         email: params.email || "",
       }));
-      setToken(params.token);
     }
   }, []);
 

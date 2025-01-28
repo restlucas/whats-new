@@ -30,6 +30,7 @@ const authService = {
       },
       select: {
         id: true,
+        image: true,
         role: true,
         name: true,
         username: true,
@@ -48,6 +49,7 @@ const authService = {
         select: {
           id: true,
           role: true,
+          image: true,
           name: true,
           username: true,
           email: true,

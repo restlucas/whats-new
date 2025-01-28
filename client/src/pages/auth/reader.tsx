@@ -27,7 +27,7 @@ export function AuthReader() {
           <Login entranceMode="READER" handleAuth={handleAuth} />
         )}
         {auth === "register" && (
-          <Register entranceMode="READER" handleAuth={handleAuth} />
+          <Register registerMode="READER" handleAuth={handleAuth} />
         )}
         {auth === "forgot" && <Forgot handleAuth={handleAuth} />}
       </aside>

@@ -1,7 +1,7 @@
 import { PlusCircle } from "@phosphor-icons/react";
 import { useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { InviteMembers } from "./components/invite-members";
+import { Invites } from "./components/invites";
 import { Members } from "./components/members";
 import { CreateTeam } from "./components/create-team";
 import { TeamContext } from "@src/contexts/TeamContext";
@@ -84,7 +84,7 @@ export function Teams() {
               </div>
             </div>
 
-            <div className="py-6 border rounded-xl border-tertiary/20 dark:border-tertiary flex flex-col gap-2">
+            <div className="py-6 border rounded-xl border-tertiary/20 dark:border-tertiary flex flex-col gap-2 space-y-8">
               <div className="px-6">
                 <div className="mb-6">
                   <div className="h-6 w-28 rounded-md bg-tertiary/20 dark:bg-tertiary mb-2 animate-pulse" />
@@ -95,7 +95,60 @@ export function Teams() {
 
                 <div className="space-y-3">
                   <div className="h-5 w-44 rounded-md bg-tertiary/20 dark:bg-tertiary animate-pulse" />
+                  <div className="overflow-x-scroll md:overflow-hidden border border-tertiary/20 dark:border-tertiary rounded-md">
+                    <table className="w-full border-collapse rounded-md">
+                      <thead>
+                        <tr className="text-sm font-bold w-full overflow-x-scroll text-left rtl:text-right">
+                          <th className="p-3 w-[60%]">
+                            <div className="h-5 w-20 rounded-md bg-tertiary/20 dark:bg-tertiary animate-pulse" />
+                          </th>
+                          <th className="p-3 w-[20%] text-nowrap">
+                            <div className="h-5 w-20 rounded-md bg-tertiary/20 dark:bg-tertiary animate-pulse" />
+                          </th>
+                          <th className="p-3 w-[20%]"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Array.from({ length: 4 }).map((_, index) => {
+                          return (
+                            <tr
+                              key={index}
+                              className="text-sm hover:bg-tertiary/5 hover:dark:bg-tertiary/60"
+                            >
+                              <td
+                                className={`${index === 2 ? "" : "border-y"} border-tertiary/20 dark:border-tertiary p-3 font-semibold cursor-pointer  duration-100 hover:underline`}
+                              >
+                                <div className="h-9 w-24 bg-tertiary/20 dark:bg-tertiary rounded-md animate-pulse" />
+                              </td>
+                              <td
+                                className={`${index === 2 ? "" : "border-y"} border-tertiary/20 dark:border-tertiary p-3`}
+                              >
+                                <div className="h-9 w-24 bg-tertiary/20 dark:bg-tertiary rounded-md animate-pulse" />
+                              </td>
+                              <td
+                                className={`${index === 2 ? "" : "border-y"} border-tertiary/20 dark:border-tertiary p-3`}
+                              >
+                                <div className="flex items-center justify-end gap-2">
+                                  <div className="h-9 w-24 bg-tertiary/20 dark:bg-tertiary rounded-md animate-pulse" />
+                                  <div className="h-9 w-24 bg-tertiary/20 dark:bg-tertiary rounded-md animate-pulse" />
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
 
+              <div className="px-6">
+                <div className="mb-6">
+                  <div className="h-6 w-28 rounded-md bg-tertiary/20 dark:bg-tertiary mb-2 animate-pulse" />
+                  <div className="h-5 w-40 rounded-md bg-tertiary/20 dark:bg-tertiary animate-pulse" />
+                </div>
+
+                <div className="space-y-3">
                   <div className="overflow-x-scroll md:overflow-hidden border border-tertiary/20 dark:border-tertiary rounded-md">
                     <table className="w-full border-collapse rounded-md">
                       <thead>
@@ -187,7 +240,7 @@ export function Teams() {
               <Members teamId={selectedTeam.id} />
 
               {/* Invite members */}
-              <InviteMembers selectedTeam={selectedTeam} />
+              <Invites selectedTeam={selectedTeam} />
             </div>
           ) : (
             <CreateTeam />

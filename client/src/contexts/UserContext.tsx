@@ -12,15 +12,11 @@ import {
   getLocalStorage,
 } from "../utils/storageUtils";
 import { check, login, logout, register } from "../services/authServices";
-import {
-  addLike,
-  fetchLikes,
-  removeLike,
-  toggleLike,
-} from "@src/services/userServices";
+import { fetchLikes, toggleLike } from "@src/services/userServices";
 
 export interface User {
   id: string;
+  image: string;
   name: string;
   email: string;
   username: string;
@@ -33,6 +29,7 @@ export interface UserData {
   email: string;
   password: string;
   token: string;
+  registerMode: "READER" | "CREATOR";
 }
 
 interface UserContextType {
@@ -48,7 +45,7 @@ interface UserContextType {
     entranceMode: string
   ) => any;
   signUp: (user: UserData) => any;
-  signOut: () => void;
+  signOut: (message: string) => void;
 }
 
 interface UserContextProviderProps {
@@ -96,7 +93,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     return response;
   };
 
-  const signOut = async () => {
+  const signOut = async (message: string) => {
     await logout();
 
     removeLocalStorage("@whats-new:user");
@@ -104,7 +101,7 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     removeLocalStorage("@whats-new:active-team");
     removeLocalStorage("@whats-new:liked-news");
 
-    alert("Logged out successfully.");
+    alert(message);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setUser(undefined);

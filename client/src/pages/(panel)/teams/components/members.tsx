@@ -99,7 +99,23 @@ export function Members({ teamId }: any) {
                 className="relative flex items-center justify-between"
               >
                 <div className="flex items-start justify-start gap-4">
-                  <div className="w-9 h-9 rounded-full bg-tertiary/20 dark:bg-tertiary" />
+                  <div
+                    className={`rounded-full h-9 w-9 bg-tertiary/20 dark:bg-tertiary relative flex items-center justify-center overflow-hidden bg-cover bg-center`}
+                    style={{
+                      backgroundImage:
+                        member.user.image && `url(${member.user.image})`,
+                    }}
+                  >
+                    {!member.user.image && (
+                      <span className="text-sm font-semibold">
+                        {member.user.name
+                          .split(" ")
+                          .map((part: any) => part[0].toUpperCase())
+                          .join("")
+                          .slice(0, 2)}
+                      </span>
+                    )}
+                  </div>
                   <div className="flex flex-col items-start justify-start">
                     <h5 className="text-xs md:text-base font-semibold leading-4">
                       {member.user.name}

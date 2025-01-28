@@ -58,7 +58,7 @@ export const updateMemberRole = async (
 
 export const getMemberInvitations = async (teamId: string) => {
   try {
-    return await axiosInstance.get("/teams/invitations", {
+    return await axiosInstance.get("/teams/invitations/members", {
       params: {
         teamId,
       },
@@ -66,6 +66,19 @@ export const getMemberInvitations = async (teamId: string) => {
   } catch (error) {
     console.log("Error on get member Invitations: ", error);
     throw new Error("Failed to get member Invitations");
+  }
+};
+
+export const getTeamInvitations = async (userEmail: string) => {
+  try {
+    return await axiosInstance.get("/teams/invitations", {
+      params: {
+        userEmail,
+      },
+    });
+  } catch (error) {
+    console.log("Error on get team invitations: ", error);
+    throw new Error("Failed to get member team invitations");
   }
 };
 
@@ -113,4 +126,16 @@ export const removeMember = async (teamId: string, memberId: string) => {
     console.log("Error on remove user: ", error);
     throw new Error("Failed on remove member");
   }
+};
+
+export const handleTeamInvitation = async (
+  userId: string,
+  invitationId: string,
+  action: string
+) => {
+  return await axiosInstance.put("/teams/invitation/team", {
+    userId,
+    invitationId,
+    action,
+  });
 };

@@ -51,10 +51,7 @@ const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
           <tbody>
             {Array.from({ length: 5 }).map((_, index) => {
               return (
-                <tr
-                  key={index}
-                  className="text-sm hover:bg-tertiary/20 hover:dark:bg-tertiary"
-                >
+                <tr key={index} className="">
                   <td className="p-2 font-semibold">
                     <div className="h-5 w-full bg-tertiary/20 dark:bg-tertiary rounded-md animate-pulse" />
                   </td>
@@ -157,7 +154,7 @@ const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
                     {isNews
                       ? new Date(
                           (row as NewsProps).createdAt
-                        ).toLocaleDateString()
+                        ).toLocaleDateString("en-US")
                       : (row as UserProps).totalNews}
                   </td>
                   <td className="p-2 text-nowrap">

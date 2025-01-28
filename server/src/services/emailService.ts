@@ -6,9 +6,13 @@ export const sendInviteEmail = async (
   teamName: string,
   email: string
 ): Promise<void> => {
-  const token = jwt.sign({ invitationId }, process.env.JWT_SECRET as string, {
-    expiresIn: "3d",
-  });
+  // const token = jwt.sign(
+  //   { invitationId, email },
+  //   process.env.JWT_SECRET as string,
+  //   {
+  //     expiresIn: "1d",
+  //   }
+  // );
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -18,7 +22,7 @@ export const sendInviteEmail = async (
     },
   });
 
-  const link = `${process.env.WHATSNEW_FRONTEND_URL}auth?method=register&token=${token}&email=${email}`;
+  const link = `${process.env.WHATSNEW_FRONTEND_URL}auth/creator`;
 
   const mailOptions = {
     from: process.env.WHATSNEW_EMAIL,
@@ -74,7 +78,7 @@ export const sendInviteEmail = async (
                   You have been invited to join the ${teamName} team!
                 </p>
                 <p style="margin: 0; font-size: 16px; margin-bottom: 3.5rem; color: #ffffff;">
-                  To continue please click in the link below:
+                  To continue please click in the link below and make login:
                 </p>
                 <a target="_blank" href="${link}" style="margin: 0; font-size: 16px; text-align: center">
                   ${link}

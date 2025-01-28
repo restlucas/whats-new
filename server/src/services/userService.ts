@@ -8,13 +8,21 @@ interface CreateUserData {
   password: string;
   confirmPassword: string;
   invitationId: string;
+  registerMode: "READER" | "CREATOR";
 }
 
 const userService = {
   async createUser(data: CreateUserData) {
-    const { name, username, email, password, invitationId } = data;
+    const {
+      name,
+      username,
+      email,
+      password,
+      invitationId,
+      registerMode: role,
+    } = data;
 
-    const userUsernameExist = await prisma.user.findFirst({
+    const userUsernameExist = await prisma.user.findUnique({
       where: {
         username,
       },
@@ -42,6 +50,7 @@ const userService = {
         username,
         email,
         password: hashedPassword,
+        role,
       },
     });
 
@@ -75,18 +84,27 @@ const userService = {
     return user;
   },
 
-  async updateProfile(userId: string, name: string, password: string) {
+  async updateProfile(
+    userId: string,
+    data: { image: string; name: string; password: string }
+  ) {
+    const { image, name, password } = data;
+    const updateData: any = {};
+
+    if (image !== "") updateData.image = image;
+    if (name !== "") updateData.name = name;
+    if (password !== "") updateData.password = password;
+
     return await prisma.user.update({
       where: {
         id: userId,
       },
-      data: {
-        name,
-        password,
-      },
+      data: updateData,
       select: {
         id: true,
+        username: true,
         name: true,
+        image: true,
         email: true,
         role: true,
         createdAt: true,
@@ -195,6 +213,17 @@ const userService = {
       },
       data: {
         used: true,
+      },
+    });
+  },
+
+  async updateImage(userId: string, imageUrl: string) {
+    return await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        image: imageUrl,
       },
     });
   },

@@ -12,6 +12,7 @@ model User {
   name          String
   username      String   @unique
   email         String   @unique
+  image         String?
   password      String
   role          Role     @default(READER)
   createdAt     DateTime @default(now())
@@ -21,6 +22,7 @@ model User {
   commentLike   CommentLike[]
   likes         Like[]
   teamMember    TeamMember[]
+  invitations   Invitation[]
   resetTokens ResetPasswordToken[]
 
   @@unique([id, username, email])
@@ -53,12 +55,13 @@ model TeamMember {
 
 model Invitation {
   id        String      @id @default(cuid())
-  email     String
   teamId    String
+  userId    String
   status    Invitationstatus @default(PENDING)
   createdAt DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@unique([id])
 }

@@ -1,7 +1,7 @@
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "./components/form";
 
 interface FAQItem {
@@ -54,6 +54,7 @@ const faqData: FAQItem[] = [
 ];
 
 export function Support() {
+  const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAnswer = (index: number) => {
@@ -65,15 +66,15 @@ export function Support() {
       <Helmet title="Support and FAQ" />
       <section className="w-full h-auto py-12 flex items-center justify-center overflow-x-hidden">
         <div className="mx-6 w-full xl:w-1/2 flex flex-col items-center justify-center gap-6">
-          <Link
-            to="/"
+          <button
+            onClick={() => navigate(-1)}
             className="w-full flex items-center justify-start gap-2 group"
           >
             <ArrowLeft size={22} className="duration-200 dark:fill-light" />
             <span className="font-bold duration-200 group-hover:underline drop-shadow-lg dark:text-light">
               Get back
             </span>
-          </Link>
+          </button>
           <div className="w-full rounded-md border border-tertiary/20 dark:border-tertiary h-auto p-8 shadow-md space-y-6 dark:text-light">
             <h1 className="font-bold text-4xl text-red-vibrant">
               Support and FAQ

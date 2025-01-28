@@ -132,7 +132,7 @@ export function Article() {
                       }}
                       className={`flex items-center justify-center h-10 w-10 rounded-md duration-200 ${
                         article && likedNews.includes(article.id)
-                          ? "bg-red-vibrant hover:bg-red-hover group"
+                          ? "bg-red-vibrant hover:bg-red-hover text-white group"
                           : "border duration-200 border-tertiary/20 dark:border-tertiary hover:border-red-vibrant hover:bg-red-vibrant group"
                       }`}
                     >

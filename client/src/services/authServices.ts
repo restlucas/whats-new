@@ -82,11 +82,15 @@ export const logout = async () => {
 
 export const register = async (user: UserData) => {
   try {
-    const response = await axiosInstance.post("/user", user, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosInstance.post(
+      "/user",
+      { user },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return {
       status: response.status,
@@ -106,11 +110,13 @@ export const register = async (user: UserData) => {
 };
 
 export const validateInvitation = async (token: string) => {
-  return await axiosInstance.get("/teams/invitations/validate", {
+  const response = await axiosInstance.get("/teams/invitations/validate", {
     params: {
-      token: token,
+      token,
     },
   });
+
+  return response.data;
 };
 
 export const requestResetPassword = async (userEmail: string) => {
