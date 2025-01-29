@@ -25,7 +25,7 @@ const categories = [
   "technology",
   "games",
 ];
-const countries = ["US", "FR", "GB", "CN", "CA", "IT", "RU", "ES", "BR"];
+const countries = ["US"];
 
 async function getRandomImageUrl() {
   const url = `https://picsum.photos/800/600`;
@@ -135,11 +135,11 @@ async function createTeam() {
 async function createNews(country: string): Promise<PrismaNews[]> {
   const news: PrismaNews[] = []; // Tipando explicitamente o array como PrismaNews[]
   for (const category of categories) {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 5; i++) {
       const title = faker.lorem.sentence(10); // Título com até 10 palavras
       const description = faker.lorem.sentence(30); // Descrição curta
       const content = faker.lorem.paragraphs(6); // Conteúdo com no mínimo 6 parágrafos
-      const views = faker.number.int({ min: 100, max: 1000 }); // Views aleatórios
+      const views = faker.number.int({ min: 10, max: 1000 }); // Views aleatórios
       const image = await getRandomImageUrl();
 
       const slug = createSlug(title);
@@ -193,7 +193,7 @@ async function seedDatabase() {
 
     // Criação de 10 usuários
     const users: PrismaUser[] = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 5; i++) {
       const user = await createUser();
       users.push(user);
     }
