@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useState,
-  ReactNode,
-  useEffect,
-  useCallback,
-} from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   removeLocalStorage,
@@ -33,18 +27,18 @@ export interface UserData {
 }
 
 interface UserContextType {
-  user: any | undefined;
+  user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   likedNews: string[];
-  setLikedNews: React.Dispatch<any>;
-  checkUser: () => any;
+  setLikedNews: React.Dispatch<React.SetStateAction<string[]>>;
+  checkUser: () => void;
   getLikes: (userId: string) => void;
   toggleArticleLike: (method: string, userId: string, newsId: string) => void;
   signIn: (
     credentials: { username: string; password: string },
     entranceMode: string
-  ) => any;
-  signUp: (user: UserData) => any;
+  ) => Promise<{ status: number; user?: User; message?: string }>;
+  signUp: (user: UserData) => void;
   signOut: (message: string) => void;
 }
 
@@ -71,16 +65,20 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
       password: string;
     },
     entranceMode: string
-  ) => {
+  ): Promise<{ status: number; user?: User; message?: string }> => {
     const response = await login(credentials, entranceMode);
 
     if (response.status === 401) {
-      return response;
+      return { status: 401, message: response.message };
     }
 
     setLocalStorage("@whats-new:user", response.user);
     setUser(response.user);
-    return response;
+
+    return {
+      status: response.status as number,
+      user: response.user,
+    };
   };
 
   const signUp = async (user: UserData) => {

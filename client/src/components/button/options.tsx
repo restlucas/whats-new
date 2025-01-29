@@ -1,11 +1,10 @@
-import { ArrowsCounterClockwise } from "@phosphor-icons/react";
+import { ArrowsCounterClockwise, CaretDown } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
 interface OptionsButtonProps {
   memberId: string;
-  selectedValue: any;
-  icon: any;
-  options: any;
+  selectedValue: string;
+  options: { value: string; name: string; description: string }[];
   disabled?: boolean;
   loading: boolean;
   handleRole: (memberId: string, roleValue: string) => void;
@@ -14,7 +13,6 @@ interface OptionsButtonProps {
 export function OptionsButton({
   memberId,
   selectedValue,
-  icon,
   options,
   disabled,
   loading,
@@ -83,7 +81,7 @@ export function OptionsButton({
                 {selectedValue.charAt(0).toUpperCase() +
                   selectedValue.slice(1).toLowerCase()}
               </span>
-              {icon}
+              <CaretDown size={18} />
             </div>
           </>
         )}

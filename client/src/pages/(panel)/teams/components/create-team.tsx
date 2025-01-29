@@ -1,6 +1,6 @@
 import { Input } from "@src/components/input";
 import { PlusCircle } from "@phosphor-icons/react";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { UserContext } from "@src/contexts/UserContext";
 import { useTeams } from "@src/hooks/useTeams";
 import { useNavigate } from "react-router-dom";
@@ -11,13 +11,15 @@ export function CreateTeam() {
   const { user } = useContext(UserContext);
   const [teamName, setTeamName] = useState<string>("");
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const response = await newTeam(user.id, teamName);
+    if (user) {
+      const response = await newTeam(user.id, teamName);
 
-    if (response) {
-      alert(response.message);
-      navigate(0);
+      if (response) {
+        alert(response.message);
+        navigate(0);
+      }
     }
   };
 

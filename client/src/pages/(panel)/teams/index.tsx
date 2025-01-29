@@ -6,14 +6,14 @@ import { Members } from "./components/members";
 import { CreateTeam } from "./components/create-team";
 import { TeamContext } from "@src/contexts/TeamContext";
 
-interface Member {
-  role: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
+// interface Member {
+//   role: string;
+//   user: {
+//     id: string;
+//     name: string;
+//     email: string;
+//   };
+// }
 
 interface Team {
   id: string;
@@ -22,10 +22,10 @@ interface Team {
 }
 
 export function Teams() {
-  const { teams, activeTeam } = useContext(TeamContext);
-  const [selectedTeam, setSelectedTeam] = useState<Team | undefined>();
+  const { teams } = useContext(TeamContext);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
-  const handleNavigation = (team: any) => {
+  const handleNavigation = (team: Team | null) => {
     setSelectedTeam(team);
   };
 
@@ -226,7 +226,7 @@ export function Teams() {
                 })}
               <button
                 type="button"
-                onClick={() => handleNavigation({})}
+                onClick={() => handleNavigation(null)}
                 className={`${teams && teams.length >= 3 ? "hidden" : "block"} px-4 h-8 font-bold flex items-center justify-center gap-2 rounded-md duration-100 text-black/30 dark:text-light/30 hover:bg-tertiary/20 dark:hover:bg-tertiary hover:text-tertiary dark:hover:text-white ${selectedTeam && Object.keys(selectedTeam).length === 0 ? " text-tertiary dark:text-white bg-tertiary/20 dark:bg-tertiary" : "text-black/30 dark:text-light/30"}`}
               >
                 <PlusCircle size={20} weight="bold" />

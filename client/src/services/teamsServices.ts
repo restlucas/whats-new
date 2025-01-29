@@ -89,19 +89,9 @@ export const sendInvitation = async (teamId: string, userEmail: string) => {
       userEmail,
     });
     return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      if (error.response.status === 400) {
-        throw new Error("Usuário já foi convidado.");
-      } else {
-        throw new Error(
-          "Falha ao enviar o convite. Tente novamente mais tarde."
-        );
-      }
-    } else if (error.request) {
-      throw new Error("Problema de conexão. Verifique sua internet.");
-    } else {
-      throw new Error("Tente novamente.");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
     }
   }
 };

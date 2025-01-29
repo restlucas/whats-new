@@ -1,10 +1,7 @@
 import {
   ArticleNyTimes,
-  CaretLeft,
   House,
-  Info,
   List,
-  Plus,
   Question,
   SignOut,
   User,
@@ -78,7 +75,7 @@ export function PanelNavigation() {
           to="/"
           className="text-4xl text-center font-bold text-red-vibrant"
         >
-          what's new
+          {"what's new"}
         </Link>
 
         <h3 className="text-sm text-center">
@@ -139,7 +136,9 @@ export function PanelNavigation() {
           </button>
         </div>
         <footer className="text-center flex flex-col gap-1 items-center justify-center text-xs">
-          <p className="font-bold">© 2024 What's New. All rights reserved.</p>
+          <p className="font-bold">
+            {"© 2024 What's New. All rights reserved."}
+          </p>
           <p>
             by{" "}
             <Link
@@ -229,7 +228,7 @@ export function PanelNavigation() {
             className={`${isAnimating ? "animate-fade-out" : "animate-fade-in"} px-4 py-8 w-2/3 h-full bg-light dark:bg-dark flex flex-col gap-4`}
           >
             <h1 className="text-4xl text-center font-bold text-red-vibrant">
-              what's new
+              {"what's new"}
             </h1>
 
             <nav>
@@ -280,7 +279,7 @@ export function PanelNavigation() {
             </div>
             <footer className="text-center flex flex-col gap-1 items-center justify-center text-xs">
               <p className="font-bold">
-                © 2024 What's New. All rights reserved.
+                {"© 2024 What's New. All rights reserved."}
               </p>
               <p>
                 by{" "}

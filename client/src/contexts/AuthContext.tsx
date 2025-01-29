@@ -1,12 +1,11 @@
-// contexts/AuthContext.tsx
-import { createContext, useContext, useEffect, useState } from "react";
 import { getLocalStorage } from "@src/utils/storageUtils";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextData {
   isAuthenticated: boolean | null;
 }
 
-const AuthContext = createContext<AuthContextData>({ isAuthenticated: null });
+const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -25,4 +24,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

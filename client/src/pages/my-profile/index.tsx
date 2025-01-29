@@ -42,10 +42,6 @@ export function MyProfile() {
   const navigate = useNavigate();
   const { user, setUser, signOut } = useContext(UserContext);
 
-  const [message, setMessage] = useState<{
-    code: number;
-    message: string;
-  } | null>();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [formProfile, setFormProfile] = useState<ProfileFormProps>({
@@ -99,7 +95,6 @@ export function MyProfile() {
     const response = await updateProfile(formData);
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    setMessage(response);
     alert(response.message);
 
     if (formProfile.password !== "") {

@@ -13,7 +13,7 @@ import {
   Trash,
   X,
 } from "@phosphor-icons/react";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { TeamContext } from "@src/contexts/TeamContext";
 import { format, parseISO } from "date-fns";
 import { useFetchBasicNews } from "@src/hooks/useFetchNews";
@@ -34,14 +34,6 @@ interface NewsProps {
   createdAt: string;
 }
 
-interface TableProps {
-  loading: boolean;
-  error: boolean;
-  isFetching: boolean;
-  newsByTeam: NewsProps[] | null;
-  options: { pageSize: number };
-}
-
 interface ListOptions {
   pageSize: number;
   currentPage: number;
@@ -50,14 +42,6 @@ interface ListOptions {
 }
 
 const clientUrl = import.meta.env.VITE_WHATSNEW_CLIENT_URL;
-
-const status = [
-  { id: "draft", name: "Draft" },
-  { id: "published", name: "Published" },
-  { id: "scheduled", name: "Scheduled" },
-  { id: "rejected", name: "Rejected" },
-  { id: "pending", name: "Pending approval" },
-];
 
 const categories = [
   "world",
@@ -371,7 +355,6 @@ const EmptyRow = () => (
 
 export function List() {
   const { activeTeam, loading } = useContext(TeamContext);
-  const divRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState<FilterProps>({
     title: "",

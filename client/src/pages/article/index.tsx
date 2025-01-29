@@ -5,15 +5,12 @@ import { useContext, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { Comments } from "./components/comments";
-import { UserContext } from "@src/contexts/UserContext";
-import { getLocalStorage } from "@src/utils/storageUtils";
+import { User, UserContext } from "@src/contexts/UserContext";
 
 export function Article() {
   const { user } = useContext(UserContext);
-  const teste = getLocalStorage("@whats-new:user");
   const { slug } = useParams();
-  const { likedNews, setLikedNews, toggleArticleLike } =
-    useContext(UserContext);
+  const { likedNews, toggleArticleLike } = useContext(UserContext);
 
   const { article, isLoading, error, refetch, incrementArticleViews } =
     useArticle(slug || "", user ? user.id : "");
@@ -185,7 +182,7 @@ export function Article() {
               </h2>
 
               <Comments
-                user={user}
+                user={user as User}
                 refetch={refetch}
                 articleId={article.id}
                 articleComments={article.comments}

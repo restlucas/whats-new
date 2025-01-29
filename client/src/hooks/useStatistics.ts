@@ -5,7 +5,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 
 interface FetchResponse {
-  statistics: any;
+  statistics: number;
   fetching: boolean;
   loading: boolean;
   error: string | null;

@@ -6,22 +6,15 @@ import {
   Newspaper,
   Question,
   SignOut,
-  ThumbsUp,
   User,
   UserGear,
 } from "@phosphor-icons/react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ThemeToggle from "./themeToggle";
 import useAuthCheck from "../hooks/useAuthCheck";
 import { useContext, useEffect, useRef, useState } from "react";
-import { clearLocalStorage, getLocalStorage } from "@src/utils/storageUtils";
-import { deleteCookie } from "@src/utils/cookieUtils";
 import { UserContext } from "@src/contexts/UserContext";
+import { categories } from "@src/constants";
 
 interface UserProps {
   id: string;
@@ -32,15 +25,10 @@ interface UserProps {
   createdAt: string;
 }
 
-export const categories = [
-  { value: "general", name: "General" },
-  { value: "business", name: "Business" },
-  { value: "entertainment", name: "Entertainment" },
-  { value: "health", name: "Health" },
-  { value: "science", name: "Science" },
-  { value: "sports", name: "Sports" },
-  { value: "technology", name: "Technology" },
-];
+interface LoggedOptionsProps {
+  user: UserProps;
+  setShowMobileMenu?: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const loggedNavigation = {
   CREATOR: [
@@ -81,13 +69,7 @@ const loggedNavigation = {
   ],
 };
 
-const LoggedOptions = ({
-  user,
-  setShowMobileMenu,
-}: {
-  user: UserProps;
-  setShowMobileMenu?: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const LoggedOptions = ({ user, setShowMobileMenu }: LoggedOptionsProps) => {
   const divRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [loggedOptions, setLoggedOptions] = useState<boolean>(false);
@@ -97,6 +79,15 @@ const LoggedOptions = ({
     if (divRef.current && !divRef.current.contains(event.target as Node)) {
       setLoggedOptions(false);
     }
+  };
+
+  const handleClick = (href: string) => {
+    if (setShowMobileMenu) {
+      setShowMobileMenu(false);
+    }
+
+    setLoggedOptions(false);
+    navigate(href);
   };
 
   useEffect(() => {
@@ -164,11 +155,7 @@ const LoggedOptions = ({
           return (
             <button
               key={index}
-              onClick={() => {
-                setLoggedOptions(false);
-                setShowMobileMenu && setShowMobileMenu(false);
-                navigate(navigation.href);
-              }}
+              onClick={() => handleClick(navigation.href)}
               className="h-10 w-10 duration-200 bg-red-hover flex items-center justify-center rounded-md"
             >
               {navigation.icon}
@@ -274,7 +261,7 @@ const DesktopNavigation = ({
     <div className="hidden min-[900px]:flex items-center justify-between">
       <div className="h-9 flex items-center justify-start gap-4 2xl:gap-16">
         <Link to="/" className="text-3xl text-nowrap text-title font-bold">
-          what's new
+          {"what's new"}
         </Link>
         <nav>
           <ul className="flex gap-2 2xl:gap-12">
@@ -367,11 +354,6 @@ const MobileNavigation = ({
     }
   };
 
-  const makeLogout = async () => {
-    await clearLocalStorage();
-    await deleteCookie("@whats-new:token");
-  };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -385,7 +367,7 @@ const MobileNavigation = ({
       <div className="flex min-[900px]:hidden items-center justify-between">
         <div className="h-9 flex items-center justify-start gap-4 2xl:gap-16">
           <Link to="/" className="text-3xl text-nowrap text-title font-bold">
-            what's new
+            {"what's new-"}
           </Link>
           <nav className="hidden lg:block">
             <ul className="flex md:gap-4 2xl:gap-12">
@@ -491,7 +473,7 @@ const MobileNavigation = ({
 };
 
 export function Header() {
-  const { isAuthenticated, loading } = useAuthCheck();
+  const { isAuthenticated } = useAuthCheck();
   const [searchParams] = useSearchParams();
 
   return (

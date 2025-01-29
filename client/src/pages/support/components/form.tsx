@@ -41,8 +41,9 @@ export function Form() {
       } else {
         throw new Error("Something went wrong!");
       }
-    } catch (error) {
-      setError("Failed to send the message. Please try again later.");
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        setError("Failed to send the message. Please try again later.");
     } finally {
       setLoading(false);
     }

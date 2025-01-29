@@ -1,5 +1,7 @@
 import {
   FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
   keepPreviousData,
   useInfiniteQuery,
   useQuery,
@@ -12,7 +14,11 @@ import {
 
 interface FetchOptions {
   queryName: string;
-  queryOptions: any;
+  queryOptions: {
+    category?: string;
+    pageSize?: number;
+    sortBy?: string;
+  };
 }
 
 export interface News {
@@ -43,6 +49,12 @@ export interface FilterProps {
   status: string;
 }
 
+export interface QueryResponse {
+  data: News[];
+  nextPage: number | null;
+  total: number;
+}
+
 export interface FetchResponse {
   news: News[];
   error: string | null;
@@ -50,7 +62,11 @@ export interface FetchResponse {
   loading: boolean;
   fetching: boolean;
   hasNextPage: boolean;
-  fetchNextPage: (options?: FetchNextPageOptions) => Promise<any>;
+  fetchNextPage: (
+    options?: FetchNextPageOptions
+  ) => Promise<
+    InfiniteQueryObserverResult<InfiniteData<QueryResponse, unknown>, Error>
+  >;
 }
 
 export const useFetchNews = ({
@@ -65,9 +81,13 @@ export const useFetchNews = ({
     isLoading,
     isFetching,
     fetchNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<QueryResponse, Error>({
     queryKey: [queryName, queryOptions],
     queryFn: async ({ pageParam = 1 }) => {
+      if (typeof pageParam !== "number") {
+        throw new Error("Invalid pageParam");
+      }
+
       return await fetchPaginateNews({
         ...queryOptions,
         page: pageParam,
@@ -81,8 +101,10 @@ export const useFetchNews = ({
     gcTime: 1200000, // 20 minutes
   });
 
+  const news = data?.pages.flatMap((page) => page.data) ?? [];
+
   return {
-    news: data?.pages.flatMap((page) => page.data) ?? [],
+    news,
     hasNextPage,
     fetching: isFetching,
     loading: isLoading,

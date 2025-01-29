@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { fetchMembers } from "../services/teamsServices";
 
+interface Member {
+  role: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image: string | null;
+  };
+}
+
 export const useMembers = () => {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,8 +22,8 @@ export const useMembers = () => {
     try {
       const response = await fetchMembers(teamId);
       setMembers(response.data);
-    } catch (err) {
-      setError("Error on fetch member");
+    } catch (error: unknown) {
+      if (error instanceof Error) setError("Error on fetch member");
     } finally {
       setLoading(false);
     }

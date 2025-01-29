@@ -1,23 +1,8 @@
-import { useState, useCallback } from "react";
-import { createTeam, fetchTeams } from "../services/teamsServices";
+import { useState } from "react";
+import { createTeam } from "../services/teamsServices";
 
 export const useTeams = () => {
-  const [teams, setTeams] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const getTeams = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      const response = await fetchTeams();
-      setTeams(response.data);
-    } catch (err) {
-      setError("Error on fetching teams");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   const newTeam = async (userId: string, teamName: string) => {
     setLoading(true);
@@ -37,10 +22,7 @@ export const useTeams = () => {
   };
 
   return {
-    teams,
     loading,
-    error,
-    getTeams,
     newTeam,
   };
 };

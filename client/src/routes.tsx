@@ -13,7 +13,6 @@ import { Search } from "./pages/search";
 import { AuthReader } from "./pages/auth/reader";
 import { MyProfile } from "./pages/my-profile";
 import { ResetPassword } from "./pages/auth/reset-password";
-import { Invitation } from "./pages/auth/invitation";
 import { AppProviders } from "./components/appProviders";
 import { Edit } from "./pages/(panel)/news/edit";
 
@@ -39,7 +38,6 @@ export const AppRoutes = () => {
           <Route path="/auth/reader" element={<AuthReader />} />
           <Route path="/auth/creator" element={<AuthCreator />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
-          <Route path="/auth/invitation" element={<Invitation />} />
           <Route path="/my-profile" element={<MyProfile />} />
           <Route path="/error" element={<Error />} />
         </Routes>

@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import { getLocalStorage, setLocalStorage } from "../utils/storageUtils";
-import { fetchTeams, fetchTeamsByUser } from "../services/teamsServices";
+import { fetchTeamsByUser } from "../services/teamsServices";
 
 export interface Team {
   id: string;
@@ -46,14 +46,16 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
     setActiveTeam(teamInfo);
   };
 
-  const validateTeams = (data: any): Team[] => {
+  const validateTeams = (
+    data: { id: string; name: string; createdAt: string }[]
+  ): Team[] => {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format: Expected an array.");
     }
     return data;
   };
 
-  const updateLocalStorage = (key: string, value: any) => {
+  const updateLocalStorage = (key: string, value: Team | Team[] | null) => {
     try {
       setLocalStorage(key, value);
     } catch (error) {
@@ -88,8 +90,9 @@ export function TeamContextProvider({ children }: TeamContextProviderProps) {
 
       setActiveTeam(initialTeam);
       updateLocalStorage("@whats-new:active-team", initialTeam);
-    } catch (error: any) {
-      console.error("Failed to fetch teams:", error.message || error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Failed to fetch teams:", error.message || error);
       setError("Error fetching teams. Please try again later.");
     } finally {
       setLoading(false);

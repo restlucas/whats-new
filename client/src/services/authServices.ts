@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import axiosInstance from "../lib/axios";
 import { UserData } from "@src/contexts/UserContext";
 
@@ -43,9 +43,7 @@ export const login = async (
 
     return {
       status: response.status,
-      token: response.data.token,
       user: response.data.user,
-      teams: response.data.teams,
     };
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -143,16 +141,15 @@ export const validateToken = async (token: string) => {
     });
 
     return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error("Error:", error.response.data.message);
-      alert(error.response.data.message);
-    } else if (error.request) {
-      console.error("No response from server:", error.request);
-      alert("No response from server. Please try again later.");
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      const errorMessage = error.response?.data.message;
+      const errorStatus = error.response?.status;
+
+      return { message: errorMessage, status: errorStatus };
     } else {
-      console.error("Unexpected error:", error.message);
-      alert("An unexpected error occurred. Please try again.");
+      console.log("Erro de rede:", (error as Error).message);
+      return { message: "Erro de rede", status: 500 };
     }
   }
 };

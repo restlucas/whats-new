@@ -29,7 +29,7 @@ export function AuthReader() {
         {auth === "register" && (
           <Register registerMode="READER" handleAuth={handleAuth} />
         )}
-        {auth === "forgot" && <Forgot handleAuth={handleAuth} />}
+        {auth === "forgot" && <Forgot />}
       </aside>
       <div className="hidden md:block relative w-full h-full bg-red-vibrant rounded-xl overflow-hidden shadow-2xl">
         <div
@@ -41,7 +41,7 @@ export function AuthReader() {
         />
         <div className="absolute z-20 top-0 left-0 bottom-0 right-0 bg-black/70 flex flex-col items-center justify-center gap-4 text-white">
           <h2 className="text-lg drop-shadow-lg">Welcome reader!</h2>
-          <h1 className="font-bold text-5xl drop-shadow-lg">what's new</h1>
+          <h1 className="font-bold text-5xl drop-shadow-lg">{"what's new"}</h1>
         </div>
       </div>
     </section>

@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { Card } from "@src/components/cards";
 import { Link } from "react-router-dom";
 
-export function GeneralNews({ country }: { country: string }) {
+export function GeneralNews() {
   const {
     news: generalNews,
     loading,

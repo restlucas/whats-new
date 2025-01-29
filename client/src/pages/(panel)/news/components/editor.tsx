@@ -29,7 +29,12 @@ import Text from "@tiptap/extension-text";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useEffect } from "react";
 
-export function Editor({ content, onChange }: any) {
+interface EditorProps {
+  content: string;
+  onChange: (newValue: string) => void;
+}
+
+export function Editor({ content, onChange }: EditorProps) {
   const editor = useEditor({
     extensions: [
       Document,

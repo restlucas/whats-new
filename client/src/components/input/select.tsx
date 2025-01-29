@@ -8,7 +8,7 @@ interface SelectInputProps
   options: Option[];
   label?: string;
   error?: string;
-  handleChange: (e: any) => void;
+  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export function SelectInput({

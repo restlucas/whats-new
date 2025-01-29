@@ -1,11 +1,13 @@
-import { makeComment } from "@src/services/newsServices";
+import { Article, makeComment } from "@src/services/newsServices";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { FormEvent, useState } from "react";
 
 interface NewCommentProps {
   userId?: string;
   articleId?: string;
-  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<any>>;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Article, Error>>;
 }
 
 export function NewComment({ userId, articleId, refetch }: NewCommentProps) {

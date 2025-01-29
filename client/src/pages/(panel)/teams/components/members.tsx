@@ -1,10 +1,20 @@
 import { OptionsButton } from "@src/components/button/options";
-import { CaretDown, Trash } from "@phosphor-icons/react";
+import { Trash } from "@phosphor-icons/react";
 import { useContext, useEffect, useState } from "react";
 import { useMembers } from "@src/hooks/useMembers";
 import { removeMember, updateMemberRole } from "@src/services/teamsServices";
 import { UserContext } from "@src/contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+
+interface TeamMember {
+  role: string;
+  user: {
+    email: string;
+    id: string;
+    image: string | null;
+    name: string;
+  };
+}
 
 const roles = [
   {
@@ -16,11 +26,11 @@ const roles = [
   { value: "READER", name: "Reader", description: "Can view and comment." },
 ];
 
-export function Members({ teamId }: any) {
+export function Members({ teamId }: { teamId: string }) {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const { members, getMembers } = useMembers();
-  const [teamMembers, setTeamMembers] = useState<any>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
 
   const [loadingMemberId, setLoadingMemberId] = useState<string | null>(null);
 
@@ -31,7 +41,7 @@ export function Members({ teamId }: any) {
     setLoadingMemberId(memberId);
 
     let memberIndex = teamMembers.findIndex(
-      (item: any) => item.user.id === memberId
+      (item: TeamMember) => item.user.id === memberId
     );
 
     const updatedMember = { ...teamMembers[memberIndex], role: roleValue };
@@ -92,7 +102,7 @@ export function Members({ teamId }: any) {
 
         {/* Members */}
         <div className="relative w-full flex flex-col gap-8">
-          {teamMembers.map((member: any, index: number) => {
+          {teamMembers.map((member: TeamMember, index: number) => {
             return (
               <div
                 key={index}
@@ -102,15 +112,16 @@ export function Members({ teamId }: any) {
                   <div
                     className={`rounded-full h-9 w-9 bg-tertiary/20 dark:bg-tertiary relative flex items-center justify-center overflow-hidden bg-cover bg-center`}
                     style={{
-                      backgroundImage:
-                        member.user.image && `url(${member.user.image})`,
+                      backgroundImage: member.user.image
+                        ? `url(${member.user.image})`
+                        : undefined,
                     }}
                   >
                     {!member.user.image && (
                       <span className="text-sm font-semibold">
                         {member.user.name
                           .split(" ")
-                          .map((part: any) => part[0].toUpperCase())
+                          .map((part: string) => part[0].toUpperCase())
                           .join("")
                           .slice(0, 2)}
                       </span>
@@ -127,7 +138,7 @@ export function Members({ teamId }: any) {
                 </div>
 
                 <div className="flex items-center justify-end gap-2">
-                  {member.user.id !== user.id && (
+                  {member.user.id !== (user && user.id) && (
                     <button
                       onClick={() =>
                         removeUser(member.user.id, member.user.name)
@@ -148,7 +159,6 @@ export function Members({ teamId }: any) {
                   )}
                   <OptionsButton
                     selectedValue={member.role}
-                    icon={<CaretDown size={18} />}
                     memberId={member.user.id}
                     loading={loadingMemberId === member.user.id}
                     disabled={false}

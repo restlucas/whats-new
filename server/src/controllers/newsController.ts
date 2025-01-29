@@ -128,6 +128,7 @@ export const getAllNews = async (req: Request, res: Response): Promise<any> => {
       size: parseInt(size as string, 10),
       sortBy: sortBy as string,
     });
+
     res.status(201).json(newsList);
   } catch (error: unknown) {
     if (error instanceof Error) {

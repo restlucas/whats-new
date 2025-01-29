@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { News, useFetchNews } from "@src/hooks/useFetchNews";
 import dayjs from "dayjs";
 
-export function HealthNews({ country }: { country: string }) {
+export function HealthNews() {
   const {
     news: healthNews,
     loading,

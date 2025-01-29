@@ -1,19 +1,28 @@
 import { Clock } from "@phosphor-icons/react";
 import dayjs from "dayjs";
 import { News } from "@src/hooks/useFetchNews";
-import { FetchNextPageOptions } from "@tanstack/react-query";
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+} from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-
-interface NewsItem {
-  title: string;
-  description: string;
-  url: string;
-}
 
 interface NewsListProps {
   news: News[];
   error: string | null;
-  fetchNextPage?: (options?: FetchNextPageOptions) => Promise<any>;
+  fetchNextPage?: (options?: FetchNextPageOptions) => Promise<
+    InfiniteQueryObserverResult<
+      InfiniteData<
+        {
+          nextPage: number;
+          total: number;
+        },
+        unknown
+      >,
+      Error
+    >
+  >;
   hasNextPage?: boolean;
   isFetching?: boolean;
   isFetchingNextPage?: boolean;

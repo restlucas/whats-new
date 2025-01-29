@@ -47,7 +47,6 @@ export interface Article {
       name: string;
       email: string;
     };
-    commentLike: any[];
     likeCount: number;
     isLikedByUser: boolean;
   }[];

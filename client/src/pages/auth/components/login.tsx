@@ -45,11 +45,18 @@ export function Login({ entranceMode, handleAuth }: LoginProps) {
       const response = await signIn(form, entranceMode);
 
       if (response.status === 401) {
-        setMessage({ code: response.status, title: response.message });
+        setMessage({
+          code: response.status,
+          title: response.message as string,
+        });
       } else {
         setMessage({ code: 201, title: "Login successful!" });
         await new Promise((resolve) => setTimeout(resolve, 3000));
-        entranceMode === "READER" ? navigate("/") : navigate("/panel");
+        if (entranceMode === "READER") {
+          navigate("/");
+        } else {
+          navigate("/panel");
+        }
       }
 
       setLoading(false);
@@ -109,7 +116,7 @@ export function Login({ entranceMode, handleAuth }: LoginProps) {
           </button>
         </div>
         <div className="flex items-center justify-center gap-2 text-sm mt-auto mb-10">
-          <span>Don't have an account?</span>
+          <span>{"Don't have an account?"}</span>
           <button
             className="font-bold duration-200 hover:underline"
             onClick={() => handleAuth("register")}

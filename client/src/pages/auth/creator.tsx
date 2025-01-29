@@ -36,7 +36,7 @@ export function AuthCreator() {
         />
         <div className="absolute z-20 top-0 left-0 bottom-0 right-0 bg-black/70 flex flex-col items-center justify-center gap-4 text-white">
           <h2 className="text-lg drop-shadow-lg">Welcome creator!</h2>
-          <h1 className="font-bold text-5xl drop-shadow-lg">what's new</h1>
+          <h1 className="font-bold text-5xl drop-shadow-lg">{"what's new"}</h1>
         </div>
       </div>
       <aside className="relative bg-light dark:bg-dark flex items-center justify-center">
@@ -58,7 +58,7 @@ export function AuthCreator() {
             handleAuth={handleAuth}
           />
         )}
-        {auth === "forgot" && <Forgot handleAuth={handleAuth} />}
+        {auth === "forgot" && <Forgot />}
       </aside>
       {/* <div className="absolute top-5 left-5">
         <Link to="/" className="flex items-center justify-start gap-2 group">

@@ -6,6 +6,7 @@ import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NewComment } from "./new-coment";
+import { Article } from "@src/services/newsServices";
 
 interface Comment {
   id: string;
@@ -25,7 +26,9 @@ interface CommentsProps {
   user: User;
   articleId: string;
   articleComments: Comment[];
-  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<any>>;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Article, Error>>;
 }
 
 export function Comments({

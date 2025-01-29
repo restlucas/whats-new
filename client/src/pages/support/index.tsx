@@ -1,7 +1,7 @@
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form } from "./components/form";
 
 interface FAQItem {

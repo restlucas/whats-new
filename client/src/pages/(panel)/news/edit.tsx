@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NewsForm, NewsProps } from "./components/form";
 import { fetchArticle } from "@src/services/newsServices";
 import { Helmet } from "react-helmet-async";
@@ -35,7 +35,7 @@ export function Edit() {
     if (linkSlug) {
       fetchEditArticle(linkSlug);
     }
-  }, []);
+  }, [linkSlug]);
 
   if (loading) {
     return (

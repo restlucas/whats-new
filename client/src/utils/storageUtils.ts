@@ -1,4 +1,11 @@
-export const setLocalStorage = (key: string, value: any): void => {
+import { Team } from "@src/contexts/TeamContext";
+import { User } from "@src/contexts/UserContext";
+import { NewsProps } from "@src/pages/(panel)/news/components/form";
+
+export const setLocalStorage = (
+  key: string,
+  value: Team | Team[] | User | NewsProps | string[] | null
+): void => {
   try {
     const stringifiedValue = JSON.stringify(value);
     localStorage.setItem(key, stringifiedValue);

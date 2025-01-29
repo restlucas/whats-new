@@ -9,14 +9,13 @@ export interface QueryOptions {
 }
 
 export const buildQueryParams = (options: QueryOptions = {}) => {
-  const { category, country, sortBy, pageSize, page = 1 } = options;
+  const { category, sortBy, pageSize, page = 1 } = options;
 
   return {
     ...(category && { category }),
     ...(sortBy && { sortBy }),
     page: page ?? 1,
     size: pageSize ?? 10,
-    country: "us",
   };
 };
 

@@ -6,16 +6,15 @@ import { User, UserContext } from "@src/contexts/UserContext";
 import { getLocalStorage } from "@src/utils/storageUtils";
 
 export function Layout() {
-  const { getLikes, setLikedNews } = useContext(UserContext);
+  const { getLikes } = useContext(UserContext);
 
   useEffect(() => {
     const userInStorage = getLocalStorage("@whats-new:user") as User;
 
     if (userInStorage) {
       getLikes(userInStorage.id);
-      setLikedNews(userInStorage);
     }
-  }, []);
+  }, [getLikes]);
 
   return (
     <div className="bg-light text-primary dark:text-light dark:bg-dark flex flex-col min-h-screen w-full overflow-x-hidden relative space-y-8">

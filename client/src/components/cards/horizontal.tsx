@@ -1,5 +1,4 @@
-import { ArrowRight, Clock } from "@phosphor-icons/react";
-import dayjs from "dayjs";
+import { ArrowRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 
 interface HorizontalCardProps {
@@ -16,7 +15,6 @@ export function HorizontalCard({
   title,
   slug,
   description,
-  date,
   author,
 }: HorizontalCardProps) {
   return (

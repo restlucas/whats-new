@@ -1,4 +1,4 @@
-import { ArrowRight, Clock } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { TechNews } from "./components/techNews";
@@ -13,7 +13,7 @@ export function Home() {
       {/* Today's news */}
       <section className="w-full h-auto">
         <h1 className="font-bold text-4xl mb-10">
-          <span className="text-title">#Today's</span> News in your region
+          <span className="text-title">{"#Today's"}</span> News in your region
         </h1>
         <TodaysNews />
       </section>
@@ -30,7 +30,7 @@ export function Home() {
       <section>
         <div className="flex items-center justify-between mb-14">
           <h1 className="font-bold text-4xl">
-            <span className="text-title">#Tech's</span> News
+            <span className="text-title">{"#Tech's"}</span> News
           </h1>
           <Link
             to="/search?category=technology"

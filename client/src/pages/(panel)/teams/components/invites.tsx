@@ -1,7 +1,7 @@
 import { format, parseISO } from "date-fns";
 import { Input } from "@src/components/input";
 import { ArrowClockwise, Check, X } from "@phosphor-icons/react";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   getMemberInvitations,
   getTeamInvitations,

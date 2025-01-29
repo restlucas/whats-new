@@ -3,11 +3,7 @@ import { requestResetPassword } from "@src/services/authServices";
 import { FormEvent, useState } from "react";
 import { Helmet } from "react-helmet-async";
 
-interface ForgotProps {
-  handleAuth: (type: string) => void;
-}
-
-export function Forgot({ handleAuth }: ForgotProps) {
+export function Forgot() {
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<

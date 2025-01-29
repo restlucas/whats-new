@@ -1,13 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { List } from "./list";
 import { Create } from "./create";
 import { EditHistory } from "./edit-history";
-import { Edit } from "./edit";
+
+interface Option {
+  name: string;
+  component: JSX.Element;
+  visible: boolean;
+}
 
 export function News() {
-  const handleOption = (optionName: any) => {
-    const selectedOption = options.find((option) => option.name === optionName);
+  const handleOption = (optionName: string) => {
+    const selectedOption = options.find(
+      (option) => option.name === optionName
+    ) as Option;
     setSelectedOption(selectedOption);
   };
 
@@ -21,7 +28,7 @@ export function News() {
     { name: "Create", component: <Create />, visible: true },
   ];
 
-  const [selectedOption, setSelectedOption] = useState<any>(options[0]);
+  const [selectedOption, setSelectedOption] = useState<Option>(options[0]);
 
   return (
     <>

@@ -1,7 +1,6 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Input } from "@src/components/input";
 import { UserContext } from "@src/contexts/UserContext";
-import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { AuthButton } from "@src/components/button/auth";
 
@@ -24,7 +23,6 @@ interface FormProps {
 
 export function Register({ registerMode, params, handleAuth }: RegisterProps) {
   const url = new URL(window.location.href);
-  const navigate = useNavigate();
   const [message, setMessage] = useState<{
     code: number;
     title: string;
@@ -36,7 +34,7 @@ export function Register({ registerMode, params, handleAuth }: RegisterProps) {
     password: "",
     confirmPassword: "",
   });
-  const [token, setToken] = useState<string>("");
+  const [token] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { signUp } = useContext(UserContext);
 

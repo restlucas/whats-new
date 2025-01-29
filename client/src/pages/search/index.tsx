@@ -1,51 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation, useNavigate } from "react-router-dom";
 import { buildQueryString, parseQueryString } from "../../utils/filters";
 
 import { FetchResponse, useFetchNews } from "../../hooks/useFetchNews";
-import { categories } from "../../components/header";
 
-import * as Flag from "country-flag-icons/react/3x2";
 import { NewsList } from "./components/newsList";
+import { categories, countries } from "@src/constants";
 
-type Filters = {
+export type Filters = {
   category?: string;
   keyword?: string;
   country?: string;
   sortBy?: string;
   [key: string]: string | undefined;
 };
-
-const countries = [
-  {
-    value: "br",
-    name: "Brazil",
-  },
-  {
-    value: "ca",
-    name: "Canada",
-  },
-  { value: "cn", name: "China" },
-  { value: "es", name: "Spain" },
-  {
-    value: "fr",
-    name: "France",
-  },
-  {
-    value: "gb",
-    name: "United Kingdom",
-  },
-  { value: "it", name: "Italy" },
-  {
-    value: "ru",
-    name: "Russia",
-  },
-  {
-    value: "us",
-    name: "United States",
-  },
-];
 
 const sortBy = [
   { value: "publishedAt", name: "Newest first" },
@@ -155,7 +124,7 @@ export function Search() {
   const applyFilters = async () => {
     setIsFiltering(true);
     if (filters) {
-      setSelectedFilters((prevFilters) => {
+      setSelectedFilters(() => {
         const newFilters = { ...filters };
         return newFilters;
       });

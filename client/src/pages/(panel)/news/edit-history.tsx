@@ -106,7 +106,7 @@ export function EditHistory() {
                           <span className="text-sm font-semibold">
                             {article.teamMember.user.name
                               .split(" ")
-                              .map((part: any) => part[0].toUpperCase())
+                              .map((part: string) => part[0].toUpperCase())
                               .join("")
                               .slice(0, 2)}
                           </span>
