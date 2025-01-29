@@ -17,9 +17,11 @@ export function SelectInput({
   label,
   options,
   value,
-  error,
   handleChange,
 }: SelectInputProps) {
+  const isValidValue = options.some((option) => option.value === value);
+  const selectedValue = isValidValue ? value : "";
+
   return (
     <div className={`flex flex-col gap-1  ${label && "gap-1"}`}>
       <label className="font-semibold">{label}</label>
@@ -27,17 +29,15 @@ export function SelectInput({
         id={id}
         name={name}
         className="rounded-md px-2 py-1 dark:bg-[#3c4856] border border-tertiary/20 dark:border-slate-600"
-        value={value}
+        value={selectedValue}
         onChange={handleChange}
       >
         <option value="">Select a category...</option>
-        {options.map((option, index) => {
-          return (
-            <option key={index} value={option.value}>
-              {option.name}
-            </option>
-          );
-        })}
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.name}
+          </option>
+        ))}
       </select>
     </div>
   );

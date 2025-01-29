@@ -22,6 +22,18 @@ interface CreateNewsProps {
   userId: string;
 }
 
+interface EditNewsProps {
+  fields: {
+    title: string;
+    description: string;
+    category: string;
+    content: string;
+  };
+  slug: string;
+  teamId: string;
+  userId: string;
+}
+
 const newsService = {
   async createNews(data: CreateNewsProps) {
     const { fields, teamId, userId } = data;
@@ -39,11 +51,52 @@ const newsService = {
       data: {
         title: fields.title,
         slug: fields.slug,
+        image: "https://picsum.photos/800/600",
         content: fields.content,
         description: fields.description,
         country: "US",
         category: fields.category,
         teamMemberId: teamMemberId,
+      },
+    });
+  },
+
+  async updateNews(data: EditNewsProps) {
+    const { fields, teamId, userId, slug } = data;
+
+    const { id: teamMemberId } = (await prisma.teamMember.findFirst({
+      where: {
+        teamId,
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    })) as { id: string };
+
+    const { id: newsId } = (await prisma.news.findUnique({
+      where: {
+        slug,
+      },
+    })) as { id: string };
+
+    await prisma.newsEditHistory.create({
+      data: {
+        newsId,
+        teamMemberId,
+      },
+    });
+
+    return prisma.news.update({
+      where: {
+        id: newsId,
+      },
+      data: {
+        title: fields.title,
+        content: fields.content,
+        description: fields.description,
+        country: "US",
+        category: fields.category,
       },
     });
   },
@@ -204,6 +257,39 @@ const newsService = {
             : false,
         })),
       }));
+  },
+
+  async getEditHistory(teamId: string) {
+    return await prisma.newsEditHistory.findMany({
+      where: {
+        teamMember: {
+          teamId,
+        },
+      },
+      select: {
+        news: {
+          select: {
+            title: true,
+            slug: true,
+          },
+        },
+        teamMember: {
+          select: {
+            user: {
+              select: {
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        createdAt: true,
+        id: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   },
 
   async countNewsByTeam(

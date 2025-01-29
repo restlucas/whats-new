@@ -110,7 +110,7 @@ export const register = async (user: UserData) => {
 };
 
 export const validateInvitation = async (token: string) => {
-  const response = await axiosInstance.get("/teams/invitations/validate", {
+  const response = await axiosInstance.get("/team/invitations/validate", {
     params: {
       token,
     },

@@ -81,6 +81,19 @@ export const createNews = async (req: Request, res: Response) => {
   }
 };
 
+export const updateNews = async (req: Request, res: Response) => {
+  const data = req.body;
+
+  try {
+    const response = await newsService.updateNews(data);
+    res.status(201).json(response);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+};
+
 export const deleteNews = async (req: Request, res: Response) => {
   const { newsId } = req.body;
 
@@ -206,6 +219,19 @@ export const makeComment = async (req: Request, res: Response) => {
   } catch (error: unknown) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
+    }
+  }
+};
+
+export const getEditHistoryByTeam = async (req: Request, res: Response) => {
+  const teamId = req.query.teamId as string;
+
+  try {
+    const newsList = await newsService.getEditHistory(teamId);
+    res.status(201).json(newsList);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
     }
   }
 };

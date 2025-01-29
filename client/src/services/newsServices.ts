@@ -2,14 +2,15 @@ import { FilterProps } from "@src/hooks/useFetchNews";
 import axiosInstance from "../lib/axios";
 import { buildQueryParams, QueryOptions } from "../utils/fetchHelpers";
 
-interface CreateNewsProps {
+interface HandleNewsProps {
   fields: {
     title: string;
     description: string;
     category: string;
     content: string;
   };
-  teamId: string;
+  slug?: string;
+  teamId: string | undefined;
   userId: string;
 }
 
@@ -52,7 +53,7 @@ export interface Article {
   }[];
 }
 
-export const fetchNews = async (options: QueryOptions) => {
+export const fetchPaginateNews = async (options: QueryOptions) => {
   try {
     const params = {
       ...buildQueryParams(options),
@@ -82,7 +83,7 @@ export const fetchNews = async (options: QueryOptions) => {
 
 export const fetchArticle = async (
   articleSlug: string,
-  userId: string
+  userId?: string
 ): Promise<Article> => {
   try {
     const params = {
@@ -128,9 +129,12 @@ export const fetchNewsByTeam = async ({
   }
 };
 
-export const createNews = async (data: CreateNewsProps) => {
+export const handleNews = async (
+  data: HandleNewsProps,
+  action: "post" | "put"
+) => {
   try {
-    const response = await axiosInstance.post("/news", data, {
+    const response = await axiosInstance[action]("/news", data, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -179,4 +183,11 @@ export const makeComment = async (
   );
 
   return response;
+};
+
+export const fetchEditHistoryByTeam = async (teamId: string) => {
+  const response = await axiosInstance.get("/news/edit/history", {
+    params: { teamId },
+  });
+  return response.data;
 };

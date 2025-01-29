@@ -250,7 +250,7 @@ const NewsOptions = ({
         <div className="animate-fade-xaxis absolute z-[100] right-full top-0 mr-1 flex flex-col border border-tertiary/20 dark:border-tertiary rounded-md bg-light dark:bg-dark ">
           <Link
             target="_blank"
-            to={`${clientUrl + linkSlug}`}
+            to={`${clientUrl + "article/" + linkSlug}`}
             className="flex items-center justify-between gap-4 px-3 py-2 hover:bg-tertiary/20 dark:hover:bg-tertiary"
           >
             <span className="font-semibold">Go to</span>
@@ -260,6 +260,13 @@ const NewsOptions = ({
             <span className="font-semibold">Edit</span>
             <PencilSimple size={16} weight="bold" />
           </button> */}
+          <Link
+            to={`edit?linkSlug=${linkSlug}`}
+            className="flex items-center justify-between gap-4 px-3 py-2 hover:bg-tertiary/20 dark:hover:bg-tertiary"
+          >
+            <span className="font-semibold">Edit</span>
+            <PencilSimple size={16} weight="bold" />
+          </Link>
           <button
             onClick={() => deleteNews(newsId)}
             className="flex items-center justify-between gap-4 px-3 py-2 hover:bg-tertiary/20 dark:hover:bg-tertiary"
@@ -339,7 +346,7 @@ const NewsRows = ({
         </Link>
       </td>
       <td className="border-y border-tertiary/20 dark:border-tertiary p-3 text-nowrap">
-        {format(parseISO(article.createdAt), "yyyy-MM-dd")}
+        {format(parseISO(article.createdAt), "MM/dd/yyyy")}
       </td>
       <td className="border-y border-tertiary/20 dark:border-tertiary p-3">
         Published

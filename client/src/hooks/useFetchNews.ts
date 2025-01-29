@@ -6,8 +6,8 @@ import {
 } from "@tanstack/react-query";
 import {
   fetchArticle,
-  fetchNews,
   fetchNewsByTeam,
+  fetchPaginateNews,
 } from "../services/newsServices";
 
 interface FetchOptions {
@@ -68,7 +68,7 @@ export const useFetchNews = ({
   } = useInfiniteQuery({
     queryKey: [queryName, queryOptions],
     queryFn: async ({ pageParam = 1 }) => {
-      return await fetchNews({
+      return await fetchPaginateNews({
         ...queryOptions,
         page: pageParam,
       });

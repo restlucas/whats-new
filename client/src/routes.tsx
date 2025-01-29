@@ -4,13 +4,9 @@ import { Home } from "./pages/home";
 import { PanelLayout } from "./components/panelLayout";
 import { Dashboard } from "./pages/(panel)/dashboard";
 import { AuthCreator } from "./pages/auth/creator";
-import { UserContextProvider } from "./contexts/UserContext";
-import { Helmet, HelmetProvider } from "react-helmet-async";
 import { News } from "./pages/(panel)/news";
 import { Support } from "./pages/support";
-import { Profile } from "./pages/(panel)/profile";
 import { Teams } from "./pages/(panel)/teams";
-import { TeamContextProvider } from "./contexts/TeamContext";
 import { Error } from "./pages/error";
 import { Article } from "./pages/article";
 import { Search } from "./pages/search";
@@ -19,6 +15,7 @@ import { MyProfile } from "./pages/my-profile";
 import { ResetPassword } from "./pages/auth/reset-password";
 import { Invitation } from "./pages/auth/invitation";
 import { AppProviders } from "./components/appProviders";
+import { Edit } from "./pages/(panel)/news/edit";
 
 export const AppRoutes = () => {
   return (
@@ -34,8 +31,8 @@ export const AppRoutes = () => {
           <Route path="/panel" element={<PanelLayout />}>
             <Route path="" element={<Dashboard />} />
             <Route path="news" element={<News />} />
+            <Route path="news/edit" element={<Edit />} />
             <Route path="teams" element={<Teams />} />
-            <Route path="profile" element={<Profile />} />
           </Route>
 
           <Route path="/support" element={<Support />} />

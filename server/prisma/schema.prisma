@@ -45,9 +45,11 @@ model TeamMember {
   teamId  String
   role    TeamRole        @default(EDITOR)
 
+
   user User @relation(fields: [userId], references: [id])
   team Team @relation(fields: [teamId], references: [id])
 
+  editHistory NewsEditHistory[]
   news         News[]
 
   @@unique([userId, teamId])
@@ -82,10 +84,23 @@ model News {
   teamMemberId  String 
 
   teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id])
+  editHistory NewsEditHistory[]
   comments    Comment[]
   likes       Like[]
 
   @@unique([id, slug])
+}
+
+model NewsEditHistory {
+  id        String  @id @default(cuid())
+  newsId    String
+  teamMemberId    String
+  createdAt DateTime @default(now())
+
+  news  News  @relation(fields: [newsId], references: [id])
+  teamMember  TeamMember  @relation(fields: [teamMemberId], references: [id])
+
+  @@unique([id])
 }
 
 model Comment {

@@ -23,7 +23,7 @@ export const fetchTeams = async () => {
 
 export const fetchTeamsByUser = async (userId: string) => {
   try {
-    return await axiosInstance.get("/teams/user", { params: { userId } });
+    return await axiosInstance.get("/team/all", { params: { userId } });
   } catch (error) {
     console.error("Error fetching teams:", error);
     throw new Error("Failed to fetch teams");
@@ -32,7 +32,7 @@ export const fetchTeamsByUser = async (userId: string) => {
 
 export const fetchMembers = async (teamId: string) => {
   try {
-    return await axiosInstance.get("/teams/members", { params: { teamId } });
+    return await axiosInstance.get("/team/members", { params: { teamId } });
   } catch (error) {
     console.log("Error on fetching team members: ", error);
     throw new Error("Failed to fetch members");
@@ -45,7 +45,7 @@ export const updateMemberRole = async (
   roleValue: string
 ) => {
   try {
-    return await axiosInstance.put("/teams/member/role", {
+    return await axiosInstance.put("/team/member/role", {
       teamId,
       userId,
       roleValue,
@@ -58,7 +58,7 @@ export const updateMemberRole = async (
 
 export const getMemberInvitations = async (teamId: string) => {
   try {
-    return await axiosInstance.get("/teams/invitations/members", {
+    return await axiosInstance.get("/team/invitations/members", {
       params: {
         teamId,
       },
@@ -71,7 +71,7 @@ export const getMemberInvitations = async (teamId: string) => {
 
 export const getTeamInvitations = async (userEmail: string) => {
   try {
-    return await axiosInstance.get("/teams/invitations", {
+    return await axiosInstance.get("/team/invitations", {
       params: {
         userEmail,
       },
@@ -84,7 +84,7 @@ export const getTeamInvitations = async (userEmail: string) => {
 
 export const sendInvitation = async (teamId: string, userEmail: string) => {
   try {
-    const response = await axiosInstance.post("/teams/invitations", {
+    const response = await axiosInstance.post("/team/invitations", {
       teamId,
       userEmail,
     });
@@ -108,7 +108,7 @@ export const sendInvitation = async (teamId: string, userEmail: string) => {
 
 export const revokeInvitation = async (inviteId: string) => {
   try {
-    return await axiosInstance.delete("/teams/invitations", {
+    return await axiosInstance.delete("/team/invitations", {
       data: { inviteId },
     });
   } catch (error) {
@@ -119,7 +119,7 @@ export const revokeInvitation = async (inviteId: string) => {
 
 export const removeMember = async (teamId: string, memberId: string) => {
   try {
-    return await axiosInstance.delete("/teams/member", {
+    return await axiosInstance.delete("/team/member", {
       data: { teamId, memberId },
     });
   } catch (error) {
@@ -133,7 +133,7 @@ export const handleTeamInvitation = async (
   invitationId: string,
   action: string
 ) => {
-  return await axiosInstance.put("/teams/invitation/team", {
+  return await axiosInstance.put("/team/invitation/team", {
     userId,
     invitationId,
     action,
