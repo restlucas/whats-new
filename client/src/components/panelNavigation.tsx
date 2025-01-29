@@ -79,7 +79,7 @@ export function PanelNavigation() {
         </Link>
 
         <h3 className="text-sm text-center">
-          Welcome <span className="font-bold">{user.name || "..."}!</span>
+          Welcome <span className="font-bold">{user?.name || "..."}!</span>
         </h3>
 
         <TeamsButton />
@@ -156,7 +156,7 @@ export function PanelNavigation() {
       <div className="flex md:hidden w-full h-auto px-4 pt-8 pb-4 items-start justify-between">
         <div className="flex flex-col gap-4">
           <Link to="/" className="text-start">
-            Welcome <span className="font-bold">{user.name || "..."}!</span>
+            Welcome <span className="font-bold">{user?.name || "..."}!</span>
           </Link>
 
           <TeamsButton />

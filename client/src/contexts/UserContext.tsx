@@ -14,7 +14,8 @@ export interface User {
   name: string;
   email: string;
   username: string;
-  role: string;
+  role: "READER" | "CREATOR" | "ADMIN";
+  createdAt: string;
 }
 
 export interface UserData {
@@ -31,14 +32,16 @@ interface UserContextType {
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   likedNews: string[];
   setLikedNews: React.Dispatch<React.SetStateAction<string[]>>;
-  checkUser: () => void;
+  checkUser: () => Promise<{ status: number; message: string }>;
   getLikes: (userId: string) => void;
   toggleArticleLike: (method: string, userId: string, newsId: string) => void;
   signIn: (
     credentials: { username: string; password: string },
     entranceMode: string
   ) => Promise<{ status: number; user?: User; message?: string }>;
-  signUp: (user: UserData) => void;
+  signUp: (
+    user: UserData
+  ) => Promise<{ status: number; user?: User; message?: string }>;
   signOut: (message: string) => void;
 }
 
@@ -54,8 +57,8 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
   const [likedNews, setLikedNews] = useState<string[]>([]);
   const navigate = useNavigate();
 
-  const checkUser = async () => {
-    const response = await check();
+  const checkUser = async (): Promise<{ status: number; message: string }> => {
+    const response = (await check()) as { status: number; message: string };
     return response;
   };
 
@@ -81,14 +84,19 @@ export function UserContextProvider({ children }: UserContextProviderProps) {
     };
   };
 
-  const signUp = async (user: UserData) => {
+  const signUp = async (
+    user: UserData
+  ): Promise<{ status: number; message: string }> => {
     const response = await register(user);
 
     if (response.status === 401) {
-      return response;
+      return { status: 401, message: response.message };
     }
 
-    return response;
+    return {
+      status: response.status as number,
+      message: response.message as string,
+    };
   };
 
   const signOut = async (message: string) => {

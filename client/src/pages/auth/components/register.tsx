@@ -26,7 +26,7 @@ export function Register({ registerMode, params, handleAuth }: RegisterProps) {
   const [message, setMessage] = useState<{
     code: number;
     title: string;
-  } | null>();
+  } | null>(null);
   const [form, setForm] = useState<FormProps>({
     name: "",
     username: "",
@@ -66,7 +66,7 @@ export function Register({ registerMode, params, handleAuth }: RegisterProps) {
       if (response.status !== 201) {
         setMessage({
           code: response.status,
-          title: response.message,
+          title: response.message as string,
         });
       } else {
         setMessage({

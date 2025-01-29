@@ -1,5 +1,8 @@
 import { Article, HourglassSimpleHigh } from "@phosphor-icons/react";
-import { useLastNewsAndTopMembers } from "@src/hooks/useStatistics";
+import {
+  LastFiveNews,
+  useLastNewsAndTopMembers,
+} from "@src/hooks/useStatistics";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -22,7 +25,7 @@ interface UserProps {
 interface TableProps {
   title: string;
   tableTitle: string[];
-  data: (NewsProps | UserProps)[];
+  data: (LastFiveNews | UserProps)[];
   fetching: boolean;
   icon: ReactNode;
 }
@@ -131,20 +134,22 @@ const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
           </thead>
           <tbody>
             {data.map((row) => {
-              const isNews = (row as NewsProps).title !== undefined;
+              const isNews = (row as LastFiveNews).title !== undefined;
               return (
                 <tr
-                  key={isNews ? (row as NewsProps).id : (row as UserProps).id}
+                  key={
+                    isNews ? (row as LastFiveNews).id : (row as UserProps).id
+                  }
                   className="text-sm hover:bg-tertiary/20 hover:dark:bg-tertiary"
                 >
                   <td className="p-2 font-semibold text-nowrap md:text-wrap">
                     {isNews ? (
                       <Link
                         target="_blank"
-                        to={`/article/${(row as NewsProps).slug}`}
+                        to={`/article/${(row as LastFiveNews).slug}`}
                         className="line-clamp-1 cursor-pointer hover:underline"
                       >
-                        {(row as NewsProps).title}
+                        {(row as LastFiveNews).title}
                       </Link>
                     ) : (
                       (row as UserProps).name
@@ -153,13 +158,13 @@ const TableCard = ({ title, tableTitle, data, fetching, icon }: TableProps) => {
                   <td className="p-2 text-nowrap">
                     {isNews
                       ? new Date(
-                          (row as NewsProps).createdAt
+                          (row as LastFiveNews).createdAt
                         ).toLocaleDateString("en-US")
                       : (row as UserProps).totalNews}
                   </td>
                   <td className="p-2 text-nowrap">
                     {isNews
-                      ? (row as NewsProps).views
+                      ? (row as LastFiveNews).views
                       : (row as UserProps).totalViews}{" "}
                   </td>
                 </tr>
@@ -179,8 +184,10 @@ export function NewsAndMembers({
 }) {
   const { statistics, fetching } = useLastNewsAndTopMembers(activeTeamId || "");
 
-  const lastFiveNews: NewsProps[] = statistics?.lastFiveNews || [];
-  const topUsers: UserProps[] = statistics?.topUsers || [];
+  console.log(statistics);
+
+  const lastFiveNews = statistics?.lastFiveNews || [];
+  const topUsers = statistics?.topUsers || [];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

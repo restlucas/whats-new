@@ -19,27 +19,27 @@ const useAuthCheck = () => {
       }
 
       try {
-        const { status, data } = await checkUser();
-        if (status === 201 && data.message === "Authenticated") {
+        const { status, message } = await checkUser();
+        if (status === 201 && message === "Authenticated") {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
         }
       } catch (error: unknown) {
         if (error instanceof AxiosError && error.response?.status === 401) {
-          setIsAuthenticated(false); // Usuário não autenticado
+          setIsAuthenticated(false);
         } else {
-          console.error("Erro ao verificar autenticação:", error); // Registre outros erros para depuração
+          console.error("Erro ao verificar autenticação:", error);
         }
       } finally {
-        setLoading(false); // Finaliza o carregamento, independente do resultado
+        setLoading(false);
       }
     };
 
     verifyAuthentication();
   }, [checkUser]);
 
-  return { isAuthenticated, loading }; // Retorne também o estado de carregamento
+  return { isAuthenticated, loading };
 };
 
 export default useAuthCheck;

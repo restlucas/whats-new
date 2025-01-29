@@ -84,7 +84,7 @@ export function MyProfile() {
 
     const formData = new FormData();
 
-    formData.append("userId", user.id);
+    formData.append("userId", user?.id as string);
     formData.append("name", formProfile.name);
     formData.append("password", formProfile.password);
 
@@ -111,14 +111,14 @@ export function MyProfile() {
     const saveUser = async () => {
       let pictureConverted = null;
 
-      if (user.image)
+      if (user && user.image)
         pictureConverted = (await transformToFile(user.image)) as File;
 
       const form = {
-        username: user.username,
+        username: user?.username as string,
         image: pictureConverted,
-        name: user.name,
-        email: user.email,
+        name: user?.name as string,
+        email: user?.email as string,
         password: "",
         confirmPassword: "",
       };

@@ -35,6 +35,7 @@ export function Members({ teamId }: { teamId: string }) {
   const [loadingMemberId, setLoadingMemberId] = useState<string | null>(null);
 
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  console.log(isRemoving);
   const [removingMember, setRemovingMember] = useState<string | null>(null);
 
   const handleMember = async (memberId: string, roleValue: string) => {

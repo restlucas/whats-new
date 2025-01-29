@@ -101,7 +101,7 @@ export function Invites({ selectedTeam }: { selectedTeam: SelectedTeamProps }) {
     if (areYouSure) {
       updateState({ loading: { ...state.loading, teamInvitations: true } });
       try {
-        await handleTeamInvitation(user.id, inviteId, action);
+        await handleTeamInvitation(user?.id as string, inviteId, action);
         navigate(0);
       } catch (error) {
         console.error("Error on handle invitation:", error);

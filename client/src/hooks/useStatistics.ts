@@ -4,8 +4,29 @@ import {
 } from "@src/services/statisticsServices";
 import { useQuery } from "@tanstack/react-query";
 
+export interface TopUsers {
+  id: string;
+  name: string;
+  totalNews: number;
+  totalViews: number;
+}
+
+export interface LastFiveNews {
+  id: string;
+  slug: string;
+  title: string;
+  createdAt: string;
+  views: number;
+  _count: {
+    likes: number;
+  };
+}
+
 interface FetchResponse {
-  statistics: number;
+  statistics: {
+    lastFiveNews: LastFiveNews[];
+    topUsers: TopUsers[];
+  };
   fetching: boolean;
   loading: boolean;
   error: string | null;
