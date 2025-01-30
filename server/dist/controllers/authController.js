@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,13 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.logout = exports.login = exports.check = void 0;
 const authService_1 = __importDefault(require("../services/authService"));
 const cookie_1 = require("cookie");
-const check = async (req, res) => {
+const check = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies;
     if (!token["@whats-new:token"]) {
         return res.status(401).json({ message: "No token provided" });
     }
     try {
-        const response = await authService_1.default.check(token["@whats-new:token"]);
+        const response = yield authService_1.default.check(token["@whats-new:token"]);
         res.status(201).json({ message: "Authenticated", user: response });
     }
     catch (error) {
@@ -23,13 +32,13 @@ const check = async (req, res) => {
             res.status(500).json({ error: "An unknown error occurred" });
         }
     }
-};
+});
 exports.check = check;
-const login = async (req, res) => {
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { credentials, entranceMode } = req.body;
     const { username, password } = credentials;
     try {
-        const response = await authService_1.default.login(username, password, entranceMode);
+        const response = yield authService_1.default.login(username, password, entranceMode);
         if (response.error) {
             return res.status(401).json({ message: response.error });
         }
@@ -49,7 +58,7 @@ const login = async (req, res) => {
             res.status(500).json({ error: error.message });
         }
     }
-};
+});
 exports.login = login;
 const logout = (req, res) => {
     const cookieString = (0, cookie_1.serialize)("@whats-new:token", "", {

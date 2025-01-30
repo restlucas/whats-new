@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const authMiddleware = (req, res, next) => {
-    const token = req.cookies?.["@whats-new:token"]; // Acessa o token corretamente
+    var _a;
+    const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a["@whats-new:token"]; // Acessa o token corretamente
     if (!token) {
         res.status(401).json({ message: "Token not provided" });
         return; // Não retorna o objeto Response, mas encerra a execução

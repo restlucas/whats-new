@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -7,10 +16,10 @@ exports.handleTeamInvite = exports.getLastNewsAndTopUsers = exports.getStatistic
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const teamsService_1 = __importDefault(require("../services/teamsService"));
 // Create team
-const create = async (req, res) => {
+const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, teamName } = req.body;
     try {
-        const news = await teamsService_1.default.createTeam(userId, teamName);
+        const news = yield teamsService_1.default.createTeam(userId, teamName);
         res.status(201).json(news);
     }
     catch (error) {
@@ -18,13 +27,13 @@ const create = async (req, res) => {
             res.status(400).json({ error: error.message });
         }
     }
-};
+});
 exports.create = create;
 // Get all teams by user
-const getAllTeamsByUser = async (req, res) => {
+const getAllTeamsByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.query;
     try {
-        const response = await teamsService_1.default.getAllByUser(userId);
+        const response = yield teamsService_1.default.getAllByUser(userId);
         res.status(201).json(response);
     }
     catch (error) {
@@ -32,13 +41,13 @@ const getAllTeamsByUser = async (req, res) => {
             res.status(400).json({ error: error.message });
         }
     }
-};
+});
 exports.getAllTeamsByUser = getAllTeamsByUser;
 // Get all members by team
-const getMembersByTeam = async (req, res) => {
+const getMembersByTeam = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { teamId } = req.query;
     try {
-        const members = await teamsService_1.default.getMembers(teamId);
+        const members = yield teamsService_1.default.getMembers(teamId);
         res.status(201).json(members);
     }
     catch (error) {
@@ -46,13 +55,13 @@ const getMembersByTeam = async (req, res) => {
             res.status(400).json({ error: error.message });
         }
     }
-};
+});
 exports.getMembersByTeam = getMembersByTeam;
-const updateMemberRole = async (req, res) => {
+const updateMemberRole = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { teamId, userId, roleValue } = req.body;
         try {
-            const response = await teamsService_1.default.updateRole(teamId, userId, roleValue);
+            const response = yield teamsService_1.default.updateRole(teamId, userId, roleValue);
             res.status(201).json(response);
         }
         catch (error) {
@@ -65,13 +74,13 @@ const updateMemberRole = async (req, res) => {
         console.error("Error on update member role:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-};
+});
 exports.updateMemberRole = updateMemberRole;
-const getMemberInvitations = async (req, res) => {
+const getMemberInvitations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { teamId } = req.query;
         try {
-            const response = await teamsService_1.default.getInvitationsByTeam(teamId);
+            const response = yield teamsService_1.default.getInvitationsByTeam(teamId);
             res.status(201).json(response);
         }
         catch (error) {
@@ -84,13 +93,13 @@ const getMemberInvitations = async (req, res) => {
         console.error("Erro ao atualizar o papel:", error);
         res.status(500).json({ message: "Erro interno no servidor" });
     }
-};
+});
 exports.getMemberInvitations = getMemberInvitations;
-const getTeamInvitations = async (req, res) => {
+const getTeamInvitations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userEmail } = req.query;
         try {
-            const response = await teamsService_1.default.getInvitationsByUser(userEmail);
+            const response = yield teamsService_1.default.getInvitationsByUser(userEmail);
             res.status(201).json(response);
         }
         catch (error) {
@@ -103,12 +112,12 @@ const getTeamInvitations = async (req, res) => {
         console.error("Erro ao atualizar o papel:", error);
         res.status(500).json({ message: "Erro interno no servidor" });
     }
-};
+});
 exports.getTeamInvitations = getTeamInvitations;
-const makeInvitation = async (req, res) => {
+const makeInvitation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { teamId, userEmail } = req.body;
     try {
-        const response = await teamsService_1.default.createInvite(teamId, userEmail);
+        const response = yield teamsService_1.default.createInvite(teamId, userEmail);
         if ("error" in response) {
             res.status(400).json({ error: response.error });
             return;
@@ -119,27 +128,27 @@ const makeInvitation = async (req, res) => {
         console.error("Unexpected error on create invite:", error);
         res.status(500).json({ message: "Unexpected error occurred" });
     }
-};
+});
 exports.makeInvitation = makeInvitation;
-const revokeInvitation = async (req, res) => {
+const revokeInvitation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { inviteId } = req.body;
     try {
-        const response = await teamsService_1.default.deleteInvite(inviteId);
+        const response = yield teamsService_1.default.deleteInvite(inviteId);
         res.status(201).json(response);
     }
     catch (error) {
         console.error("Unexpected error on create invite:", error);
         res.status(500).json({ message: "Unexpected error occurred" });
     }
-};
+});
 exports.revokeInvitation = revokeInvitation;
-const validateInvitation = async (req, res) => {
+const validateInvitation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { token } = req.query;
     try {
         const { invitationId, email } = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         let redirect = `/auth/creator?method=register&email=${email}`;
         let message = `Token is valid, redirecting to register page!`;
-        const userInSystem = await teamsService_1.default.getInvitationsByUser(email);
+        const userInSystem = yield teamsService_1.default.getInvitationsByUser(email);
         if (userInSystem) {
             redirect = "/auth/creator?method=login";
             message = "Make login and access system to accept invite!";
@@ -163,21 +172,21 @@ const validateInvitation = async (req, res) => {
             res.status(500).json({ message: "An unexpected error occurred" });
         }
     }
-};
+});
 exports.validateInvitation = validateInvitation;
-const removeMember = async (req, res) => {
+const removeMember = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { teamId, memberId } = req.body;
     try {
-        const response = await teamsService_1.default.removeUser(teamId, memberId);
+        const response = yield teamsService_1.default.removeUser(teamId, memberId);
         res.status(201).json(response);
     }
     catch (error) {
         console.error("Unexpected error on remove member:", error);
         res.status(500).json({ message: "Unexpected error occurred" });
     }
-};
+});
 exports.removeMember = removeMember;
-const getStatistics = async (req, res) => {
+const getStatistics = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { teamId, type } = req.query;
     let key = null;
     switch (type) {
@@ -190,20 +199,20 @@ const getStatistics = async (req, res) => {
         default:
             break;
     }
-    const response = await teamsService_1.default.getStatisticsByTeam(teamId, key);
+    const response = yield teamsService_1.default.getStatisticsByTeam(teamId, key);
     res.status(201).json({ data: response });
-};
+});
 exports.getStatistics = getStatistics;
-const getLastNewsAndTopUsers = async (req, res) => {
+const getLastNewsAndTopUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { teamId } = req.query;
-    const response = await teamsService_1.default.getLastFiveNewsAndTopUsers(teamId);
+    const response = yield teamsService_1.default.getLastFiveNewsAndTopUsers(teamId);
     res.status(201).json({ data: response });
-};
+});
 exports.getLastNewsAndTopUsers = getLastNewsAndTopUsers;
-const handleTeamInvite = async (req, res) => {
+const handleTeamInvite = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, invitationId, action } = req.body;
     try {
-        const response = await teamsService_1.default.updateTeamInvitation(userId, invitationId, action);
+        const response = yield teamsService_1.default.updateTeamInvitation(userId, invitationId, action);
         res.status(201).json({ message: "Success", user: response });
     }
     catch (error) {
@@ -211,5 +220,5 @@ const handleTeamInvite = async (req, res) => {
             res.status(400).json({ error: error.message });
         }
     }
-};
+});
 exports.handleTeamInvite = handleTeamInvite;
