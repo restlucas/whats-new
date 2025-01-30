@@ -6,15 +6,6 @@ import {
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
-interface NewsProps {
-  id: string;
-  title: string;
-  slug: string;
-  createdAt: string;
-  likes: number;
-  views: number;
-}
-
 interface UserProps {
   id: string;
   name: string;
@@ -183,8 +174,6 @@ export function NewsAndMembers({
   activeTeamId: string | undefined;
 }) {
   const { statistics, fetching } = useLastNewsAndTopMembers(activeTeamId || "");
-
-  console.log(statistics);
 
   const lastFiveNews = statistics?.lastFiveNews || [];
   const topUsers = statistics?.topUsers || [];

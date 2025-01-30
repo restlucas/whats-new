@@ -24,9 +24,17 @@ export interface LastFiveNews {
 
 interface FetchResponse {
   statistics: {
-    lastFiveNews: LastFiveNews[];
-    topUsers: TopUsers[];
+    lastFiveNews?: LastFiveNews[];
+    topUsers?: TopUsers[];
+    likeRate?: number;
   };
+  fetching: boolean;
+  loading: boolean;
+  error: string | null;
+}
+
+interface StatisticsResponse {
+  statistics: number;
   fetching: boolean;
   loading: boolean;
   error: string | null;
@@ -35,7 +43,7 @@ interface FetchResponse {
 export const useStatistics = (
   queryName: string,
   teamId: string
-): FetchResponse => {
+): StatisticsResponse => {
   const {
     data: total,
     isError,

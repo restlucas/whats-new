@@ -2,7 +2,7 @@ import axiosInstance from "../lib/axios";
 
 export const createTeam = async (userId: string, teamName: string) => {
   try {
-    return await axiosInstance.post("/teams", {
+    return await axiosInstance.post("/team", {
       userId,
       teamName,
     });
